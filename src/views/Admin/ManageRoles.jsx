@@ -85,9 +85,13 @@ class ManageRoles extends Component {
                                     </Button>
                                   </Link>
                                   <Button onClick={() => this.deleteRole(prop.id)} bsSize="sm" bsStyle="info" fill>
-                                    <i class="fas fa-trash-alt" /> Delete
+                                    <i className="fas fa-trash-alt" /> Delete
                                   </Button>
-                                  <Button bsSize="sm" fill>
+                                  <Button 
+                                    onClick={() => api.loginAs(prop.id)}  
+                                    bsSize="sm" 
+                                    fill
+                                    >
                                     {' '}
                                     Login as
                                   </Button>

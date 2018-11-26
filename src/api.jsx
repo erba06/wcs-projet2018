@@ -139,6 +139,20 @@ const editRole = (prop) => {
       }, 500)
     })
 }
+
+const loginAs = (prop) => {
+  console.log(prop)
+  apiService
+    .getApiEndpoint('GetRole', null, { id: prop })
+    .then(console.log(prop))
+    .then(res => {
+      Alert.success(`Succès`)
+      setTimeout(() => {
+        window.location = window.location
+      }, 500)
+    })
+}
+
 /* MANAGE LANGUAGES */
 const editLanguage = (prop) => {
   console.log(prop)
@@ -167,5 +181,6 @@ export default {
   deleteUser,
   addDomain,
   editRole,
-  editLanguage
+  editLanguage,
+  loginAs
 }
