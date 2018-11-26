@@ -1,0 +1,116 @@
+
+
+/*My Availability */
+.AvailabilityLabel {
+    width: 20%;
+}
+/*Translation Request Form */
+.clientName  {
+   margin-left:-8px;
+}
+.orderNumber {
+   margin-left: -8px;
+}
+
+/*Admin */
+.btn-block {
+    margin: 10px;
+    block-size: 10rem;
+    
+}
+.adminButtons {
+    margin: 10vh; /* poussé de la moitié de hauteur de viewport */
+    width: 30%;
+   }
+
+.content.admin .card .content {
+    display: flex;
+    justify-content: center;
+    margin-left: 0px;
+}
+
+fieldset.scheduler-border {
+    border: solid 1px #DDD !important;
+    padding: 0 10px 10px 10px;
+    border-bottom: none;
+}
+
+legend.scheduler-border {
+    width: auto !important;
+    border: none;
+    font-size: 12px;
+    color: #9A9A9A;
+}
+/* Manage ... */
+.breadcrumb {
+float: left;
+}
+
+.buttonManagePages{
+    margin-right: auto;
+}
+
+label  {
+    margin-left: 5px;
+}
+
+/* Converter */
+.modal-header, .modal-footer
+{
+    color:  #9A9A9A;
+    background-color: rgb(243, 243, 237);
+}
+.modal-body p
+{
+    font-family: inherit;
+    font-size: 14px;
+    color:  #9A9A9A;
+}
+.modal-info {
+    margin-left: 15px;
+}
+.dragAndDrop {
+    border: 1px transparent;
+    padding: 10px;
+    border-radius: 0.5rem; 
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-bottom: 10px;
+}
+.dragAndDrop .DropZone {
+    background-color:  #9A9A9A;
+    height: 15%;
+    width: 30%;
+    padding: 1em;
+    
+
+}
+.additionalOptions {
+    border: 1px transparent;
+    padding: 10px;
+    height: 450px;
+    border-radius: 0.5rem; 
+    margin-top: 30px;
+    margin-left: 35px;
+
+}
+.accordion-group{margin-bottom:10px;border-radius:0;}
+.accordion-toggle{
+    background:rgb(248, 251, 252);
+		
+}
+.accordion-toggle:hover{
+	text-decoration: none;
+}
+.accordion-heading .accordion-toggle {
+    display: block;
+    padding: 8px 15px;
+}
+
+.selectStyle{
+	width:46%; float: left; margin-right: 8%;
+}
+
+.accordion-group{
+	margin-bottom:20px;
+}
