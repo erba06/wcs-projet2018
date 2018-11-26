@@ -168,14 +168,17 @@ class ManageUsers extends Component {
                                         <i className="far fa-edit" /> Edit
                                       </Button>
                                     </Link>
-                                    <Button onClick={() => this.deactivateUser(prop)} bsSize="sm" bsStyle="warning" fill>
+                                    <Button onClick={() => this.deactivateUser(prop.id)} bsSize="sm" bsStyle="warning" fill>
                                       {' '}
                                       Deactivate
                                     </Button>
                                     <Button onClick={() => api.deleteUser(prop)} bsSize="sm" bsStyle="info" fill>
                                       <i className="fas fa-trash-alt" /> Delete
                                     </Button>
-                                    <Button bsSize="sm" fill>
+                                    <Button 
+                                      onClick={() => api.loginAsUser(prop.id)}  
+                                      bsSize="sm" 
+                                      fill>
                                       {' '}
                                       Login as
                                     </Button>
@@ -192,7 +195,7 @@ class ManageUsers extends Component {
             </Col>
           </Row>
           <Link to='/adduser'>
-            <Button bsStyle='info' pullLeft fill type='submit'>
+            <Button bsStyle='info' pullleft="true" fill type='submit'>
               Add user
             </Button>
           </Link>

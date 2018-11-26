@@ -13,6 +13,8 @@ import Alert from 'react-s-alert'
 
 import { Card } from 'components/Card/Card.jsx'
 import Button from 'components/CustomButton/CustomButton.jsx'
+import api from '../../api'
+
 
 // mandatory
 import 'react-s-alert/dist/s-alert-default.css'
@@ -85,7 +87,9 @@ class EditUser extends Component {
     }
 }
 */
-
+  handleChange (e) {
+    this.setState({ value: e.target.value })
+  }
   updateFirstNameField (event) {
     const firstName = event.target.value
     this.setState({ firstName }) //  autre methode this.setState({ firstName: event.target.value})
@@ -138,21 +142,13 @@ class EditUser extends Component {
     this.setState({ domain })
   }
 
-  /*
-  onChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
-  }
-  */
 
-  /* fetch('/translationRequests',
-    {
-        method:  'POST',
-        headers:  new  Headers({
-            'Content-Type':  'application/json'
-        }),
-        body:  JSON.stringify(this.state),
-    })
-    .then(res => res.json()) */
+  handleSubmit = (event) => {
+    event.preventDefault()
+    const user = this.state
+    console.log(user)
+
+  }
 
   handleGenie (event) {
     event.preventDefault()
@@ -164,6 +160,8 @@ class EditUser extends Component {
 
   render () {
     const { errors } = this.state
+    const user = this.state
+    console.log(user)
 
     return (
       <div className='content'>
@@ -339,6 +337,7 @@ class EditUser extends Component {
                     <ButtonToolbar>
                       <Button
                         onClick={this.handleGenie}
+                        onClick={() => api.editUser(user)}
                         bsStyle='info'
                         pullRight
                         fill

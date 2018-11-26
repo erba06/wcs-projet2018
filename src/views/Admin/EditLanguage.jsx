@@ -15,7 +15,6 @@ import { Card } from 'components/Card/Card.jsx'
 import Button from 'components/CustomButton/CustomButton.jsx'
 import api from '../../api'
 
-
 class EditLanguage extends Component {
   constructor () {
     super()
@@ -23,18 +22,16 @@ class EditLanguage extends Component {
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleIsNeutralLanguage = this.handleIsNeutralLanguage.bind(this)
 
-
     this.state = {
       languageName: '',
       languageCode: '',
       isNeutralLanguage: false
     }
   }
-  handleChange(e) {
-   const { name: key, value } = e.target
-console.log(value)
-this.setState({ [key]: value })
-
+  handleChange (e) {
+    const { name: key, value } = e.target
+    console.log(value)
+    this.setState({ [key]: value })
   }
 
   handleIsNeutralLanguage = event => {
@@ -46,7 +43,7 @@ this.setState({ [key]: value })
       [name]: event.target.checked
     })
   }
-  
+
   handleInputChange (event) {
     const target = event.target
     const value = target.type === 'checkbox' ? target.checked : target.value
@@ -70,6 +67,7 @@ this.setState({ [key]: value })
   updateLanguageNameField (event) {
     const languageName = event.target.value
     this.setState({ languageName: event.target.value })
+    console.log(languageName)
   }
 
   updateLanguageCodeField (event) {
@@ -168,10 +166,11 @@ this.setState({ [key]: value })
                         <ButtonToolbar>
                           <Button
                             onClick={() => api.editLanguage(languages)}
-                            bsStyle='info' 
-                            pullRight 
-                            fill 
-                            type='submit'>
+                            bsStyle='info'
+                            pullRight
+                            fill
+                            type='submit'
+                          >
                             Submit
                           </Button>
                           <Button

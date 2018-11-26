@@ -88,11 +88,53 @@ const getAccounts = () => {
     .getApiEndpoint('GetAccounts')
     .then(users => console.log(users.data.items))
 }
+const editUser = prop => {
+ console.log(prop)
+  apiService
+    .getApiEndpoint(
+      'PutAccount',
+      {
+        userName: prop.userName,
+        firstName: prop.firstName,
+        lastName: prop.lastName,
+        emailAddress: prop.emailAddress,
+        roles: prop.roles,
+        password: prop.password,
+        sourceLanguages: prop.sourceLanguages,
+        targetLanguages: prop.targetLanguages,
+        domains: prop.domains,
+        profilePictureLink: prop.profilePictureLink,
+        active: prop.active
+      },
+      { id: 4 }
+    )
+    .then(res => {
+      console.log(res)
+      Alert.success(`Succès`)
+      setTimeout(() => {
+        window.location = window.location
+      }, 500)
+    })
+}
 
 const deleteUser = prop => {
   apiService
     .getApiEndpoint('DeleteAccount', null, { id: prop.id })
     .then(res => console.log(res))
+}
+
+const loginAsUser = prop => {
+  console.log(prop)
+  apiService
+    .getApiEndpoint('GetAccount', null, { id: prop })
+    .then(console.log(prop))
+    .then(res => {
+      console.log(res)
+      Alert.success(`Succès`)
+      setTimeout(() => {
+        window.location = window.location
+      }, 500)
+    })
 }
 
 /*
@@ -101,7 +143,7 @@ const deleteDomain = prop =>
     .getApiEndpoint('deleteDomain')
     .then(domains => console.log(domains.data.items)) */
 
-const addDomain = (domainName) => {
+const addDomain = domainName => {
   console.log(domainName)
   apiService
     .getApiEndpoint('PostDomains', { name: domainName }, null)
@@ -114,10 +156,10 @@ const addDomain = (domainName) => {
     })
 }
 
-const editDomain = (prop) => {
+const editDomain = prop => {
   console.log(prop)
   apiService
-    .getApiEndpoint('PutDomains', { name: prop}, {id : 4})
+    .getApiEndpoint('PutDomains', { name: prop }, { id: 4 })
     .then(console.log(prop))
     .then(res => {
       Alert.success(`Succès`)
@@ -127,10 +169,10 @@ const editDomain = (prop) => {
     })
 }
 /* MANAGE ROLES */
-const editRole = (prop) => {
+const editRole = prop => {
   console.log(prop)
   apiService
-    .getApiEndpoint('PutRoles', { description: 'test role update' }, { id: 4  })
+    .getApiEndpoint('PutRoles', { description: 'test role update' }, { id: 4 })
     .then(console.log(prop))
     .then(res => {
       Alert.success(`Succès`)
@@ -140,12 +182,13 @@ const editRole = (prop) => {
     })
 }
 
-const loginAs = (prop) => {
+const loginAsRole = prop => {
   console.log(prop)
   apiService
     .getApiEndpoint('GetRole', null, { id: prop })
     .then(console.log(prop))
     .then(res => {
+      console.log(res)
       Alert.success(`Succès`)
       setTimeout(() => {
         window.location = window.location
@@ -154,14 +197,18 @@ const loginAs = (prop) => {
 }
 
 /* MANAGE LANGUAGES */
-const editLanguage = (prop) => {
+const editLanguage = prop => {
   console.log(prop)
   apiService
-    .getApiEndpoint('PutLanguages', {
-      "name": "French (France)",
-      "code": "fr",
-      "isNeutral": true
-    }, { id: 1 })
+    .getApiEndpoint(
+      'PutLanguages',
+      {
+        name: 'French (France)',
+        code: 'fr',
+        isNeutral: true
+      },
+      { id: 1 }
+    )
     .then(console.log(prop))
     .then(res => {
       Alert.success(`Succès`)
@@ -182,5 +229,7 @@ export default {
   addDomain,
   editRole,
   editLanguage,
-  loginAs
+  loginAsRole,
+  loginAsUser,
+  editUser
 }

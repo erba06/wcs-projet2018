@@ -51,7 +51,6 @@ class EditRole extends Component {
     event.preventDefault()
     const roles = this.state
     console.log(roles)
-
   }
 
 
@@ -126,7 +125,7 @@ class EditRole extends Component {
                             fill 
                             type='submit'
                             >
-                            Edit
+                            Submit
                           </Button>
                           <Button
                             bsStyle='default'
