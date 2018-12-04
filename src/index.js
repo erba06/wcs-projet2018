@@ -1,5 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+
+import { Provider } from 'react-redux'
+import { createStore, applyMiddleware } from 'redux'
+
 import { HashRouter, Route, Switch } from 'react-router-dom'
 import api from './api'
 import AuthForm from './views/Auth/AuthForm'
@@ -14,18 +18,32 @@ import './assets/css/pe-icon-7-stroke.css'
 import 'react-s-alert/dist/s-alert-default.css'
 import 'react-s-alert/dist/s-alert-css-effects/slide.css'
 
+import reducers from './reducers'
+
+
+const createStoreWithMiddleware = applyMiddleware()(createStore)
+
 api.onPageLoadChecks().then(status => {
   if (status) {
     ReactDOM.render(
-      <HashRouter>
-        <Switch>
-          {indexRoutes.map((prop, key) => {
-            return <Route to={prop.path} component={prop.component} key={key} />
-          })}
-        </Switch>
-      </HashRouter>,
+      <Provider
+        store={createStoreWithMiddleware(
+          reducers,
+          window.__REDUX_DEVTOOLS_EXTENSION__ &&
+            window.__REDUX_DEVTOOLS_EXTENSION__()
+        )}
+      >
+        <HashRouter>
+          <Switch>
+            {indexRoutes.map((prop, key) => {
+              return (
+                <Route to={prop.path} component={prop.component} key={key} />
+              )
+            })}
+          </Switch>
+        </HashRouter>
+      </Provider>,
       document.getElementById('root')
     )
   } else ReactDOM.render(<AuthForm />, document.getElementById('root'))
 })
-

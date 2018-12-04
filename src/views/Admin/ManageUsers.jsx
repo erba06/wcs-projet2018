@@ -28,13 +28,11 @@ class ManageUsers extends Component {
   updateState = accounts => {
     this.setState({ users: accounts.data.items })
   }
-  
+
   deactivateUser = prop => {
-    apiService
-      .getApiEndpoint('PutAccount', { id: prop.id },  { "active": false } )
-      console.log(prop.id)
-    }
-  
+    apiService.getApiEndpoint('PutAccount', { id: prop.id }, { active: false })
+    console.log(prop.id)
+  }
 
   render () {
     const users = this.state.users
@@ -54,13 +52,19 @@ class ManageUsers extends Component {
                   <div>
                     <ul className='breadcrumb'>
                       <li>
-                        <a href='ManageRolesPage'>Manage Roles </a>
+                        <Link to='/manageroles'>
+                          <a href='ManageRolePage'>Manage Roles </a>
+                        </Link>
                       </li>
                       <li>
-                        <a href='ManageLanguagesPage'>Manage Languages</a>
+                        <Link to='/managelanguages'>
+                          <a href='ManageLanguagesPage'>Manage Languages</a>
+                        </Link>
                       </li>
                       <li>
-                        <a href='ManageDomainsPage'>Manage Domains</a>
+                        <Link to='/managedomains'>
+                          <a href='ManageDomainsPage'>Manage Domains</a>
+                        </Link>
                       </li>
                     </ul>
                     <Table striped hover>
@@ -80,112 +84,88 @@ class ManageUsers extends Component {
                       </thead>
                       <tbody>
                         {users.map((prop, key) => {
-                          return <tr key={key}>
+                          return (
+                            <tr key={key}>
+                              <td>{prop.firstName + ' ' + prop.lastName}</td>
                               <td>
-                                {prop.firstName +
-                                  ' ' +
-                                  prop.lastName}
-                              </td>
-                              <td>
-                                {prop.domains
-                                  .length === 0
+                                {prop.domains.length === 0
                                   ? 'N/A'
-                                  : prop.domains
-                                      .length === 1
-                                  ? prop.domains[0]
-                                      .domainName
-                                  : prop.domains.map(
-                                      arrayOfDomains => (
-                                        <li>
-                                          {
-                                            arrayOfDomains.domainName
-                                          }
-                                        </li>
-                                      )
-                                    )}
+                                  : prop.domains.length === 1
+                                    ? prop.domains[0].domainName
+                                    : prop.domains.map(arrayOfDomains => (
+                                      <li>{arrayOfDomains.domainName}</li>
+                                    ))}
                               </td>
+                              <td>{prop.emailAddress}</td>
                               <td>
-                                {prop.emailAddress}
-                              </td>
-                              <td>
-                                {prop.roles.length ===
-                                1
+                                {prop.roles.length === 1
                                   ? prop.roles
-                                  : prop.roles.map(
-                                      roles => (
-                                        <li>
-                                          {roles}
-                                        </li>
-                                      )
-                                    )}
+                                  : prop.roles.map(roles => <li>{roles}</li>)}
                               </td>
                               <td>
-                                {prop.sources
-                                  .length === 0
+                                {prop.sources.length === 0
                                   ? 'N/A'
-                                  : prop.sources
-                                      .length === 1
-                                  ? prop.sources[0]
-                                      .languageName
-                                  : prop.sources.map(
-                                      arrayOfSources => (
-                                        <li>
-                                          {
-                                            arrayOfSources.languageName
-                                          }
-                                        </li>
-                                      )
-                                    )}
+                                  : prop.sources.length === 1
+                                    ? prop.sources[0].languageName
+                                    : prop.sources.map(arrayOfSources => (
+                                      <li>{arrayOfSources.languageName}</li>
+                                    ))}
                               </td>
                               <td>
-                                {prop.targets
-                                  .length === 0
+                                {prop.targets.length === 0
                                   ? 'N/A'
-                                  : prop.targets
-                                      .length === 1
-                                  ? prop.targets[0]
-                                      .languageName
-                                  : prop.targets.map(
-                                      arrayOfTargets => (
-                                        <li>
-                                          {
-                                            arrayOfTargets.languageName
-                                          }
-                                        </li>
-                                      )
-                                    )}
+                                  : prop.targets.length === 1
+                                    ? prop.targets[0].languageName
+                                    : prop.targets.map(arrayOfTargets => (
+                                      <li>{arrayOfTargets.languageName}</li>
+                                    ))}
                               </td>
-                              <td>
-                                {prop.active === true
-                                  ? 'Yes'
-                                  : 'No'}
-                              </td>
+                              <td>{prop.active === true ? 'Yes' : 'No'}</td>
                               <td>
                                 <ButtonGroup>
                                   <div>
-                                    <Link to="/edituser">
-                                      <Button bsSize="sm" bsStyle="primary" fill>
-                                        <i className="far fa-edit" /> Edit
+                                    <Link to='/edituser/:id'>
+                                      <Button
+                                        onClick={() => api.getUser(prop.id)}
+                                        bsSize='sm'
+                                        bsStyle='primary'
+                                        fill
+                                      >
+                                        <i className='far fa-edit' /> Edit
                                       </Button>
                                     </Link>
-                                    <Button onClick={() => this.deactivateUser(prop.id)} bsSize="sm" bsStyle="warning" fill>
+                                    <Button
+                                      onClick={() =>
+                                        this.deactivateUser(prop.id)
+                                      }
+                                      bsSize='sm'
+                                      bsStyle='warning'
+                                      fill
+                                    >
                                       {' '}
                                       Deactivate
                                     </Button>
-                                    <Button onClick={() => api.deleteUser(prop)} bsSize="sm" bsStyle="info" fill>
-                                      <i className="fas fa-trash-alt" /> Delete
+                                    <Button
+                                      onClick={() => api.deleteUser(prop)}
+                                      bsSize='sm'
+                                      bsStyle='info'
+                                      fill
+                                    >
+                                      <i className='fas fa-trash-alt' /> Delete
                                     </Button>
-                                    <Button 
-                                      onClick={() => api.loginAsUser(prop.id)}  
-                                      bsSize="sm" 
-                                      fill>
+                                    <Button
+                                      onClick={() => api.loginAsUser(prop.id)}
+                                      bsSize='sm'
+                                      fill
+                                    >
                                       {' '}
                                       Login as
                                     </Button>
                                   </div>
                                 </ButtonGroup>
                               </td>
-                            </tr>;
+                            </tr>
+                          )
                         })}
                       </tbody>
                     </Table>
@@ -195,7 +175,7 @@ class ManageUsers extends Component {
             </Col>
           </Row>
           <Link to='/adduser'>
-            <Button bsStyle='info' pullleft="true" fill type='submit'>
+            <Button bsStyle='info' pullleft='true' fill type='submit'>
               Add user
             </Button>
           </Link>

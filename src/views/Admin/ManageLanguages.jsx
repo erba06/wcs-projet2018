@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Grid, Row, Col, Table, ButtonGroup } from 'react-bootstrap'
 import Button from 'components/CustomButton/CustomButton.jsx'
 import Alert from 'react-s-alert'
@@ -7,17 +8,16 @@ import { Link } from 'react-router-dom'
 import apiService from '../../api/apiService'
 import api from '../../api'
 
-
 class ManageLanguages extends Component {
   constructor (props) {
     super(props)
     this.state = {
       languages: []
     }
+    // this.editLanguage = this.editLanguage.bind(this)
   }
 
   componentDidMount () {
-    console.log(this.state)
     apiService
       .getApiEndpoint('GetLanguages')
       .then(this.updateState)
@@ -29,15 +29,14 @@ class ManageLanguages extends Component {
     this.setState({ languages: languages.data })
   }
 
-  deleteLanguages = prop => {
-    apiService
-      .getApiEndpoint('DeleteLanguage', null, { id: prop.id })
-      .then(res => console.log(res))
-  }
+  // editLanguage() {
+  // const action = { type: 'EDIT_LANGUAGE', value: this.state.languages }
+  // this.props.dispatch(action)
+  // console.log(this.prop)
+  // }
 
   render () {
     const languages = this.state.languages
-    console.log('render')
     console.log(languages)
 
     return (
@@ -54,13 +53,19 @@ class ManageLanguages extends Component {
                   <div>
                     <ul className='breadcrumb'>
                       <li>
-                        <a href='ManageUsersPage'>Manage Users</a>
+                        <Link to='/manageusers'>
+                          <a href='ManageUsersPage'>Manage Users</a>
+                        </Link>
                       </li>
                       <li>
-                        <a href='ManageRolesPage'>Manage Roles</a>
+                        <Link to='/manageroles'>
+                          <a href='ManageRolesPage'>Manage Roles</a>
+                        </Link>
                       </li>
                       <li>
-                        <a href='ManageDomainsPage'>Manage Domains</a>
+                        <Link to='/managedomains'>
+                          <a href='ManageDomainsPage'>Manage Domains</a>
+                        </Link>
                       </li>
                     </ul>
 
@@ -91,18 +96,21 @@ class ManageLanguages extends Component {
                               </td>
                               <td>
                                 <ButtonGroup className='buttonManagePages'>
-                                  <Link to='/editlanguage'>
-                                    <Button 
-                                      onClick={() => api.editLanguage(prop.id)}  
-                                      bsSize='sm' 
-                                      bsStyle='primary' 
+                                  <Link to='/editlanguage/:id'>
+                                    <Button
+                                      onClick={() => api.getLanguage(prop.id)}
+                                      bsSize='sm'
+                                      bsStyle='primary'
                                       fill
-                                      >
+                                    >
                                       <i className='far fa-edit' /> Edit
                                     </Button>
                                   </Link>
                                   <Button
-                                    onClick={() => this.deleteLanguages(prop)}
+                                    onClick={() => {
+                                      console.log(prop)
+                                      api.deleteLanguage(prop)
+                                    }}
                                     bsSize='sm'
                                     bsStyle='info'
                                     fill
@@ -120,7 +128,7 @@ class ManageLanguages extends Component {
                 }
               />
               <Link to='/addlanguage'>
-                <Button bsStyle='info' pullleft="true" fill type='submit'>
+                <Button bsStyle='info' pullleft='true' fill type='submit'>
                   Add language
                 </Button>
               </Link>
@@ -131,5 +139,15 @@ class ManageLanguages extends Component {
     )
   }
 }
+{
+  /* const mapStateToProps = state => {
+  return {
+    state
+    // languages: state.languages
+  }
+}
 
+export default connect(mapStateToProps)(ManageLanguages)
+*/
+}
 export default ManageLanguages

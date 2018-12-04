@@ -13,32 +13,37 @@ import {
 
 import { Card } from 'components/Card/Card.jsx'
 import Button from 'components/CustomButton/CustomButton.jsx'
-import { cpus } from 'os';
 import api from '../../api'
-
 
 class EditRole extends Component {
   constructor () {
     super()
     this.state = {
-      userName: '',
+      roleName: '',
       description: ''
     }
   }
   getValidationState () {
-    const { userName } = this.state
-    if (userName.length > 0) return 'success'
+    const { roleName } = this.state
+    if (roleName.length > 0) return 'success'
     return 'error'
+  }
+
+  componentDidMount() {
+    let arrayOfUrl = (window.location.href.split('/'))
+    console.log(arrayOfUrl)
+    let newId = arrayOfUrl[4].split("#")[0];
+    this.setState({ id: newId })
   }
 
   handleChange (e) {
     this.setState({ value: e.target.value })
   }
 
-  updateUserNameField (event) {
-    const userName = event.target.value
-    this.setState({ userName: event.target.value })
-    console.log(userName)
+  updateRoleNameField (event) {
+    const roleName = event.target.value
+    this.setState({ roleName: event.target.value })
+    console.log(roleName)
   }
 
   updateDescriptionField (event) {
@@ -53,11 +58,10 @@ class EditRole extends Component {
     console.log(roles)
   }
 
-
   render () {
-    const roles= this.state
+    const roles = this.state
     console.log(roles)
-   
+
     return (
       <div className='content'>
         <Grid fluid>
@@ -75,14 +79,14 @@ class EditRole extends Component {
                         >
                           <ControlLabel>Name</ControlLabel>
                           <FormControl
-                            onChange={this.updateUserNameField.bind(this)}
+                            onChange={this.updateRoleNameField.bind(this)}
                             validationState={this.getValidationState()}
                             ncols={['col-md-6']}
                             proprieties={[
                               {
-                                className: 'userName',
+                                className: 'roleName',
                                 type: 'text',
-                                name: 'userName',
+                                name: 'roleName',
                                 bsClass: 'form-control',
                                 placeholder: 'Edit the user role'
                               }
@@ -118,13 +122,13 @@ class EditRole extends Component {
                     <Row>
                       <Col md={6}>
                         <ButtonToolbar>
-                          <Button 
+                          <Button
                             onClick={() => api.editRole(roles)}
-                            bsStyle='info' 
-                            pullRight 
-                            fill 
+                            bsStyle='info'
+                            pullRight
+                            fill
                             type='submit'
-                            >
+                          >
                             Submit
                           </Button>
                           <Button

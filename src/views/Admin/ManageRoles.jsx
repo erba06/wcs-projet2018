@@ -28,36 +28,47 @@ class ManageRoles extends Component {
     this.setState({ roles: roles.data })
   }
   deleteRole = prop => {
-  apiService
-    .getApiEndpoint('DeleteRole', null, { id: prop.id })
-    .then(res => console.log(res))
-}
-
-
+    apiService
+      .getApiEndpoint('DeleteRole', null, { id: prop.id })
+      .then(res => console.log(res))
+  }
 
   render () {
     const roles = this.state.roles
     console.log('render')
     console.log(roles)
 
-    return <div className="content">
+    return (
+      <div className='content'>
         <Grid fluid>
           <Row>
             <Col md={12}>
-              <Card title="Manage User Roles" category="Your internal translation requests marketplace" ctTableFullWidth ctTableResponsive content={<div>
-                    <ul className="breadcrumb">
+              <Card
+                title='Manage User Roles'
+                category='Your internal translation requests marketplace'
+                ctTableFullWidth
+                ctTableResponsive
+                content={
+                  <div>
+                    <ul className='breadcrumb'>
                       <li>
-                        <a href="ManageUsersPage">Manage Users</a>
+                        <Link to='/manageusers'>
+                          <a href='ManageUsersPage'>Manage Users</a>
+                        </Link>
                       </li>
                       <li>
-                        <a href="ManageLanguagesPage">Manage Languages</a>
+                        <Link to='/managelanguages'>
+                          <a href='ManageLanguagesPage'>Manage Languages</a>
+                        </Link>
                       </li>
                       <li>
-                        <a href="ManageDomainsPage">Manage Domains</a>
+                        <Link to='/managedomains'>
+                          <a href='ManageDomainsPage'>Manage Domains</a>
+                        </Link>
                       </li>
                     </ul>
                     <Table striped hover>
-                      <div id="tableGoesHere" className="col-md-6" />
+                      <div id='tableGoesHere' className='col-md-6' />
                       <thead>
                         <tr>
                           <th>Id</th>
@@ -69,48 +80,59 @@ class ManageRoles extends Component {
 
                       <tbody>
                         {roles.map((prop, key) => {
-                          return <tr key={key}>
+                          return (
+                            <tr key={key}>
                               <td>{prop.id}</td>
                               <td>{prop.name}</td>
                               <td>{prop.description}</td>
                               <td>
-                                <ButtonGroup className="buttonManagePages">
-                                  <Link to="/editrole">
-                                    <Button 
-                                      onClick={() => api.editRole(prop.id)}  
-                                      bsSize="sm" 
-                                      bsStyle="primary" 
-                                      fill>
-                                      <i className="far fa-edit" /> Edit
+                                <ButtonGroup className='buttonManagePages'>
+                                  <Link to='/editrole/:id'>
+                                    <Button
+                                      onClick={() => api.getRole(prop.id)}
+                                      bsSize='sm'
+                                      bsStyle='primary'
+                                      fill
+                                    >
+                                      <i className='far fa-edit' /> Edit
                                     </Button>
                                   </Link>
-                                  <Button onClick={() => this.deleteRole(prop.id)} bsSize="sm" bsStyle="info" fill>
-                                    <i className="fas fa-trash-alt" /> Delete
-                                  </Button>
-                                  <Button 
-                                    onClick={() => api.loginAsRole(prop.id)}  
-                                    bsSize="sm" 
+                                  <Button
+                                    onClick={() => api.deleteRole(prop.id)}
+                                    bsSize='sm'
+                                    bsStyle='info'
                                     fill
-                                    >
+                                  >
+                                    <i className='fas fa-trash-alt' /> Delete
+                                  </Button>
+                                  <Button
+                                    onClick={() => api.loginAsRole(prop.id)}
+                                    bsSize='sm'
+                                    fill
+                                  >
                                     {' '}
                                     Login as
                                   </Button>
                                 </ButtonGroup>
                               </td>
-                            </tr>;
+                            </tr>
+                          )
                         })}
                       </tbody>
                     </Table>
-                  </div>} />
-              <Link to="/addrole">
-                <Button bsStyle="info" pullLeft fill type="submit">
+                  </div>
+                }
+              />
+              <Link to='/addrole'>
+                <Button bsStyle='info' pullLeft fill type='submit'>
                   Add role
                 </Button>
               </Link>
             </Col>
           </Row>
         </Grid>
-      </div>;
+      </div>
+    )
   }
 }
 

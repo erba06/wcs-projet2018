@@ -1,4 +1,7 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+
 import Alert from 'react-s-alert'
 import {
   Grid,
@@ -15,34 +18,54 @@ import { Card } from 'components/Card/Card.jsx'
 import Button from 'components/CustomButton/CustomButton.jsx'
 import api from '../../api'
 
+
+
+
 class EditLanguage extends Component {
-  constructor () {
-    super()
+  constructor (prop) {
+    super(prop)
     this.handleChange = this.handleChange.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleIsNeutralLanguage = this.handleIsNeutralLanguage.bind(this)
 
     this.state = {
-      languageName: '',
-      languageCode: '',
-      isNeutralLanguage: false
+     id: [],
+     languageCode: [],
+     languageName:[],
+     isNeutralLanguage: false,
+     languages:[]
     }
+    console.log(this.state)
+    console.log(prop)
   }
-  handleChange (e) {
-    const { name: key, value } = e.target
+
+  componentDidMount() {
+    let arrayOfUrl = (window.location.href.split('/'))
+    console.log(arrayOfUrl)
+    let newId = arrayOfUrl[4].split("#")[0];
+    this.setState({id: newId})
+  }
+  
+  updateState = languages => {
+  this.setState({ languages: languages.data })
+}
+
+  handleChange(e) {
+    const { isNeutralLanguage: key, value } = e.target
     console.log(value)
     this.setState({ [key]: value })
   }
 
-  handleIsNeutralLanguage = event => {
-    event.preventDefault()
+ handleIsNeutralLanguage = event => {
+  event.preventDefault()
 
-    let name = event.target.name
-    console.log(event.target.checked)
-    this.setState({
-      [name]: event.target.checked
-    })
-  }
+  let isNeutralLanguage = event.target.isNeutralLanguage
+  console.log(event.target.checked)
+  this.setState({
+    isNeutralLanguage: event.target.checked
+  })
+}
+
 
   handleInputChange (event) {
     const target = event.target
@@ -54,11 +77,11 @@ class EditLanguage extends Component {
     })
   }
 
-  getValidationState () {
+ /* getValidationState () {
     const { languageName } = this.state
     if (languageName.length > 0) return 'success'
     return 'error'
-  }
+  }*/
 
   handleChange (e) {
     this.setState({ value: e.target.value })
@@ -107,7 +130,7 @@ class EditLanguage extends Component {
                       <Col md={6}>
                         <FormGroup
                           controlId='formBasicText'
-                          validationState={this.getValidationState()}
+                         // validationState={this.getValidationState()}
                         >
                           <ControlLabel>Language name</ControlLabel>
                           <FormControl
@@ -135,7 +158,7 @@ class EditLanguage extends Component {
                           <ControlLabel>Language code</ControlLabel>
                           <FormControl
                             onChange={this.updateLanguageCodeField.bind(this)}
-                            validationstate={this.getValidationState()}
+                           // validationstate={this.getValidationState()}
                             languagecode={this.state.languageCode}
                             ncols={['col-md-6']}
                             proprieties={[
@@ -194,5 +217,14 @@ class EditLanguage extends Component {
     )
   }
 }
+{/*const mapStateToProps = state => {
+  return {
+    state
+    //languages: state.languages
+  }
+}
+
+export default connect(mapStateToProps)(EditLanguage)*/}
 
 export default EditLanguage
+

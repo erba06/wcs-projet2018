@@ -16,7 +16,7 @@ import Button from 'components/CustomButton/CustomButton.jsx'
 import api from '../../api'
 
 class AddLanguage extends Component {
-  constructor() {
+  constructor () {
     super()
     this.handleChange = this.handleChange.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this)
@@ -28,8 +28,8 @@ class AddLanguage extends Component {
       isNeutralLanguage: false
     }
   }
-  handleChange(e) {
-    const { name: key, value } = e.target
+  handleChange (e) {
+    const { isNeutralLanguage: key, value } = e.target
     console.log(value)
     this.setState({ [key]: value })
   }
@@ -37,40 +37,40 @@ class AddLanguage extends Component {
   handleIsNeutralLanguage = event => {
     event.preventDefault()
 
-    let name = event.target.name
+    let isNeutralLanguage = event.target.isNeutralLanguage
     console.log(event.target.checked)
     this.setState({
-      [name]: event.target.checked
+      isNeutralLanguage: event.target.checked
     })
   }
 
-  handleInputChange(event) {
+  handleInputChange (event) {
     const target = event.target
     const value = target.type === 'checkbox' ? target.checked : target.value
-    const name = target.name
+    const isNeutralLanguage = target.name
 
     this.setState({
-      [name]: value
+      isNeutralLanguage: value
     })
   }
 
-  getValidationState() {
+  getValidationState () {
     const { languageName } = this.state
     if (languageName.length > 0) return 'success'
     return 'error'
   }
 
-  handleChange(e) {
+  handleChange (e) {
     this.setState({ value: e.target.value })
   }
 
-  updateLanguageNameField(event) {
+  updateLanguageNameField (event) {
     const languageName = event.target.value
     this.setState({ languageName: event.target.value })
     console.log(languageName)
   }
 
-  updateLanguageCodeField(event) {
+  updateLanguageCodeField (event) {
     const languageCode = event.target.value
     this.setState({ languageCode: event.target.value })
     console.log(languageCode)
@@ -90,10 +90,10 @@ class AddLanguage extends Component {
     console.log(languages)
   }
 
-  render() {
+  render () {
     const languages = this.state
     console.log(languages)
-    
+
     return (
       <div className='content'>
         <Grid fluid>
@@ -165,7 +165,7 @@ class AddLanguage extends Component {
                       <Col md={6}>
                         <ButtonToolbar>
                           <Button
-                            onClick={() => console.log(languages)}
+                            onClick={() => api.addLanguage(languages)}
                             bsStyle='info'
                             pullRight
                             fill

@@ -1,7 +1,9 @@
+import React, { Component } from 'react'
+import createHashHistory from 'history/createBrowserHistory'
+import { Link } from 'react-router-dom'
 import jwt from './jwt'
 import apiService from '../src/api/apiService'
 import Alert from 'react-s-alert'
-
 const hostUrl = 'http://localhost:52996/'
 let now = new Date()
 
@@ -88,8 +90,33 @@ const getAccounts = () => {
     .getApiEndpoint('GetAccounts')
     .then(users => console.log(users.data.items))
 }
+
+const addUser = user => {
+  console.log(user)
+  apiService
+    .getApiEndpoint('PostAccounts', {
+      userName: user.userName,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      emailAddress: user.emailAddress,
+      roles: [3, 4],
+      password: user.password,
+      sourceLanguages: [3, 4],
+      targetLanguages: [1, 1],
+      domains: [1, 4],
+      profilePictureLink: 'https://imgur.com/.....'
+    })
+    .then(res => {
+      console.log(res.message)
+      Alert.success(`Succès`)
+      setTimeout(() => {
+        window.location = window.location
+      }, 500)
+    })
+}
+
 const editUser = prop => {
- console.log(prop)
+  console.log(prop)
   apiService
     .getApiEndpoint(
       'PutAccount',
@@ -106,14 +133,12 @@ const editUser = prop => {
         profilePictureLink: prop.profilePictureLink,
         active: prop.active
       },
-      { id: 4 }
+      { id: prop.id }
     )
     .then(res => {
       console.log(res)
       Alert.success(`Succès`)
-      setTimeout(() => {
-        window.location = window.location
-      }, 500)
+     
     })
 }
 
@@ -137,16 +162,25 @@ const loginAsUser = prop => {
     })
 }
 
-/*
-const deleteDomain = prop =>
-  apiService
-    .getApiEndpoint('deleteDomain')
-    .then(domains => console.log(domains.data.items)) */
+const getUser = id => {
+  apiService.getApiEndpoint('GetAccount', null, { id: id }).then(res => {
+    if (res.status === 200) {
+      console.log('succès')
+      const history = createHashHistory({
+        hashType: 'noslash' // Omit the leading slash
+      })
+      history.push(`/edituser/${res.data.id}`)
+    }
+  })
+}
+
+
+/* MANAGE DOMAINS */
 
 const addDomain = domainName => {
   console.log(domainName)
   apiService
-    .getApiEndpoint('PostDomains', { name: domainName }, null)
+    .getApiEndpoint('PostDomains', { name: domainName })
     .then(console.log(domainName))
     .then(res => {
       Alert.success(`Succès`)
@@ -155,27 +189,65 @@ const addDomain = domainName => {
       }, 500)
     })
 }
+const deleteDomain = prop => {
+  apiService.getApiEndpoint('DeleteDomain', null, { id: prop }).then(res => {
+    if (res.status === 200) {
+      console.log('succès')
+      Alert.success(`Succès`)
+      setTimeout(() => {
+        window.location = window.location
+      }, 500)
+    }
+  })
+}
 
 const editDomain = prop => {
   console.log(prop)
   apiService
-    .getApiEndpoint('PutDomains', { name: prop }, { id: 4 })
+    .getApiEndpoint('PutDomains', { name: prop.domains }, { id: 6 })
     .then(console.log(prop))
     .then(res => {
+      console.log(res)
       Alert.success(`Succès`)
       setTimeout(() => {
         window.location = window.location
       }, 500)
     })
 }
+
+const getDomain = id => {
+  apiService.getApiEndpoint('GetDomain', null, { id: id }).then(res => {
+    if (res.status === 200) {
+      console.log('succès')
+      const history = createHashHistory({
+        hashType: 'noslash' // Omit the leading slash
+      })
+      history.push(`/editdomain/${res.data.id}`)
+    }
+  })
+}
+
 /* MANAGE ROLES */
-const editRole = prop => {
-  console.log(prop)
+const deleteRole = prop => {
+  apiService.getApiEndpoint('DeleteRole', null, { id: prop })
+  .then(res => {
+    if (res.status === 200) {
+      console.log('succès')
+      alert.success(`Succès`)
+      setTimeout(() => {
+        window.location = window.location
+      }, 500)
+    }
+  })
+}
+
+const editRole = role => {
+  console.log(role)
   apiService
-    .getApiEndpoint('PutRoles', { description: 'test role update' }, { id: 4 })
-    .then(console.log(prop))
+    .getApiEndpoint('PutRoles', { description: role.description }, { id: 5 })
+    .then(console.log(role))
     .then(res => {
-      Alert.success(`Succès`)
+      console.log(res)
       setTimeout(() => {
         window.location = window.location
       }, 500)
@@ -195,26 +267,110 @@ const loginAsRole = prop => {
       }, 500)
     })
 }
+const addRole = role => {
+  console.log(role)
+  apiService
+    .getApiEndpoint('PostRoles', {
+      name: role.roleName,
+      description: role.description
+    })
+    .then(console.log(role))
+    .then(res => {
+      if (res.status == 200) {
+        Alert.success(`Succès`)
+        setTimeout(() => {
+          window.location = window.location
+        }, 500)
+      }
+    })
+}
+
+const getRole = id => {
+  apiService.getApiEndpoint('GetRole', null, { id: id }).then(res => {
+    if (res.status === 200) {
+      console.log('succès')
+      const history = createHashHistory({
+        hashType: 'noslash' // Omit the leading slash
+      })
+      history.push(`/editrole/${res.data.id}`)
+    }
+  })
+}
+
 
 /* MANAGE LANGUAGES */
-const editLanguage = prop => {
-  console.log(prop)
+
+const addLanguage = language => {
+  console.log(language)
+  apiService
+    .getApiEndpoint('PostLanguages', {
+      name: language.languageName,
+      code: language.languageCode,
+      isNeutral: language.isNeutralLanguage
+    })
+    .then(res => {
+      if (res.status === 200) {
+        Alert.success(`Succès`)
+        setTimeout(() => {
+          window.location = window.location
+        }, 500)
+      }
+    })
+}
+
+const editLanguage = language => {
+  console.log(language)
   apiService
     .getApiEndpoint(
       'PutLanguages',
       {
-        name: 'French (France)',
-        code: 'fr',
-        isNeutral: true
+        name: language.languageName,
+        code: language.languageCode,
+        isNeutral: language.isNeutralLanguage
       },
-      { id: 1 }
+      { id: language.id }
     )
-    .then(console.log(prop))
+    .then(console.log(language))
     .then(res => {
-      Alert.success(`Succès`)
-      setTimeout(() => {
-        window.location = window.location
-      }, 500)
+      if (res.status === 200) {
+        console.log('succès')
+        Alert.success(`Succès`)
+        setTimeout(() => {
+          window.location = window.location
+        }, 500)
+      }
+    })
+}
+
+const getLanguage = id => {
+  apiService.getApiEndpoint('GetLanguage', null, { id: id }).then(res => {
+    if (res.status === 200) {
+      console.log('succès')
+      const history = createHashHistory({
+        hashType: 'noslash' // Omit the leading slash
+      })
+      let url = `/editlanguage/${res.data.id}`
+      history.push(`/editlanguage/${res.data.id}`)
+
+      //  console.log(url.split('#')[0])
+    }
+    // let url = (`/editlanguage/${res.data.id}`)
+    // console.log(url)
+    // window.location.href = url.split("#")[0];
+  })
+}
+
+const deleteLanguage = prop => {
+  apiService
+    .getApiEndpoint('DeleteLanguage', null, { id: prop.id })
+    .then(res => {
+      if (res.status === 200) {
+        console.log('succès')
+        Alert.success(`Succès`)
+        setTimeout(() => {
+          window.location = window.location
+        }, 500)
+      }
     })
 }
 
@@ -226,10 +382,20 @@ export default {
   getAccounts,
   editDomain,
   deleteUser,
+  getUser,
   addDomain,
+  deleteDomain,
+  getDomain,
+  addRole,
   editRole,
+  deleteRole,
+  getRole,
   editLanguage,
+  addUser,
   loginAsRole,
   loginAsUser,
-  editUser
+  editUser,
+  addLanguage,
+  deleteLanguage,
+  getLanguage
 }

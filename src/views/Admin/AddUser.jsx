@@ -25,6 +25,7 @@ import 'react-s-alert/dist/s-alert-css-effects/flip.css'
 import 'react-s-alert/dist/s-alert-css-effects/genie.css'
 import 'react-s-alert/dist/s-alert-css-effects/jelly.css'
 import 'react-s-alert/dist/s-alert-css-effects/stackslide.css'
+import api from '../../api'
 
 // import api from 'api/api.jsx'
 
@@ -32,12 +33,12 @@ class AddUser extends Component {
   constructor () {
     super()
     this.state = {
-      firstname: '',
-      lastname: '',
+      firstName: '',
+      lastName: '',
       userName: '',
       email: '',
       password: '',
-      confirmpassword: '',
+      confirmPassword: '',
       roles: '',
       source: '',
       target: '',
@@ -45,6 +46,7 @@ class AddUser extends Component {
 
       errors: []
     }
+    console.log(this.state)
   }
 
   validate (name, email, password) {
@@ -85,86 +87,79 @@ class AddUser extends Component {
       }
   }
   */
+  handleChange(e) {
+    this.setState({ value: e.target.value })
+  }
 
   updateFirstNameField (event) {
     const firstName = event.target.value
-    this.setState({ firstName }) //  autre methode this.setState({ firstName: event.target.value})
+    this.setState({ firstName: event.target.value }) //  autre methode this.setState({ firstName: event.target.value})
     console.log(firstName)
   }
 
   updateLastNameField (event) {
     const lastname = event.target.value
-    this.setState({ lastname })
+    this.setState({ lastName: event.target.value })
     console.log(lastname)
   }
 
   updateUserNameField (event) {
     const userName = event.target.value
-    this.setState({ userName })
+    this.setState({ userName: event.target.value })
     console.log(userName)
   }
 
   updateEmailField (event) {
     const email = event.target.value
-    this.setState({ email })
+    this.setState({ email: event.target.value })
   }
 
   updatePasswordField (event) {
     const password = event.target.value
-    this.setState({ password })
+    this.setState({ password: event.target.value })
   }
 
   updateConfirmPasswordField (event) {
     const confirmPassword = event.target.value
-    this.setState({ confirmPassword })
+    this.setState({ confirmPassword: event.target.value })
   }
 
   updateRolesField (event) {
     const roles = event.target.value
-    this.setState({ roles })
+    this.setState({ roles: event.target.values })
   }
 
   updateSourceField (event) {
     const source = event.target.value
-    this.setState({ source })
+    this.setState({ source: event.target.value })
   }
   updateTargetField (event) {
     const target = event.target.value
-    this.setState({ target })
+    this.setState({ target: event.target.value })
   }
 
   updateDomainsField (event) {
     const domain = event.target.value
-    this.setState({ domain })
+    this.setState({ domain: event.target.value })
   }
 
-  /*
-    onChange = (e) => {
-      this.setState({ [e.target.name]: e.target.value });
-    }
-    */
-
-  /* fetch('/translationRequests',
-      {
-          method:  'POST',
-          headers:  new  Headers({
-              'Content-Type':  'application/json'
-          }),
-          body:  JSON.stringify(this.state),
-      })
-      .then(res => res.json()) */
-
-  handleGenie (event) {
+   handleGenie (event) {
     event.preventDefault()
     Alert.success('User has been updated!', {
       position: 'bottom-right',
       effect: 'genie'
     })
   }
+  handleSubmit = e => {
+    e.preventDefault()
+    const user = this.state.user
+  }
 
   render () {
-    const { errors } = this.state
-
+   // const { errors } = this.state
+    const user = this.state
+    console.log(user)
+  
     return (
       <div className='content'>
         <Grid fluid>
@@ -175,7 +170,7 @@ class AddUser extends Component {
                 content={
                   <form action='#' onSubmit={this.handleSubmit}>
                     <Row>
-                      {errors.map(error => <p key={error}>Error: {error}</p>)}
+                    {/*  {errors.map(error => <p key={error}>Error: {error}</p>)}*/}
                       <Col md={12}>
                         <fieldset className='scheduler-border'>
                           <legend className='scheduler-border'>
@@ -192,7 +187,6 @@ class AddUser extends Component {
                                   type='text'
                                   autoFocus
                                   name='firstName'
-                                  value={this.state.firstName}
                                   onChange={this.updateFirstNameField.bind(
                                     this
                                   )}
@@ -205,7 +199,7 @@ class AddUser extends Component {
                                 <FormControl
                                   type='text'
                                   name='lastName'
-                                  value={this.state.lastName}
+                                  //value={this.state.lastName}
                                   autoFocus
                                   onChange={this.updateLastNameField.bind(this)}
                                 />
@@ -220,7 +214,7 @@ class AddUser extends Component {
                                   type='text'
                                   autoFocus
                                   name='userName'
-                                  value={this.state.userName}
+                                  //value={this.state.userName}
                                   onChange={this.updateUserNameField.bind(this)}
                                 />
                               </FormGroup>
@@ -245,7 +239,7 @@ class AddUser extends Component {
                                 <FormControl
                                   type='text'
                                   name='password'
-                                  value={this.state.password}
+                                  //value={this.state.password}
                                   onChange={this.updatePasswordField.bind(this)}
                                 />
                               </FormGroup>
@@ -257,7 +251,7 @@ class AddUser extends Component {
                               >
                                 <ControlLabel>Confirm password</ControlLabel>
                                 <FormControl
-                                  value={this.state.confirmPassword}
+                                  //value={this.state.confirmPassword}
                                   onChange={this.updateConfirmPasswordField.bind(
                                     this
                                   )}
@@ -286,7 +280,7 @@ class AddUser extends Component {
                                   type='text'
                                   autoFocus
                                   name='roles'
-                                  value={this.state.roles}
+                                  //value={this.state.roles}
                                   onChange={this.updateRolesField.bind(this)}
                                 />
                               </FormGroup>
@@ -298,7 +292,7 @@ class AddUser extends Component {
                                   type='text'
                                   autoFocus
                                   name='domain'
-                                  value={this.state.domain}
+                                  //value={this.state.domain}
                                   onChange={this.updateDomainsField.bind(this)}
                                 />
                               </FormGroup>
@@ -311,7 +305,7 @@ class AddUser extends Component {
                                   Source language (for translator role)
                                 </ControlLabel>
                                 <FormControl
-                                  value={this.state.source}
+                                  //value={this.state.source}
                                   onChange={this.updateSourceField.bind(this)}
                                   type='text'
                                   name='source'
@@ -338,7 +332,8 @@ class AddUser extends Component {
                     </Row>
                     <ButtonToolbar>
                       <Button
-                        onClick={this.handleGenie}
+                        onClick={() => api.addUser(user)}
+                       // onClick={this.handleGenie}
                         bsStyle='info'
                         pullRight
                         fill

@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import Alert from 'react-s-alert'
 import { Grid, Row, Col, ButtonToolbar, FormControl } from 'react-bootstrap'
 import { Card } from 'components/Card/Card.jsx'
 import Button from 'components/CustomButton/CustomButton.jsx'
 import apiService from '../../api/apiService'
 import api from '../../api'            
+import { cpus } from 'os';
 
 class EditDomain extends Component {
   constructor (props) {
@@ -13,21 +16,27 @@ class EditDomain extends Component {
       domains: [],
       id: []
     }
-  }
-
-  componentDidMount () {
     console.log(this.state)
-    apiService
-      .getApiEndpoint('GetDomains')
-      .then(res => this.updateState(res))
-      .catch(console.log)
   }
 
-  updateState = domains => {
-    this.setState({ domains: domains.data })
-    console.log(domains)
+  componentDidMount() {
+    let arrayOfUrl = (window.location.href.split('/'))
+    console.log(arrayOfUrl)
+    let newId = arrayOfUrl[4].split("#")[0];
+    this.setState({ id: newId })
   }
 
+  
+  handleChange(e) {
+    this.setState({ value: e.target.value })
+  }
+
+  //updateState = domains => {
+  //  this.setState({ domains: domains.data })
+  //  console.log(domains)
+ // }
+
+  
   updateDomainField = event => {
     const domains = event.target.value
     this.setState({ domains: event.target.value })
@@ -37,13 +46,15 @@ class EditDomain extends Component {
   handleSubmit = e => {
     e.preventDefault()
     const domains = this.state.domains
-    
+    console.log(domains)
   }
 
   render () {
-    const domains = this.state.domains
+    const domains = this.state
     console.log(domains)
     
+    console.log('REDUX:' + this.props)
+
     return (
       <div className='content'>
         <Grid fluid>
@@ -54,7 +65,7 @@ class EditDomain extends Component {
                 content={
                   <Row>
                     <Col md={6}>
-                      <form action='#' onSubmit={this.handleSubmit.bind(this)}>
+                      <form action='#' onSubmit={this.handleSubmit}>
                         <FormControl
                           onChange={this.updateDomainField.bind(this)}
                           ncols={['col-md-6']}
@@ -72,13 +83,13 @@ class EditDomain extends Component {
                           <Col md={12}>
                             <ButtonToolbar>
                               <Button
-                                onClick={() => api.editDomain(this.state)}
+                                onClick={() => api.editDomain(domains)}
                                 bsStyle='info'
                                 pullLeft
                                 fill
                                 type='submit'
                               >
-                                Edit
+                                Submit
                               </Button>
                               <Button
                                 bsStyle='default'
@@ -103,5 +114,11 @@ class EditDomain extends Component {
     )
   }
 }
+const mapStateToProps = state => {
+  return {
+    domains: state.domains
+  }
+}
 
-export default EditDomain
+export default connect(mapStateToProps)(EditDomain)
+
