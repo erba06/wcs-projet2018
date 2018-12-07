@@ -14,7 +14,7 @@ import Alert from 'react-s-alert'
 import { Card } from 'components/Card/Card.jsx'
 import Button from 'components/CustomButton/CustomButton.jsx'
 import api from '../../api'
-
+import apiService from '../../api/apiService'
 
 // mandatory
 import 'react-s-alert/dist/s-alert-default.css'
@@ -31,55 +31,89 @@ import 'react-s-alert/dist/s-alert-css-effects/stackslide.css'
 // import api from 'api/api.jsx'
 
 class EditUser extends Component {
-  constructor() {
-    super();
+  constructor () {
+    super()
     this.state = {
-      firstname: "",
-      lastname: "",
-      userName: "",
-      email: "",
-      password: "",
-      confirmpassword: "",
-      roles: "",
-      source: "",
-      target: "",
-      domains: "",
+      firstName: '',
+      lastName: '',
+      userName: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      roles: '',
+      source: [],
+      target: [],
+      domains: [],
 
-      errors: [],
-    };
+      errors: []
+    }
   }
 
-  componentDidMount() {
-    let arrayOfUrl = window.location.href.split("/");
-    console.log(arrayOfUrl);
-    let newId = arrayOfUrl[4].split("#")[0];
-    this.setState({ id: newId });
+  componentDidMount () {
+    let arrayOfUrl = window.location.href.split('/')
+    console.log(arrayOfUrl)
+    let newId = arrayOfUrl[4].split('#')[0]
+    this.setState({ id: newId })
+    apiService.getApiEndpoint('GetAccount', null, { id: newId }).then(res => {
+      if (res.status === 200) {
+        console.log(res)
+        this.setState({ firstName: res.data.firstName })
+        this.setState({ lastName: res.data.lastName })
+        this.setState({ userName: res.data.userName })
+        this.setState({ email: res.data.emailAddress })
+        this.setState({ confirmPassword: res.data.confirmpassword })
+        this.setState({ roles: res.data.roles })
+
+        if (res.data.sources.length === 1) {
+          this.setState({ source: res.data.sources[0].languageName })
+        } else {
+          this.setState({
+            source: res.data.sources.map(t => t.languageName)
+          })
+        }
+        if (res.data.targets.length === 1) {
+          this.setState({ target: res.data.targets[0].languageName })
+        } else {
+          this.setState({
+            target: res.data.targets.map(t => t.languageName)
+          })
+          console.log(this.state)
+        }
+        if (res.data.domains.length === 1) {
+          this.setState({ domains: res.data.domains[0].domainName })
+        } else {
+          this.setState({
+            domains: res.data.domains.map(dom => dom.domainName)
+          })
+        }
+      }
+    })
   }
 
-  validate(name, email, password) {
+  validate (name, email, password) {
     // we are going to store errors for all fields
     // in a signle array
-    const errors = [];
+    const errors = []
 
     if (name.length === 0) {
-      errors.push("Name can't be empty");
+      errors.push("Name can't be empty")
     }
 
     if (email.length < 5) {
-      errors.push("Email should be at least 5 charcters long");
+      errors.push('Email should be at least 5 charcters long')
     }
-    if (email.split("").filter(x => x === "@").length !== 1) {
-      errors.push("Email should contain a @");
+    if (email.split('').filter(x => x === '@').length !== 1) {
+      errors.push('Email should contain a @')
     }
-    if (email.indexOf(".") === -1) {
-      errors.push("Email should contain at least one dot");
+    if (email.indexOf('.') === -1) {
+      errors.push('Email should contain at least one dot')
     }
 
     if (password.length < 6) {
-      errors.push("Password should be at least 6 characters long");
+      errors.push('Password should be at least 6 characters long')
     }
 
-    return errors;
+    return errors
   }
 
   /* handleSubmit = (e) => {
@@ -94,109 +128,109 @@ class EditUser extends Component {
     }
 }
 */
-  handleChange(e) {
-    this.setState({ value: e.target.value });
+  handleChange (e) {
+    this.setState({ value: e.target.value })
   }
-  updateFirstNameField(event) {
-    const firstName = event.target.value;
-    this.setState({ firstName }); //  autre methode this.setState({ firstName: event.target.value})
-    console.log(firstName);
-  }
-
-  updateLastNameField(event) {
-    const lastname = event.target.value;
-    this.setState({ lastname });
-    console.log(lastname);
+  updateFirstNameField (event) {
+    const firstName = event.target.value
+    this.setState({ firstName }) //  autre methode this.setState({ firstName: event.target.value})
+    console.log(firstName)
   }
 
-  updateUserNameField(event) {
-    const userName = event.target.value;
-    this.setState({ userName });
-    console.log(userName);
+  updateLastNameField (event) {
+    const lastName = event.target.value
+    this.setState({ lastName })
+    console.log(lastName)
   }
 
-  updateEmailField(event) {
-    const email = event.target.value;
-    this.setState({ email });
+  updateUserNameField (event) {
+    const userName = event.target.value
+    this.setState({ userName })
+    console.log(userName)
   }
 
-  updatePasswordField(event) {
-    const password = event.target.value;
-    this.setState({ password });
+  updateEmailField (event) {
+    const email = event.target.value
+    this.setState({ email })
   }
 
-  updateConfirmPasswordField(event) {
-    const confirmPassword = event.target.value;
-    this.setState({ confirmPassword });
+  updatePasswordField (event) {
+    const password = event.target.value
+    this.setState({ password })
   }
 
-  updateRolesField(event) {
-    const roles = event.target.value;
-    this.setState({ roles });
+  updateConfirmPasswordField (event) {
+    const confirmPassword = event.target.value
+    this.setState({ confirmPassword })
   }
 
-  updateSourceField(event) {
-    const source = event.target.value;
-    this.setState({ source });
-  }
-  updateTargetField(event) {
-    const target = event.target.value;
-    this.setState({ target });
+  updateRolesField (event) {
+    const roles = event.target.value
+    this.setState({ roles })
   }
 
-  updateDomainsField(event) {
-    const domain = event.target.value;
-    this.setState({ domain });
+  updateSourceField (event) {
+    const source = event.target.value
+    this.setState({ source })
+  }
+  updateTargetField (event) {
+    const target = event.target.value
+    this.setState({ target })
+  }
+
+  updateDomainsField (event) {
+    const domains = event.target.value
+    this.setState({ domains })
   }
 
   handleSubmit = event => {
-    event.preventDefault();
-    const user = this.state;
-    console.log(user);
-  };
-
-  handleGenie(event) {
-    event.preventDefault();
-    Alert.success("User has been updated!", {
-      position: "bottom-right",
-      effect: "genie",
-    });
+    event.preventDefault()
+    const user = this.state
+    console.log(user)
   }
 
-  render() {
-    const { errors } = this.state;
-    const user = this.state;
-    console.log(user);
+  handleGenie (event) {
+    event.preventDefault()
+    alert.success('User has been updated!', {
+      position: 'bottom-right',
+      effect: 'genie'
+    })
+  }
+
+  render () {
+    const { errors } = this.state
+    const user = this.state
+    console.log(user)
 
     return (
-      <div className="content">
+      <div className='content'>
         <Grid fluid>
           <Row>
             <Col md={12}>
               <Card
-                title="Edit user"
+                title='Edit user'
                 content={
-                  <form action="#" onSubmit={this.handleSubmit}>
+                  <form action='#' onSubmit={this.handleSubmit}>
                     <Row>
                       {errors.map(error => (
                         <p key={error}>Error: {error}</p>
                       ))}
                       <Col md={12}>
-                        <fieldset className="scheduler-border">
-                          <legend className="scheduler-border">
+                        <fieldset className='scheduler-border'>
+                          <legend className='scheduler-border'>
                             Contact info
                           </legend>
                           <Row>
                             <Col md={6}>
                               <FormGroup
-                                controlId="firstName-id"
-                                bsSize="large"
+                                controlId='firstName-id'
+                                bsSize='large'
                               >
                                 <ControlLabel>First name</ControlLabel>
                                 <FormControl
-                                  type="text"
+                                  type='text'
                                   autoFocus
-                                  name="firstName"
+                                  name='firstName'
                                   value={this.state.firstName}
                                   onChange={this.updateFirstNameField.bind(
                                     this
@@ -205,11 +239,11 @@ class EditUser extends Component {
                               </FormGroup>
                             </Col>
                             <Col md={6}>
-                              <FormGroup controlId="lastName-id" bsSize="large">
+                              <FormGroup controlId='lastName-id' bsSize='large'>
                                 <ControlLabel>Last name</ControlLabel>
                                 <FormControl
-                                  type="text"
-                                  name="lastName"
+                                  type='text'
+                                  name='lastName'
                                   value={this.state.lastName}
                                   autoFocus
                                   onChange={this.updateLastNameField.bind(this)}
@@ -219,24 +253,24 @@ class EditUser extends Component {
                           </Row>
                           <Row>
                             <Col md={6}>
-                              <FormGroup controlId="userName-id" bsSize="large">
+                              <FormGroup controlId='userName-id' bsSize='large'>
                                 <ControlLabel>Username</ControlLabel>
                                 <FormControl
-                                  type="text"
+                                  type='text'
                                   autoFocus
-                                  name="userName"
+                                  name='userName'
                                   value={this.state.userName}
                                   onChange={this.updateUserNameField.bind(this)}
                                 />
                               </FormGroup>
                             </Col>
                             <Col md={6}>
-                              <FormGroup controlId="email-id" bsSize="large">
+                              <FormGroup controlId='email-id' bsSize='large'>
                                 <ControlLabel>Email</ControlLabel>
                                 <FormControl
-                                  type="text"
+                                  type='text'
                                   autoFocus
-                                  name="email"
+                                  name='email'
                                   value={this.state.email}
                                   onChange={this.updateEmailField.bind(this)}
                                 />
@@ -245,11 +279,11 @@ class EditUser extends Component {
                           </Row>
                           <Row>
                             <Col md={6}>
-                              <FormGroup controlId="password-id" bsSize="large">
+                              <FormGroup controlId='password-id' bsSize='large'>
                                 <ControlLabel>Password</ControlLabel>
                                 <FormControl
-                                  type="text"
-                                  name="password"
+                                  type='text'
+                                  name='password'
                                   value={this.state.password}
                                   onChange={this.updatePasswordField.bind(this)}
                                 />
@@ -257,8 +291,8 @@ class EditUser extends Component {
                             </Col>
                             <Col md={6}>
                               <FormGroup
-                                controlId="confirmPassword-id"
-                                bsSize="large"
+                                controlId='confirmPassword-id'
+                                bsSize='large'
                               >
                                 <ControlLabel>Confirm password</ControlLabel>
                                 <FormControl
@@ -266,8 +300,8 @@ class EditUser extends Component {
                                   onChange={this.updateConfirmPasswordField.bind(
                                     this
                                   )}
-                                  type="password"
-                                  name="confirmPassword"
+                                  type='password'
+                                  name='confirmPassword'
                                 />
                               </FormGroup>
                             </Col>
@@ -277,33 +311,33 @@ class EditUser extends Component {
                     </Row>
                     <Row>
                       <Col md={12}>
-                        <fieldset className="scheduler-border">
-                          <legend className="scheduler-border">
+                        <fieldset className='scheduler-border'>
+                          <legend className='scheduler-border'>
                             Role & Language info
                           </legend>
                           <Row>
                             <Col md={6}>
-                              <FormGroup controlId="role-id" bsSize="large">
+                              <FormGroup controlId='role-id' bsSize='large'>
                                 <ControlLabel>
                                   Role(s) within the organisation
                                 </ControlLabel>
                                 <FormControl
-                                  type="text"
+                                  type='text'
                                   autoFocus
-                                  name="roles"
+                                  name='roles'
                                   value={this.state.roles}
                                   onChange={this.updateRolesField.bind(this)}
                                 />
                               </FormGroup>
                             </Col>
                             <Col md={6}>
-                              <FormGroup controlId="domain-id" bsSize="large">
+                              <FormGroup controlId='domain-id' bsSize='large'>
                                 <ControlLabel>Domain(s)</ControlLabel>
                                 <FormControl
-                                  type="text"
+                                  type='text'
                                   autoFocus
-                                  name="domain"
-                                  value={this.state.domain}
+                                  name='domain'
+                                  value={this.state.domains}
                                   onChange={this.updateDomainsField.bind(this)}
                                 />
                               </FormGroup>
@@ -311,28 +345,28 @@ class EditUser extends Component {
                           </Row>
                           <Row>
                             <Col md={6}>
-                              <FormGroup controlId="password" bsSize="large">
+                              <FormGroup controlId='password' bsSize='large'>
                                 <ControlLabel>
                                   Source language (for translator role)
                                 </ControlLabel>
                                 <FormControl
                                   value={this.state.source}
                                   onChange={this.updateSourceField.bind(this)}
-                                  type="text"
-                                  name="source"
+                                  type='text'
+                                  name='source'
                                 />
                               </FormGroup>
                             </Col>
                             <Col md={6}>
-                              <FormGroup controlId="target" bsSize="large">
+                              <FormGroup controlId='target' bsSize='large'>
                                 <ControlLabel>
                                   Target language (for translator role)
                                 </ControlLabel>
                                 <FormControl
                                   value={this.state.target}
                                   onChange={this.updateTargetField.bind(this)}
-                                  type="text"
-                                  name="target"
+                                  type='text'
+                                  name='target'
                                 />
                               </FormGroup>
                             </Col>
@@ -344,14 +378,14 @@ class EditUser extends Component {
                       <Button
                         onClick={this.handleGenie}
                         onClick={() => api.editUser(user)}
-                        bsStyle="info"
+                        bsStyle='info'
                         pullRight
                         fill
-                        type="submit"
+                        type='submit'
                       >
                         Submit
                       </Button>
-                      <Button bsStyle="default" pullRight fill type="submit">
+                      <Button bsStyle='default' pullRight fill type='submit'>
                         Cancel
                       </Button>
                     </ButtonToolbar>
@@ -362,7 +396,7 @@ class EditUser extends Component {
           </Row>
         </Grid>
       </div>
-    );
+    )
   }
 }
 

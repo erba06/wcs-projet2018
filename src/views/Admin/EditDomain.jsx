@@ -6,8 +6,7 @@ import { Grid, Row, Col, ButtonToolbar, FormControl } from 'react-bootstrap'
 import { Card } from 'components/Card/Card.jsx'
 import Button from 'components/CustomButton/CustomButton.jsx'
 import apiService from '../../api/apiService'
-import api from '../../api'            
-import { cpus } from 'os';
+import api from '../../api'
 
 class EditDomain extends Component {
   constructor (props) {
@@ -19,24 +18,28 @@ class EditDomain extends Component {
     console.log(this.state)
   }
 
-  componentDidMount() {
-    let arrayOfUrl = (window.location.href.split('/'))
+  componentDidMount () {
+    let arrayOfUrl = window.location.href.split('/')
     console.log(arrayOfUrl)
-    let newId = arrayOfUrl[4].split("#")[0];
+    let newId = arrayOfUrl[4].split('#')[0]
     this.setState({ id: newId })
+    apiService.getApiEndpoint('GetDomain', null, { id: newId }).then(res => {
+      if (res.status === 200) {
+        console.log(res)
+        this.setState({ domains: res.data.name })
+      }
+    })
   }
 
-  
-  handleChange(e) {
+  handleChange (e) {
     this.setState({ value: e.target.value })
   }
 
-  //updateState = domains => {
+  // updateState = domains => {
   //  this.setState({ domains: domains.data })
   //  console.log(domains)
- // }
+  // }
 
-  
   updateDomainField = event => {
     const domains = event.target.value
     this.setState({ domains: event.target.value })
@@ -52,7 +55,7 @@ class EditDomain extends Component {
   render () {
     const domains = this.state
     console.log(domains)
-    
+
     console.log('REDUX:' + this.props)
 
     return (
@@ -68,14 +71,15 @@ class EditDomain extends Component {
                       <form action='#' onSubmit={this.handleSubmit}>
                         <FormControl
                           onChange={this.updateDomainField.bind(this)}
+                          value={this.state.domains}
                           ncols={['col-md-6']}
+                          placeholder='Edit the domain'
                           proprieties={[
                             {
                               className: 'Domain',
                               type: 'text',
-                              name: 'domain',
-                              bsClass: 'form-control',
-                              placeholder: 'Edit the domain'
+                              name: 'domains',
+                              bsClass: 'form-control'
                             }
                           ]}
                         />
@@ -121,4 +125,3 @@ const mapStateToProps = state => {
 }
 
 export default connect(mapStateToProps)(EditDomain)
-

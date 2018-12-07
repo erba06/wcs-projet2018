@@ -17,9 +17,7 @@ import {
 import { Card } from 'components/Card/Card.jsx'
 import Button from 'components/CustomButton/CustomButton.jsx'
 import api from '../../api'
-
-
-
+import apiService from '../../api/apiService'
 
 class EditLanguage extends Component {
   constructor (prop) {
@@ -29,43 +27,51 @@ class EditLanguage extends Component {
     this.handleIsNeutralLanguage = this.handleIsNeutralLanguage.bind(this)
 
     this.state = {
-     id: [],
-     languageCode: [],
-     languageName:[],
-     isNeutralLanguage: false,
-     languages:[]
+      id: [],
+      languageCode: [],
+      languageName: [],
+      isNeutralLanguage: false,
+      languages: []
     }
     console.log(this.state)
     console.log(prop)
   }
 
-  componentDidMount() {
-    let arrayOfUrl = (window.location.href.split('/'))
+  componentDidMount () {
+    let arrayOfUrl = window.location.href.split('/')
     console.log(arrayOfUrl)
-    let newId = arrayOfUrl[4].split("#")[0];
-    this.setState({id: newId})
+    let newId = arrayOfUrl[4].split('#')[0]
+    this.setState({ id: newId })
+    apiService.getApiEndpoint('GetLanguage', null, { id: newId })
+    .then(res => {
+      if (res.status === 200) {
+        console.log(res)
+        this.setState({ languageName: res.data.name })
+        this.setState({ languageCode: res.data.code })
+        this.setState({ isNeutralLanguage: res.data.isNeutral })
+      }
+    })
   }
-  
-  updateState = languages => {
-  this.setState({ languages: languages.data })
-}
 
-  handleChange(e) {
+  updateState = languages => {
+    this.setState({ languages: languages.data })
+  }
+
+  handleChange (e) {
     const { isNeutralLanguage: key, value } = e.target
     console.log(value)
     this.setState({ [key]: value })
   }
 
- handleIsNeutralLanguage = event => {
-  event.preventDefault()
+  handleIsNeutralLanguage = event => {
+    event.preventDefault()
 
-  let isNeutralLanguage = event.target.isNeutralLanguage
-  console.log(event.target.checked)
-  this.setState({
-    isNeutralLanguage: event.target.checked
-  })
-}
-
+    let isNeutralLanguage = event.target.isNeutralLanguage
+    console.log(event.target.checked)
+    this.setState({
+      isNeutralLanguage: event.target.checked
+    })
+  }
 
   handleInputChange (event) {
     const target = event.target
@@ -77,11 +83,11 @@ class EditLanguage extends Component {
     })
   }
 
- /* getValidationState () {
+  /* getValidationState () {
     const { languageName } = this.state
     if (languageName.length > 0) return 'success'
     return 'error'
-  }*/
+  } */
 
   handleChange (e) {
     this.setState({ value: e.target.value })
@@ -100,9 +106,8 @@ class EditLanguage extends Component {
   }
 
   handleChange = e => {
-    const value = e.target.type === 'checkbox'
-      ? e.target.checked
-      : e.target.value
+    const value =
+      e.target.type === 'checkbox' ? e.target.checked : e.target.value
 
     return this.setState({ doc: { ...this.state.doc, [e.target.name]: value } })
   }
@@ -130,20 +135,21 @@ class EditLanguage extends Component {
                       <Col md={6}>
                         <FormGroup
                           controlId='formBasicText'
-                         // validationState={this.getValidationState()}
+                          // validationState={this.getValidationState()}
                         >
                           <ControlLabel>Language name</ControlLabel>
                           <FormControl
                             onChange={this.updateLanguageNameField.bind(this)}
                             languagename={this.state.languageName}
                             ncols={['col-md-6']}
+                            placeholder='Edit the language name'
+                            value={this.state.languageName}
                             proprieties={[
                               {
                                 className: 'languageName',
                                 type: 'text',
                                 name: 'languageName',
-                                bsClass: 'form-control',
-                                placeholder: 'Edit the language name'
+                                bsClass: 'form-control'
                               }
                             ]}
                           />
@@ -158,16 +164,17 @@ class EditLanguage extends Component {
                           <ControlLabel>Language code</ControlLabel>
                           <FormControl
                             onChange={this.updateLanguageCodeField.bind(this)}
-                           // validationstate={this.getValidationState()}
+                            // validationstate={this.getValidationState()}
                             languagecode={this.state.languageCode}
                             ncols={['col-md-6']}
+                            placeholder='Edit the language code'
+                            value={this.state.languageCode}
                             proprieties={[
                               {
                                 className: 'LanguageCode',
                                 type: 'text',
                                 name: 'languageCode',
-                                bsClass: 'form-control',
-                                placeholder: 'Edit the language code'
+                                bsClass: 'form-control'
                               }
                             ]}
                           />
@@ -180,6 +187,7 @@ class EditLanguage extends Component {
                           type='checkbox'
                           id='isNeutral'
                           onChange={this.handleIsNeutralLanguage}
+                          value={this.state.isNeutralLanguage}
                         />
                         <label htmlFor='isNeutral'>Is neutral language</label>
                       </Col>
@@ -217,14 +225,15 @@ class EditLanguage extends Component {
     )
   }
 }
-{/*const mapStateToProps = state => {
+{
+  /* const mapStateToProps = state => {
   return {
     state
     //languages: state.languages
   }
 }
 
-export default connect(mapStateToProps)(EditLanguage)*/}
+export default connect(mapStateToProps)(EditLanguage) */
+}
 
 export default EditLanguage
-

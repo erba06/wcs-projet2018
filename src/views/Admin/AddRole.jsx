@@ -81,7 +81,7 @@ class AddRole extends Component {
                                 type: 'text',
                                 name: 'userName',
                                 bsClass: 'form-control',
-                                placeholder: 'Add a user role'
+                                placeholder: "Add a user role"
                               }
                             ]}
                           />

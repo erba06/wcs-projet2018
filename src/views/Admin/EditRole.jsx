@@ -13,6 +13,7 @@ import {
 
 import { Card } from 'components/Card/Card.jsx'
 import Button from 'components/CustomButton/CustomButton.jsx'
+import apiService from '../../api/apiService'
 import api from '../../api'
 
 class EditRole extends Component {
@@ -20,7 +21,8 @@ class EditRole extends Component {
     super()
     this.state = {
       roleName: '',
-      description: ''
+      description: '',
+      id: ''
     }
   }
   getValidationState () {
@@ -29,11 +31,18 @@ class EditRole extends Component {
     return 'error'
   }
 
-  componentDidMount() {
-    let arrayOfUrl = (window.location.href.split('/'))
+  componentDidMount () {
+    let arrayOfUrl = window.location.href.split('/')
     console.log(arrayOfUrl)
-    let newId = arrayOfUrl[4].split("#")[0];
+    let newId = arrayOfUrl[4].split('#')[0]
     this.setState({ id: newId })
+    apiService.getApiEndpoint('GetRole', null, { id: newId }).then(res => {
+      if (res.status === 200) {
+        console.log(res)
+        this.setState({ roleName: res.data.name })
+        this.setState({ description: res.data.description })
+      }
+    })
   }
 
   handleChange (e) {
@@ -59,8 +68,10 @@ class EditRole extends Component {
   }
 
   render () {
-    const roles = this.state
+    const roles = this.state.roleName
     console.log(roles)
+    const description = this.state.description
+    console.log(description)
 
     return (
       <div className='content'>
@@ -81,14 +92,15 @@ class EditRole extends Component {
                           <FormControl
                             onChange={this.updateRoleNameField.bind(this)}
                             validationState={this.getValidationState()}
+                            placeholder='Edit the user role'
+                            value={this.state.roleName}
                             ncols={['col-md-6']}
                             proprieties={[
                               {
                                 className: 'roleName',
                                 type: 'text',
                                 name: 'roleName',
-                                bsClass: 'form-control',
-                                placeholder: 'Edit the user role'
+                                bsClass: 'form-control'
                               }
                             ]}
                           />
@@ -107,13 +119,14 @@ class EditRole extends Component {
                           validationState={this.getValidationState()}
                           languageCode={this.state.languageCode}
                           ncols={['col-md-6']}
+                          placeholder='Edit the description'
+                          value={this.state.description}
                           proprieties={[
                             {
                               className: 'LanguageCode',
                               type: 'text',
                               name: 'description',
-                              bsClass: 'form-control',
-                              placeholder: 'Edit the description'
+                              bsClass: 'form-control'
                             }
                           ]}
                         />

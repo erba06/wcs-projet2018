@@ -25,9 +25,8 @@ import 'react-s-alert/dist/s-alert-css-effects/flip.css'
 import 'react-s-alert/dist/s-alert-css-effects/genie.css'
 import 'react-s-alert/dist/s-alert-css-effects/jelly.css'
 import 'react-s-alert/dist/s-alert-css-effects/stackslide.css'
+import apiService from '../../api/apiService'
 import api from '../../api'
-
-// import api from 'api/api.jsx'
 
 class AddUser extends Component {
   constructor () {
@@ -39,14 +38,32 @@ class AddUser extends Component {
       email: '',
       password: '',
       confirmPassword: '',
-      roles: '',
-      source: '',
-      target: '',
-      domains: '',
-
+      roles: [],
+      languages: [],
+      domains: [],
+      accounts: [],
       errors: []
     }
     console.log(this.state)
+  }
+
+  syncDatas = () => {
+    apiService.getApiEndpoint('GetDomains').then(domains => {
+      this.setState({ domains: domains.data })
+    })
+    apiService.getApiEndpoint('GetRoles').then(roles => {
+      this.setState({ roles: roles.data })
+    })
+    apiService.getApiEndpoint('GetAccounts').then(accounts => {
+      this.setState({ accounts: accounts.data.items })
+    })
+    apiService.getApiEndpoint('GetLanguages').then(languages => {
+  this.setState({ languages: languages.data })
+})
+
+  }
+  componentDidMount () {
+    this.syncDatas()
   }
 
   validate (name, email, password) {
@@ -87,7 +104,7 @@ class AddUser extends Component {
       }
   }
   */
-  handleChange(e) {
+  handleChange (e) {
     this.setState({ value: e.target.value })
   }
 
@@ -143,7 +160,7 @@ class AddUser extends Component {
     this.setState({ domain: event.target.value })
   }
 
-   handleGenie (event) {
+  handleGenie (event) {
     event.preventDefault()
     Alert.success('User has been updated!', {
       position: 'bottom-right',
@@ -152,14 +169,18 @@ class AddUser extends Component {
   }
   handleSubmit = e => {
     e.preventDefault()
-    const user = this.state.user
+    const accounts = this.state.accounts
   }
 
   render () {
-   // const { errors } = this.state
-    const user = this.state
-    console.log(user)
-  
+    const roles = this.state.roles
+    const accounts = this.state.accounts
+    const domains = this.state.domains
+    const languages = this.state.languages
+
+    
+    console.log(this.state)
+
     return (
       <div className='content'>
         <Grid fluid>
@@ -170,7 +191,7 @@ class AddUser extends Component {
                 content={
                   <form action='#' onSubmit={this.handleSubmit}>
                     <Row>
-                    {/*  {errors.map(error => <p key={error}>Error: {error}</p>)}*/}
+                      {/*  {errors.map(error => <p key={error}>Error: {error}</p>)} */}
                       <Col md={12}>
                         <fieldset className='scheduler-border'>
                           <legend className='scheduler-border'>
@@ -199,9 +220,10 @@ class AddUser extends Component {
                                 <FormControl
                                   type='text'
                                   name='lastName'
-                                  //value={this.state.lastName}
                                   autoFocus
-                                  onChange={this.updateLastNameField.bind(this)}
+                                  onChange={
+                                    this.updateLastNameField.bind(this) // value={this.state.lastName}
+                                  }
                                 />
                               </FormGroup>
                             </Col>
@@ -214,7 +236,7 @@ class AddUser extends Component {
                                   type='text'
                                   autoFocus
                                   name='userName'
-                                  //value={this.state.userName}
+                                  value={this.state.userName}
                                   onChange={this.updateUserNameField.bind(this)}
                                 />
                               </FormGroup>
@@ -239,8 +261,9 @@ class AddUser extends Component {
                                 <FormControl
                                   type='text'
                                   name='password'
-                                  //value={this.state.password}
-                                  onChange={this.updatePasswordField.bind(this)}
+                                  onChange={
+                                    this.updatePasswordField.bind(this) // value={this.state.password}
+                                  }
                                 />
                               </FormGroup>
                             </Col>
@@ -251,10 +274,9 @@ class AddUser extends Component {
                               >
                                 <ControlLabel>Confirm password</ControlLabel>
                                 <FormControl
-                                  //value={this.state.confirmPassword}
-                                  onChange={this.updateConfirmPasswordField.bind(
-                                    this
-                                  )}
+                                  onChange={
+                                    this.updateConfirmPasswordField.bind(this) // value={this.state.confirmPassword}
+                                  }
                                   type='password'
                                   name='confirmPassword'
                                 />
@@ -272,73 +294,80 @@ class AddUser extends Component {
                           </legend>
                           <Row>
                             <Col md={6}>
-                              <FormGroup controlId='role-id' bsSize='large'>
+                              <FormGroup controlId='formControlsSelectMultipleRole'>
                                 <ControlLabel>
                                   Role(s) within the organisation
                                 </ControlLabel>
-                                <FormControl
-                                  type='text'
-                                  autoFocus
-                                  name='roles'
-                                  //value={this.state.roles}
-                                  onChange={this.updateRolesField.bind(this)}
-                                />
+                                <FormControl componentClass='select' multiple>
+                                  <option value='select'>
+                                    select (multiple)
+                                  </option>
+                                  {roles.map((roles, index) => { 
+                                      return (<option value={roles.name}>{roles.name}</option>)
+                                    }) }
+                                </FormControl>
                               </FormGroup>
                             </Col>
                             <Col md={6}>
-                              <FormGroup controlId='domain-id' bsSize='large'>
-                                <ControlLabel>Domain(s)</ControlLabel>
-                                <FormControl
-                                  type='text'
-                                  autoFocus
-                                  name='domain'
-                                  //value={this.state.domain}
-                                  onChange={this.updateDomainsField.bind(this)}
-                                />
+                              <FormGroup controlId='formControlsSelectMultiple'>
+                                <ControlLabel>Domains</ControlLabel>
+                                <FormControl componentClass='select' multiple>
+                                  <option value='select'>
+                                    select (multiple)
+                                  </option>
+                                  {domains.map((domain, index) => { 
+                                      return (<option value={domain.name}>{domain.name}</option>)
+                                })}
+                                </FormControl>
                               </FormGroup>
                             </Col>
                           </Row>
                           <Row>
                             <Col md={6}>
-                              <FormGroup controlId='password' bsSize='large'>
+                              <FormGroup controlId='formControlsSelectMultiple'>
                                 <ControlLabel>
                                   Source language (for translator role)
                                 </ControlLabel>
-                                <FormControl
-                                  //value={this.state.source}
-                                  onChange={this.updateSourceField.bind(this)}
-                                  type='text'
-                                  name='source'
-                                />
+                                <FormControl componentClass='select' multiple>
+                                  <option value='select'>
+                                    select (multiple)
+                                  </option>
+                                  {languages.map((languages, index) => {
+                                    return (<option value={languages.name}>{languages.name}</option>)
+                                  })}
+                                </FormControl>
                               </FormGroup>
+                              
                             </Col>
                             <Col md={6}>
-                              <FormGroup controlId='target' bsSize='large'>
+                              <FormGroup controlId='formControlsSelectMultiple'>
                                 <ControlLabel>
                                   Target language (for translator role)
                                 </ControlLabel>
-                                <FormControl
-                                  value={this.state.target}
-                                  onChange={this.updateTargetField.bind(this)}
-                                  type='text'
-                                  name='target'
-                                />
+                                <FormControl componentClass='select' multiple>
+                                  <option value='select'>
+                                    select (multiple)
+                                  </option>
+                                  {languages.map((languages, index) => {
+                                    return (<option value={languages.name}>{languages.name}</option>)
+                                  })}
+                                </FormControl>
                               </FormGroup>
+                              
                             </Col>
-
                           </Row>
                         </fieldset>
                       </Col>
                     </Row>
                     <ButtonToolbar>
                       <Button
-                        onClick={() => api.addUser(user)}
-                       // onClick={this.handleGenie}
+                        onClick={() => api.addUser(accounts)}
                         bsStyle='info'
                         pullRight
                         fill
                         type='submit'
                       >
+                        {/* } onClick={this.handleGenie} */}
                         Submit
                       </Button>
                       <Button bsStyle='default' pullRight fill type='submit'>
