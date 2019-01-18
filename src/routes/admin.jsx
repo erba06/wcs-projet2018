@@ -10,68 +10,80 @@ import AddUser from 'views/Admin/AddUser.jsx'
 import AddRole from 'views/Admin/AddRole.jsx'
 import AddLanguage from 'views/Admin/AddLanguage.jsx'
 import AddDomain from 'views/Admin/AddDomain.jsx'
+import WeeklyPlanning from '../views/Planning/WeeklyPlanning'
+import MonthlyPlanning from '../views/Planning/MonthlyPlanning'
 
 const adminRoutes = [
   {
-    path: '/manageusers',
-    name: 'Manage Users',
+    path: "/manageusers",
+    name: "Manage Users",
     component: ManageUsers,
   },
   {
-    path: '/manageroles',
-    name: 'Manage Roles',
+    path: "/manageroles",
+    name: "Manage Roles",
     component: ManageRoles,
   },
   {
-    path: '/managelanguages',
-    name: 'Manage Languages',
+    path: "/managelanguages",
+    name: "Manage Languages",
     component: ManageLanguages,
   },
   {
-    path: '/managedomains',
-    name: 'Manage Domains',
+    path: "/managedomains",
+    name: "Manage Domains",
     component: ManageDomains,
   },
   {
-    path: '/editdomain',
-    name: 'Edit a domain',
+    path: "/editdomain/:id",
+    name: "Edit a domain",
     component: EditDomain,
   },
   {
-    path: '/adddomain',
-    name: 'Add a domain',
+    path: "/adddomain",
+    name: "Add a domain",
     component: AddDomain,
   },
   {
-    path: '/editlanguage',
-    name: 'Edit a language',
+    path: "/editlanguage/:id",
+    name: "Edit a language",
     component: EditLanguage,
   },
   {
-    path: '/addlanguage',
-    name: 'Add a language',
+    path: "/addlanguage",
+    name: "Add a language",
     component: AddLanguage,
   },
   {
-    path: '/editrole',
-    name: 'Edit a role',
+    path: "/editrole/:id",
+    name: "Edit a role",
     component: EditRole,
   },
   {
-    path: '/addrole',
-    name: 'Add a role',
+    path: "/addrole",
+    name: "Add a role",
     component: AddRole,
   },
   {
-    path: '/edituser',
-    name: 'Edit a user',
+    path: "/edituser/:id",
+    name: "Edit a user",
     component: EditUser,
   },
   {
-    path: '/adduser',
-    name: 'Add a user',
+    path: "/adduser",
+    name: "Add a user",
     component: AddUser,
   },
-];
+  {
+    path: "/weeklyplanning",
+    name: "Weekly Planning",
+    component: WeeklyPlanning,
+  },
+  {
+    path: "/monthlyplanning",
+    name: "Monthly Planning",
+    component: MonthlyPlanning,
+  }
+]
 
 export default adminRoutes

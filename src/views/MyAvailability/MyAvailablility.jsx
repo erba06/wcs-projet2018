@@ -1,10 +1,5 @@
 import React, { Component } from 'react'
-import {
-  Grid,
-  Row,
-  Col,
-  Jumbotron
-} from 'react-bootstrap'
+import { Grid, Row, Col, Jumbotron } from 'react-bootstrap'
 import Button from 'components/CustomButton/CustomButton.jsx'
 import { Card } from 'components/Card/Card.jsx'
 import DateRangePicker from 'react-bootstrap-daterangepicker'
@@ -32,13 +27,19 @@ class MyAvailability extends Component {
                     <Jumbotron>
                       <h3>My Availability!</h3>
                       <p>
-                          Indicate when you are not available. Click on the button to open the calendar.
+                        Indicate when you are not available. Click on the button
+                        to open the calendar.
                       </p>
-                      
-                        <DateRangePicker onEvent={this.handleEvent} startDate='1/1/2014' endDate='3/1/2014'>
-                          <Button bsStyle='info' fill>Select Dates</Button>
-                        </DateRangePicker>
-                      
+
+                      <DateRangePicker
+                        onEvent={this.handleEvent}
+                        startDate='1/1/2014'
+                        endDate='3/1/2014'
+                      >
+                        <Button bsStyle='info' fill>
+                          Select Dates
+                        </Button>
+                      </DateRangePicker>
                     </Jumbotron>
                   </form>
                 }

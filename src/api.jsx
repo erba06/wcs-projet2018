@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import createHashHistory from 'history/createBrowserHistory'
-import { Link } from 'react-router-dom'
 import jwt from './jwt'
 import apiService from '../src/api/apiService'
 import Alert from 'react-s-alert'
@@ -92,18 +91,18 @@ const getAccounts = () => {
 }
 
 const addUser = user => {
-  console.log(user)
+  console.log('USERS :' + user)
   apiService
     .getApiEndpoint('PostAccounts', {
       userName: user.userName,
       firstName: user.firstName,
       lastName: user.lastName,
-      emailAddress: user.emailAddress,
-      roles: [3, 4],
+      emailAddress: user.email,
+      roles: user.selectedRoles,
       password: user.password,
-      sourceLanguages: [3, 4],
-      targetLanguages: [1, 1],
-      domains: [1, 4],
+      sourceLanguages: user.selectedSources,
+      targetLanguages: user.selectedTargets,
+      domains: user.selectedDomains,
       profilePictureLink: 'https://imgur.com/.....'
     })
     .then(res => {
@@ -138,7 +137,6 @@ const editUser = prop => {
     .then(res => {
       console.log(res)
       Alert.success(`Succès`)
-     
     })
 }
 
@@ -173,7 +171,6 @@ const getUser = id => {
     }
   })
 }
-
 
 /* MANAGE DOMAINS */
 
@@ -229,8 +226,7 @@ const getDomain = id => {
 
 /* MANAGE ROLES */
 const deleteRole = prop => {
-  apiService.getApiEndpoint('DeleteRole', null, { id: prop })
-  .then(res => {
+  apiService.getApiEndpoint('DeleteRole', null, { id: prop }).then(res => {
     if (res.status === 200) {
       console.log('succès')
       alert.success(`Succès`)
@@ -297,7 +293,6 @@ const getRole = id => {
   })
 }
 
-
 /* MANAGE LANGUAGES */
 
 const addLanguage = language => {
@@ -351,12 +346,7 @@ const getLanguage = id => {
       })
       let url = `/editlanguage/${res.data.id}`
       history.push(`/editlanguage/${res.data.id}`)
-
-      //  console.log(url.split('#')[0])
     }
-    // let url = (`/editlanguage/${res.data.id}`)
-    // console.log(url)
-    // window.location.href = url.split("#")[0];
   })
 }
 
@@ -373,6 +363,72 @@ const deleteLanguage = prop => {
       }
     })
 }
+
+/* MONTHLY & WEEKLY PLANNING */
+const displayDomains = account => {
+  console.log(account.domains.length)
+
+  if (account.domains.length === 0) {
+    return null
+  } else if (account.domains.length === 1) {
+    return account.domains[0].domainName
+  } else {
+    account.domains.map(arrayOfDomains => <li>{arrayOfDomains.domainName}</li>)
+  }
+}
+
+/* SELECT TRANSLATOR MONTHLY" */
+const displayLanguages = account => {
+  if (account.sources.length === 0) return null
+  else if (account.sources.length === 1) {
+    return (
+      account.sources[0].languageCode + ' to ' + account.targets[0].languageCode
+    )
+  } else {
+    return account.sources.map(arrayOfSources => (
+      <li>{arrayOfSources.languageName}</li>
+    ))
+  }
+}
+const displayLanguagesInResultPanel = account => {
+  console.log(account)
+  if (account.sources.length === 0) return null
+  else if (account.sources.length === 1 && account.targets.length === 1) {
+    return (
+      account.sources[0].languageCode + ' to ' + account.targets[0].languageCode
+    )
+  } else {
+    return (
+      account.sources.map(arrayOfSources => ' ' + arrayOfSources.languageCode) +
+      ' to ' +
+      account.targets.map(a => ' ' + a.languageCode)
+    )
+  }
+}
+
+const checkSourceLanguages = account => {
+  if (account.sources.length === 0) {
+    return null
+  } else if (account.sources.length === 1) {
+    return account.sources[0].languageName
+  } else {
+    return account.sources.map(arrayOfSources => arrayOfSources.languageName)
+  }
+}
+
+const checkTargetLanguages = account => {
+  if (account.targets.length === 0) {
+    return null
+  } else if (account.targets.length === 1) {
+    return account.targets[0].languageName
+  } else {
+    return account.targets.map(arrayOfTargets => arrayOfTargets.languageName)
+  }
+}
+
+const isTranslator = roles => roles.indexOf('Translator') > -1
+const displayTranslatorOnly = roles =>
+  roles.filter(role => role.indexOf('Translator') > -1)
 
 export default {
   logIn,
@@ -397,5 +453,12 @@ export default {
   editUser,
   addLanguage,
   deleteLanguage,
-  getLanguage
+  getLanguage,
+  displayDomains,
+  displayLanguages,
+  displayLanguagesInResultPanel,
+  checkSourceLanguages,
+  checkTargetLanguages,
+  isTranslator,
+  displayTranslatorOnly
 }

@@ -47,6 +47,7 @@ class EditUser extends Component {
 
       errors: []
     }
+    console.log(this.state)
   }
 
   componentDidMount () {
@@ -377,7 +378,8 @@ class EditUser extends Component {
                     <ButtonToolbar>
                       <Button
                         onClick={this.handleGenie}
-                        onClick={() => api.editUser(user)}
+                        onClick={() => {console.log(user)
+                          api.editUser(user)}}
                         bsStyle='info'
                         pullRight
                         fill

@@ -74,8 +74,7 @@ const CalendarHeader = createReactClass({
           {this.displayingMinMonth() ? null : this.props.previousButtonElement}
         </div>
         <span>
-          {this.props.monthLabels[this.props.displayDate.getMonth()]}
-          {' '}
+          {this.props.monthLabels[this.props.displayDate.getMonth()]}{' '}
           {this.props.displayDate.getFullYear()}
         </span>
         <div
@@ -137,7 +136,7 @@ const Calendar = createReactClass({
     const firstThursday = target.valueOf()
     target.setMonth(0, 1)
     if (target.getDay() !== 4) {
-      target.setMonth(0, 1 + (4 - target.getDay() + 7) % 7)
+      target.setMonth(0, 1 + ((4 - target.getDay() + 7) % 7))
     }
     return 1 + Math.ceil((firstThursday - target) / 604800000)
   },
@@ -156,10 +155,13 @@ const Calendar = createReactClass({
     const year = this.props.displayDate.getFullYear()
     const month = this.props.displayDate.getMonth()
     const firstDay = new Date(year, month, 1)
-    const startingDay = this.props.weekStartsOn > 1
-      ? firstDay.getDay() - this.props.weekStartsOn + 7
-      : this.props.weekStartsOn === 1
-          ? firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1
+    const startingDay =
+      this.props.weekStartsOn > 1
+        ? firstDay.getDay() - this.props.weekStartsOn + 7
+        : this.props.weekStartsOn === 1
+          ? firstDay.getDay() === 0
+            ? 6
+            : firstDay.getDay() - 1
           : firstDay.getDay()
     const showWeeks = this.props.showWeeks
 
@@ -240,12 +242,12 @@ const Calendar = createReactClass({
       }
     }
 
-    const weekColumn = showWeeks
-      ? <td
+    const weekColumn = showWeeks ? (
+      <td
         className='text-muted current-week'
         style={{ padding: this.props.cellPadding }}
-        />
-      : null
+      />
+    ) : null
 
     return (
       <table className='text-center'>
@@ -265,10 +267,8 @@ const Calendar = createReactClass({
             })}
           </tr>
         </thead>
-        <tbody>
-          {weeks}
-        </tbody>
-        {this.props.showTodayButton &&
+        <tbody>{weeks}</tbody>
+        {this.props.showTodayButton && (
           <tfoot>
             <tr>
               <td
@@ -285,7 +285,8 @@ const Calendar = createReactClass({
                 </Button>
               </td>
             </tr>
-          </tfoot>}
+          </tfoot>
+        )}
       </table>
     )
   }
@@ -356,13 +357,16 @@ export default createReactClass({
   },
 
   getDefaultProps () {
-    const language = typeof window !== 'undefined' && window.navigator
-      ? (window.navigator.userLanguage || window.navigator.language || '')
-          .toLowerCase()
-      : ''
-    const dateFormat = !language || language === 'en-us'
-      ? 'MM/DD/YYYY'
-      : 'DD/MM/YYYY'
+    const language =
+      typeof window !== 'undefined' && window.navigator
+        ? (
+          window.navigator.userLanguage ||
+            window.navigator.language ||
+            ''
+        ).toLowerCase()
+        : ''
+    const dateFormat =
+      !language || language === 'en-us' ? 'MM/DD/YYYY' : 'DD/MM/YYYY'
     return {
       cellPadding: '5px',
       dayLabels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
@@ -536,8 +540,9 @@ export default createReactClass({
   },
 
   shouldComponentUpdate: function (nextProps, nextState) {
-    return !(this.state.inputFocused === true &&
-      nextState.inputFocused === false)
+    return !(
+      this.state.inputFocused === true && nextState.inputFocused === false
+    )
   },
 
   getValue () {
@@ -763,14 +768,14 @@ export default createReactClass({
       />
     )
 
-    const control = this.props.customControl
-      ? React.cloneElement(this.props.customControl, {
+    const control = this.props.customControl ? (
+      React.cloneElement(this.props.customControl, {
         onKeyDown: this.handleKeyDown,
         value: this.state.inputValue || '',
         required: this.props.required,
         placeholder: this.state.focused
-            ? this.props.dateFormat
-            : this.state.placeholder,
+          ? this.props.dateFormat
+          : this.state.placeholder,
         ref: 'input',
         disabled: this.props.disabled,
         onFocus: this.handleFocus,
@@ -782,7 +787,8 @@ export default createReactClass({
         onInvalid: this.props.onInvalid,
         noValidate: this.props.noValidate
       })
-      : <FormControl
+    ) : (
+      <FormControl
         onKeyDown={this.handleKeyDown}
         value={this.state.inputValue || ''}
         required={this.props.required}
@@ -793,15 +799,16 @@ export default createReactClass({
         autoFocus={this.props.autoFocus}
         disabled={this.props.disabled}
         placeholder={
-            this.state.focused ? this.props.dateFormat : this.state.placeholder
-          }
+          this.state.focused ? this.props.dateFormat : this.state.placeholder
+        }
         onFocus={this.handleFocus}
         onBlur={this.handleBlur}
         onChange={this.handleInputChange}
         autoComplete={this.props.autoComplete}
         onInvalid={this.props.onInvalid}
         noValidate={this.props.noValidate}
-        />
+      />
+    )
 
     return (
       <InputGroup
@@ -817,7 +824,8 @@ export default createReactClass({
           show={this.state.focused}
           container={() =>
             this.props.calendarContainer ||
-            ReactDOM.findDOMNode(this.refs.overlayContainer)}
+            ReactDOM.findDOMNode(this.refs.overlayContainer)
+          }
           target={() => ReactDOM.findDOMNode(this.refs.input)}
           placement={this.state.calendarPlacement}
           delayHide={200}
@@ -852,26 +860,26 @@ export default createReactClass({
           value={this.state.value || ''}
           data-formattedvalue={this.state.value ? this.state.inputValue : ''}
         />
-        {this.props.showClearButton &&
-          !this.props.customControl &&
+        {this.props.showClearButton && !this.props.customControl && (
           <InputGroup.Addon
             onClick={this.props.disabled ? null : this.clear}
             style={{
-              cursor: this.state.inputValue && !this.props.disabled
-                ? 'pointer'
-                : 'not-allowed'
+              cursor:
+                this.state.inputValue && !this.props.disabled
+                  ? 'pointer'
+                  : 'not-allowed'
             }}
           >
             <div
               style={{
-                opacity: this.state.inputValue && !this.props.disabled
-                  ? 1
-                  : 0.5
+                opacity:
+                  this.state.inputValue && !this.props.disabled ? 1 : 0.5
               }}
             >
               {this.props.clearButtonElement}
             </div>
-          </InputGroup.Addon>}
+          </InputGroup.Addon>
+        )}
         {this.props.children}
       </InputGroup>
     )

@@ -144,7 +144,7 @@ class Dashboard extends Component {
                     key={key}
                   />
                 )
-              } else if (prop.path === '/editdomain') {
+              } else if (prop.path === '/editdomain/:id') {
                 return (
                   <Route
                     exact
@@ -153,7 +153,7 @@ class Dashboard extends Component {
                     key={key}
                   />
                 )
-              } else if (prop.path === '/editlanguage') {
+              } else if (prop.path === '/editlanguage/:id') {
                 return (
                   <Route
                     exact
@@ -171,8 +171,7 @@ class Dashboard extends Component {
                     key={key}
                   />
                 )
-              } 
-              else if (prop.path === '/adddomain') {
+              } else if (prop.path === '/adddomain') {
                 return (
                   <Route
                     exact
@@ -181,7 +180,7 @@ class Dashboard extends Component {
                     key={key}
                   />
                 )
-              } else if (prop.path === '/editrole') {
+              } else if (prop.path === '/editrole/:id') {
                 return (
                   <Route
                     exact
@@ -199,8 +198,7 @@ class Dashboard extends Component {
                     key={key}
                   />
                 )
-              }
-              else if (prop.path === '/login') {
+              } else if (prop.path === '/login') {
                 return (
                   <Route
                     exact
@@ -209,7 +207,7 @@ class Dashboard extends Component {
                     key={key}
                   />
                 )
-              } else if (prop.path === '/edituser') {
+              } else if (prop.path === '/edituser/:id') {
                 return (
                   <Route
                     exact
@@ -219,6 +217,26 @@ class Dashboard extends Component {
                   />
                 )
               } else if (prop.path === '/adduser') {
+                return (
+                  <Route
+                    exact
+                    path={prop.path}
+                    component={prop.component}
+                    key={key}
+                  />
+                )
+              }
+              else if (prop.path === '/weeklyplanning') {
+                return (
+                  <Route
+                    exact
+                    path={prop.path}
+                    component={prop.component}
+                    key={key}
+                  />
+                )
+              }
+              else if (prop.path === '/monthlyplanning') {
                 return (
                   <Route
                     exact

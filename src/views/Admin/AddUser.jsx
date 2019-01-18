@@ -42,9 +42,17 @@ class AddUser extends Component {
       languages: [],
       domains: [],
       accounts: [],
-      errors: []
+      errors: [],
+      selectedDomains: [],
+      selectedRoles: [],
+      selectedSources: [],
+      selectedTargets: []
     }
     console.log(this.state)
+    this.updateRolesField = this.updateRolesField.bind(this)
+    this.updateDomainsField = this.updateDomainsField.bind(this)
+    this.updateTargetField = this.updateTargetField.bind(this)
+    this.updateSourceField = this.updateSourceField.bind(this)
   }
 
   syncDatas = () => {
@@ -58,9 +66,8 @@ class AddUser extends Component {
       this.setState({ accounts: accounts.data.items })
     })
     apiService.getApiEndpoint('GetLanguages').then(languages => {
-  this.setState({ languages: languages.data })
-})
-
+      this.setState({ languages: languages.data })
+    })
   }
   componentDidMount () {
     this.syncDatas()
@@ -92,18 +99,6 @@ class AddUser extends Component {
     return errors
   }
 
-  /* handleSubmit = (e) => {
-      e.preventDefault();
-
-      const { name, email, password } = this.state;
-
-      const errors = this.validate(name, email, password);
-      if (errors.length > 0) {
-        this.setState({ errors });
-        return;
-      }
-  }
-  */
   handleChange (e) {
     this.setState({ value: e.target.value })
   }
@@ -115,9 +110,9 @@ class AddUser extends Component {
   }
 
   updateLastNameField (event) {
-    const lastname = event.target.value
+    const lastName = event.target.value
     this.setState({ lastName: event.target.value })
-    console.log(lastname)
+    console.log(lastName)
   }
 
   updateUserNameField (event) {
@@ -142,22 +137,69 @@ class AddUser extends Component {
   }
 
   updateRolesField (event) {
-    const roles = event.target.value
-    this.setState({ roles: event.target.values })
+    let opts = []
+
+    let opt
+
+    for (let i = 0, len = event.target.options.length; i < len; i++) {
+      opt = event.target.options[i]
+
+      if (opt.selected) {
+        opts.push(parseInt(opt.value))
+      }
+    }
+    console.log('opts: ', opts)
+    this.setState({ selectedRoles: opts })
   }
 
   updateSourceField (event) {
-    const source = event.target.value
-    this.setState({ source: event.target.value })
-  }
-  updateTargetField (event) {
-    const target = event.target.value
-    this.setState({ target: event.target.value })
+    let opts = []
+
+    let opt
+
+    for (let i = 0, len = event.target.options.length; i < len; i++) {
+      opt = event.target.options[i]
+
+      if (opt.selected) {
+        opts.push(parseInt(opt.value))
+
+      }
+    }
+    console.log('opts: ', opts)
+    this.setState({ selectedSources: opts })
   }
 
-  updateDomainsField (event) {
-    const domain = event.target.value
-    this.setState({ domain: event.target.value })
+  updateTargetField (event) {
+    let opts = []
+
+    let opt
+
+    for (let i = 0, len = event.target.options.length; i < len; i++) {
+      opt = event.target.options[i]
+
+      if (opt.selected) {
+        opts.push(parseInt(opt.value))
+
+      }
+    }
+    console.log('opts: ', opts)
+    this.setState({ selectedTargets: opts })
+  }
+
+  updateDomainsField = event => {
+    let opts = []
+
+    let opt
+
+    for (let i = 0, len = event.target.options.length; i < len; i++) {
+      opt = event.target.options[i]
+
+      if (opt.selected) {
+        opts.push(parseInt(opt.value))
+      }
+    }
+    console.log('opts: ', opts)
+    this.setState({ selectedDomains: opts })
   }
 
   handleGenie (event) {
@@ -177,8 +219,11 @@ class AddUser extends Component {
     const accounts = this.state.accounts
     const domains = this.state.domains
     const languages = this.state.languages
-
-    
+    const selectedRoles = this.state.selectedRoles
+    const selectedSources = this.state.selectedSources
+    const selectedTargets = this.state.selectedTargets
+    const selectedDomains = this.state.selectedDomains
+    //const selectedRoleId = this.state.selectedRoleId
     console.log(this.state)
 
     return (
@@ -298,26 +343,44 @@ class AddUser extends Component {
                                 <ControlLabel>
                                   Role(s) within the organisation
                                 </ControlLabel>
-                                <FormControl componentClass='select' multiple>
+                                <FormControl
+                                  componentClass='select'
+                                  multiple
+                                  onChange={this.updateRolesField.bind(this)}
+                                  value={this.state.selectedRoles}
+                                >
                                   <option value='select'>
                                     select (multiple)
                                   </option>
-                                  {roles.map((roles, index) => { 
-                                      return (<option value={roles.name}>{roles.name}</option>)
-                                    }) }
+                                  {roles.map((roles, index) => {
+                                    return (
+                                      <option value={roles.id}>
+                                        {roles.id}-{roles.name}
+                                      </option>
+                                    )
+                                  })}
                                 </FormControl>
                               </FormGroup>
                             </Col>
                             <Col md={6}>
                               <FormGroup controlId='formControlsSelectMultiple'>
                                 <ControlLabel>Domains</ControlLabel>
-                                <FormControl componentClass='select' multiple>
+                                <FormControl
+                                  componentClass='select'
+                                  onChange={this.updateDomainsField}
+                                  value={this.state.selectedDomains}
+                                  multiple
+                                >
                                   <option value='select'>
                                     select (multiple)
                                   </option>
-                                  {domains.map((domain, index) => { 
-                                      return (<option value={domain.name}>{domain.name}</option>)
-                                })}
+                                  {domains.map((domain, index) => {
+                                    return (
+                                      <option value={domain.id}>
+                                        {domain.id}-{domain.name}
+                                      </option>
+                                    )
+                                  })}
                                 </FormControl>
                               </FormGroup>
                             </Col>
@@ -328,32 +391,48 @@ class AddUser extends Component {
                                 <ControlLabel>
                                   Source language (for translator role)
                                 </ControlLabel>
-                                <FormControl componentClass='select' multiple>
+                                <FormControl
+                                  componentClass='select'
+                                  multiple
+                                  onChange={this.updateSourceField.bind(this)}
+                                  value={this.state.selectedSources}
+                                >
                                   <option value='select'>
                                     select (multiple)
                                   </option>
-                                  {languages.map((languages, index) => {
-                                    return (<option value={languages.name}>{languages.name}</option>)
+                                  {languages.map(languages => {
+                                    return (
+                                      <option value={languages.id}>
+                                        {languages.id}-{languages.name}
+                                      </option>
+                                    )
                                   })}
                                 </FormControl>
                               </FormGroup>
-                              
                             </Col>
                             <Col md={6}>
                               <FormGroup controlId='formControlsSelectMultiple'>
                                 <ControlLabel>
                                   Target language (for translator role)
                                 </ControlLabel>
-                                <FormControl componentClass='select' multiple>
+                                <FormControl
+                                  componentClass='select'
+                                  multiple
+                                  onChange={this.updateTargetField.bind(this)}
+                                  value={this.state.selectedTargets}
+                                >
                                   <option value='select'>
                                     select (multiple)
                                   </option>
                                   {languages.map((languages, index) => {
-                                    return (<option value={languages.name}>{languages.name}</option>)
+                                    return (
+                                      <option value={languages.id}>
+                                        {languages.id}-{languages.name}
+                                      </option>
+                                    )
                                   })}
                                 </FormControl>
                               </FormGroup>
-                              
                             </Col>
                           </Row>
                         </fieldset>
@@ -361,7 +440,10 @@ class AddUser extends Component {
                     </Row>
                     <ButtonToolbar>
                       <Button
-                        onClick={() => api.addUser(accounts)}
+                        onClick={() => {
+                          console.log(this.state)
+                          api.addUser(this.state)
+                        }}
                         bsStyle='info'
                         pullRight
                         fill

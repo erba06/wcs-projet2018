@@ -87,7 +87,9 @@ class EditDomain extends Component {
                           <Col md={12}>
                             <ButtonToolbar>
                               <Button
-                                onClick={() => api.editDomain(domains)}
+                                onClick={() => {
+                                  console.log(domains)
+                                  api.editDomain(domains)}}
                                 bsStyle='info'
                                 pullLeft
                                 fill

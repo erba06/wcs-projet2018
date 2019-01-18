@@ -20,7 +20,6 @@ class ManageUsers extends Component {
     apiService
       .getApiEndpoint('GetAccounts')
       .then(this.updateState)
-      // .then(this.convertToTable)
       .catch(console.log)
     console.log(this.state)
   }

@@ -54,11 +54,11 @@ const endpoints = {
     method: 'GET'
   },
   PutDomains: {
-    url: `${hostUrl}/Domains`,
+    url: `${hostUrl}/Domains/{id}`,
     method: 'PUT'
   },
   PostDomains: {
-    url: `${hostUrl}/Domains/{id}`,
+    url: `${hostUrl}/Domains`,
     method: 'POST'
   },
   DeleteDomain: {
@@ -70,7 +70,7 @@ const endpoints = {
     method: 'GET'
   },
   PutLanguages: {
-    url: `${hostUrl}/Languages`,
+    url: `${hostUrl}/Languages/{id}`,
     method: 'PUT'
   },
   PostLanguages: {
@@ -83,14 +83,14 @@ const endpoints = {
   },
   DeleteLanguage: {
     url: `${hostUrl}/Languages/{id}`,
-    method: 'GET'
+    method: 'DELETE'
   },
   GetRoles: {
     url: `${hostUrl}/Roles`,
     method: 'GET'
   },
   PutRoles: {
-    url: `${hostUrl}/Roles`,
+    url: `${hostUrl}/Roles/{id}`,
     method: 'PUT'
   },
   PostRoles: {
