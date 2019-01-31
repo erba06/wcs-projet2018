@@ -23,14 +23,14 @@ class SelectTranslatorsMonthly extends Component {
     console.log(props)
   }
 
-  greyOut (props) {
-    let div = document.getElementById(props)
-    div.addEventListener('click', () => {
-      let curColour = div.style.backgroundColor
-      div.style.backgroundColor =
-        curColour === 'rgb(251, 249, 252)' ? 'blue' : 'rgb(251, 249, 252)'
-    })
-    // document.getElementById(props).style.backgroundColor = 'blue'
+  greyOut (accountId) {
+    let div = document.getElementById(accountId)
+    var c = window.getComputedStyle(div).backgroundColor
+    if (c === 'rgb(251, 249, 252)') {
+      document.getElementById(accountId).style.background = 'blue'
+    } else {
+      document.getElementById(accountId).style.background = 'rgb(251, 249, 252)'
+    }
   }
 
   componentDidUpdate (oldProps) {
@@ -42,8 +42,6 @@ class SelectTranslatorsMonthly extends Component {
     console.log(newProps)
     console.log(oldProps)
     console.log(this.state)
-
-    let accounts = this.props.accounts
   }
 
   render () {
@@ -69,7 +67,7 @@ class SelectTranslatorsMonthly extends Component {
             </Panel.Title>
           </Panel.Heading>
 
-          <Panel.Body>
+          <Panel.Body className='translators'>
             {filteredAccounts == undefined ||
             selectedDomain == 'select' ||
             selectedSourceLanguage == 'select' ||

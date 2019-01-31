@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Alert from 'react-s-alert'
 import { Grid, Row, Col, Table } from 'react-bootstrap'
 import Button from 'components/CustomButton/CustomButton.jsx'
 import { ButtonGroup } from 'react-bootstrap'
@@ -122,11 +123,10 @@ class ManageUsers extends Component {
                               <td>{prop.active === true ? 'Yes' : 'No'}</td>
                               <td>
                                 <ButtonGroup>
-                                  <div>
+                                  <div className="buttonGroup">
                                     <Link to='/edituser/:id'>
                                       <Button
                                         onClick={() => api.getUser(prop.id)}
-                                        bsSize='sm'
                                         bsStyle='primary'
                                         fill
                                       >
@@ -137,8 +137,7 @@ class ManageUsers extends Component {
                                       onClick={() =>
                                         this.deactivateUser(prop.id)
                                       }
-                                      bsSize='sm'
-                                      bsStyle='warning'
+                                      bsStyle='success'
                                       fill
                                     >
                                       {' '}
@@ -146,7 +145,6 @@ class ManageUsers extends Component {
                                     </Button>
                                     <Button
                                       onClick={() => api.deleteUser(prop)}
-                                      bsSize='sm'
                                       bsStyle='info'
                                       fill
                                     >
@@ -154,7 +152,8 @@ class ManageUsers extends Component {
                                     </Button>
                                     <Button
                                       onClick={() => api.loginAsUser(prop.id)}
-                                      bsSize='sm'
+                                      bsStyle = 'dafault'
+
                                       fill
                                     >
                                       {' '}
@@ -162,6 +161,7 @@ class ManageUsers extends Component {
                                     </Button>
                                   </div>
                                 </ButtonGroup>
+                                <Alert stack={{ limit: 3 }} />
                               </td>
                             </tr>
                           )

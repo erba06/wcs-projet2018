@@ -6,6 +6,10 @@ import Card from 'components/Card/Card.jsx'
 import { Link } from 'react-router-dom'
 import apiService from '../../api/apiService'
 import api from '../../api'
+import Alert from 'react-s-alert'
+import 'react-s-alert/dist/s-alert-default.css'
+import 'react-s-alert/dist/s-alert-css-effects/slide.css'
+
 
 class ManageRoles extends Component {
   constructor (props) {
@@ -86,34 +90,35 @@ class ManageRoles extends Component {
                               <td>{prop.name}</td>
                               <td>{prop.description}</td>
                               <td>
-                                <ButtonGroup className='buttonManagePages'>
-                                  <Link to='/editrole/:id'>
-                                    <Button
-                                      onClick={() => api.getRole(prop.id)}
-                                      bsSize='sm'
-                                      bsStyle='primary'
-                                      fill
-                                    >
-                                      <i className='far fa-edit' /> Edit
-                                    </Button>
-                                  </Link>
+                                {/* <ButtonGroup className='buttonManagePages'> */}
+                                <Link to='/editrole/:id'>
                                   <Button
-                                    onClick={() => api.deleteRole(prop.id)}
-                                    bsSize='sm'
-                                    bsStyle='info'
+                                    onClick={() => api.getRole(prop.id)}
+                                    bsSize='default'
+                                    bsStyle='primary'
                                     fill
                                   >
-                                    <i className='fas fa-trash-alt' /> Delete
+                                    <i className='far fa-edit' /> Edit
                                   </Button>
-                                  <Button
-                                    onClick={() => api.loginAsRole(prop.id)}
-                                    bsSize='sm'
-                                    fill
-                                  >
-                                    {' '}
-                                    Login as
-                                  </Button>
-                                </ButtonGroup>
+                                </Link>
+                                <Button
+                                  onClick={() => api.deleteRole(prop.id)}
+                                  bsSize='default'
+                                  bsStyle='info'
+                                  fill
+                                >
+                                  <i className='fas fa-trash-alt' /> Delete
+                                </Button>
+                                <Button
+                                  onClick={() => api.loginAsRole(prop.id)}
+                                  bsSize='default'
+                                  fill
+                                >
+                                  {' '}
+                                  Login as
+                                </Button>
+                                {/* } </ButtonGroup> */}
+                                <Alert stack={{ limit: 3 }} />
                               </td>
                             </tr>
                           )

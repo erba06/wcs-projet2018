@@ -22,29 +22,33 @@ class EditRole extends Component {
     this.state = {
       roleName: '',
       description: '',
-      id: ''
+      id: '',
+      roles: []
     }
+    console.log(this.state)
   }
-  getValidationState () {
-    const { roleName } = this.state
-    if (roleName.length > 0) return 'success'
+ getValidationState () {
+    const { description } = this.state
+    if (description.length > 0) return 'success'
     return 'error'
   }
 
-  componentDidMount () {
+   componentDidMount () {
     let arrayOfUrl = window.location.href.split('/')
     console.log(arrayOfUrl)
     let newId = arrayOfUrl[4].split('#')[0]
     this.setState({ id: newId })
-    apiService.getApiEndpoint('GetRole', null, { id: newId }).then(res => {
+     apiService.getApiEndpoint('GetRole', null, { id: newId }).then(res => {
       if (res.status === 200) {
-        console.log(res)
         this.setState({ roleName: res.data.name })
         this.setState({ description: res.data.description })
       }
     })
   }
 
+  updateState = roles => {
+    this.setState({ roles: roles.data })
+  }
   handleChange (e) {
     this.setState({ value: e.target.value })
   }
@@ -68,10 +72,8 @@ class EditRole extends Component {
   }
 
   render () {
-    const roles = this.state.roleName
+    const roles = this.state
     console.log(roles)
-    const description = this.state.description
-    console.log(description)
 
     return (
       <div className='content'>
@@ -86,12 +88,13 @@ class EditRole extends Component {
                       <Col md={6}>
                         <FormGroup
                           controlId='formBasicText'
-                          validationState={this.getValidationState()}
+                         // validationState={this.getValidationState()}
                         >
                           <ControlLabel>Name</ControlLabel>
                           <FormControl
+                            readOnly
                             onChange={this.updateRoleNameField.bind(this)}
-                            validationState={this.getValidationState()}
+                          //  validationState={this.getValidationState()}
                             placeholder='Edit the user role'
                             value={this.state.roleName}
                             ncols={['col-md-6']}
@@ -104,10 +107,10 @@ class EditRole extends Component {
                               }
                             ]}
                           />
-                          <FormControl.Feedback />
+                          {/* <FormControl.Feedback />
                           <HelpBlock>
                             Validation is based on string length.
-                          </HelpBlock>
+                         </HelpBlock> */}
                         </FormGroup>
                       </Col>
                     </Row>
@@ -116,7 +119,6 @@ class EditRole extends Component {
                         <ControlLabel>Description</ControlLabel>
                         <FormControl
                           onChange={this.updateDescriptionField.bind(this)}
-                          validationState={this.getValidationState()}
                           languageCode={this.state.languageCode}
                           ncols={['col-md-6']}
                           placeholder='Edit the description'
@@ -153,6 +155,7 @@ class EditRole extends Component {
                             Cancel
                           </Button>
                         </ButtonToolbar>
+                        <Alert stack={{ limit: 3 }} />
                       </Col>
                     </Row>
                   </form>

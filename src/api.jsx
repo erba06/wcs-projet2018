@@ -3,6 +3,7 @@ import createHashHistory from 'history/createBrowserHistory'
 import jwt from './jwt'
 import apiService from '../src/api/apiService'
 import Alert from 'react-s-alert'
+
 const hostUrl = 'http://localhost:52996/'
 let now = new Date()
 
@@ -52,7 +53,7 @@ const logIn = credentials =>
         onPageLoadChecks()
         document.location.reload(true)
       } else {
-        alert('Wrong credentials, please sign in again')
+        Alert('Wrong credentials, please sign in again')
         document.location.reload(true)
       }
       return Promise.resolve(response)
@@ -106,11 +107,14 @@ const addUser = user => {
       profilePictureLink: 'https://imgur.com/.....'
     })
     .then(res => {
-      console.log(res.message)
-      Alert.success(`Succès`)
-      setTimeout(() => {
-        window.location = window.location
-      }, 500)
+      if (res.status === 200 || 204) {
+        Alert.success('The user has been added')
+        setTimeout(() => {
+          window.location.href = '/editrole/2#/manageusers'
+        }, 500)
+      } else {
+        Alert.error('Error, try again')
+      }
     })
 }
 
@@ -135,8 +139,14 @@ const editUser = prop => {
       { id: prop.id }
     )
     .then(res => {
-      console.log(res)
-      Alert.success(`Succès`)
+      if (res.status === 200 || 204) {
+        Alert.success('The user has been edited')
+        //setTimeout(() => {
+        //  window.location.href = '/editrole/2#/manageusers'
+       // }, 500)
+      } else {
+        Alert.error('Error, try again')
+      }
     })
 }
 
@@ -144,6 +154,16 @@ const deleteUser = prop => {
   apiService
     .getApiEndpoint('DeleteAccount', null, { id: prop.id })
     .then(res => console.log(res))
+    .then(res => {
+      if (res.status === 200 || 204) {
+        Alert.success('The user has been deleted')
+        setTimeout(() => {
+          window.location.reload()
+        }, 500)
+      } else {
+        Alert.error('Error, try again')
+      }
+    })
 }
 
 const loginAsUser = prop => {
@@ -161,6 +181,7 @@ const loginAsUser = prop => {
 }
 
 const getUser = id => {
+  console.log(id)
   apiService.getApiEndpoint('GetAccount', null, { id: id }).then(res => {
     if (res.status === 200) {
       console.log('succès')
@@ -180,35 +201,42 @@ const addDomain = domainName => {
     .getApiEndpoint('PostDomains', { name: domainName })
     .then(console.log(domainName))
     .then(res => {
-      Alert.success(`Succès`)
-      setTimeout(() => {
-        window.location = window.location
-      }, 500)
+      if (res.status === 200 || 204) {
+        Alert.success('The domain has been added')
+        setTimeout(() => {
+          window.location.href = '/editrole/2#/managedomains'
+        }, 500)
+      } else {
+        Alert.error('Error, try again')
+      }
     })
 }
+
 const deleteDomain = prop => {
   apiService.getApiEndpoint('DeleteDomain', null, { id: prop }).then(res => {
-    if (res.status === 200) {
-      console.log('succès')
-      Alert.success(`Succès`)
+    if (res.status === 200 || 204) {
+      Alert.success('The domain has been deleted')
       setTimeout(() => {
-        window.location = window.location
+        window.location.reload()
       }, 500)
+    } else {
+      Alert.error('Error, try again')
     }
   })
 }
 
 const editDomain = prop => {
-  console.log(prop)
   apiService
-    .getApiEndpoint('PutDomains', { name: prop.domains }, { id: 6 })
-    .then(console.log(prop))
+    .getApiEndpoint('PutDomains', { name: prop.domains }, { id: prop.id })
     .then(res => {
-      console.log(res)
-      Alert.success(`Succès`)
-      setTimeout(() => {
-        window.location = window.location
-      }, 500)
+      if (res.status === 200 || 204) {
+        Alert.success('The domain has been edited')
+        setTimeout(() => {
+          window.location.href = '/editrole/2#/managedomains'
+        }, 500)
+      } else {
+        Alert.error('Error, try again')
+      }
     })
 }
 
@@ -227,12 +255,13 @@ const getDomain = id => {
 /* MANAGE ROLES */
 const deleteRole = prop => {
   apiService.getApiEndpoint('DeleteRole', null, { id: prop }).then(res => {
-    if (res.status === 200) {
-      console.log('succès')
-      alert.success(`Succès`)
+    if (res.status === 200 || 204) {
+      Alert.success(`The role has been deleted`)
       setTimeout(() => {
-        window.location = window.location
+        window.location.reload()
       }, 500)
+    } else {
+      Alert.error('Error, try again')
     }
   })
 }
@@ -240,13 +269,20 @@ const deleteRole = prop => {
 const editRole = role => {
   console.log(role)
   apiService
-    .getApiEndpoint('PutRoles', { description: role.description }, { id: 5 })
-    .then(console.log(role))
+    .getApiEndpoint(
+      'PutRoles',
+      { description: role.description },
+      { id: role.id }
+    )
     .then(res => {
-      console.log(res)
-      setTimeout(() => {
-        window.location = window.location
-      }, 500)
+      if (res.status === 200) {
+        Alert.success('The role has been edited')
+        setTimeout(() => {
+          window.location.href = '/editrole/23#/manageroles'
+        }, 500)
+      } else {
+        Alert.error('Error, try again')
+      }
     })
 }
 
@@ -256,7 +292,6 @@ const loginAsRole = prop => {
     .getApiEndpoint('GetRole', null, { id: prop })
     .then(console.log(prop))
     .then(res => {
-      console.log(res)
       Alert.success(`Succès`)
       setTimeout(() => {
         window.location = window.location
@@ -270,13 +305,15 @@ const addRole = role => {
       name: role.roleName,
       description: role.description
     })
-    .then(console.log(role))
     .then(res => {
-      if (res.status == 200) {
-        Alert.success(`Succès`)
+      if (res.status === 200 || 204) {
+        console.log('succes')
+        Alert.success('The role has been added')
         setTimeout(() => {
-          window.location = window.location
+          window.location.href = '/editrole/23#/manageroles'
         }, 500)
+      } else {
+        Alert.error('Error, try again')
       }
     })
 }
@@ -305,10 +342,12 @@ const addLanguage = language => {
     })
     .then(res => {
       if (res.status === 200) {
-        Alert.success(`Succès`)
+        Alert.success('The language has been added')
         setTimeout(() => {
-          window.location = window.location
+          window.location.href = '/editrole/2#/managelanguages'
         }, 500)
+      } else {
+        Alert.error('Error, try again')
       }
     })
 }
@@ -329,10 +368,12 @@ const editLanguage = language => {
     .then(res => {
       if (res.status === 200) {
         console.log('succès')
-        Alert.success(`Succès`)
+        Alert.success('The language has been edited')
         setTimeout(() => {
-          window.location = window.location
+          window.location.href = '/editrole/2#/managelanguages'
         }, 500)
+      } else {
+        Alert.error('Error, try again')
       }
     })
 }
@@ -354,12 +395,13 @@ const deleteLanguage = prop => {
   apiService
     .getApiEndpoint('DeleteLanguage', null, { id: prop.id })
     .then(res => {
-      if (res.status === 200) {
-        console.log('succès')
-        Alert.success(`Succès`)
+      if (res.status === 200 || 204) {
+        Alert.success('The language has been deleted')
         setTimeout(() => {
-          window.location = window.location
+          window.location.reload()
         }, 500)
+      } else {
+        Alert.error('Error, try again')
       }
     })
 }

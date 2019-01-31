@@ -162,7 +162,6 @@ class AddUser extends Component {
 
       if (opt.selected) {
         opts.push(parseInt(opt.value))
-
       }
     }
     console.log('opts: ', opts)
@@ -179,7 +178,6 @@ class AddUser extends Component {
 
       if (opt.selected) {
         opts.push(parseInt(opt.value))
-
       }
     }
     console.log('opts: ', opts)
@@ -223,7 +221,7 @@ class AddUser extends Component {
     const selectedSources = this.state.selectedSources
     const selectedTargets = this.state.selectedTargets
     const selectedDomains = this.state.selectedDomains
-    //const selectedRoleId = this.state.selectedRoleId
+    // const selectedRoleId = this.state.selectedRoleId
     console.log(this.state)
 
     return (
@@ -275,11 +273,15 @@ class AddUser extends Component {
                           </Row>
                           <Row>
                             <Col md={6}>
-                              <FormGroup controlId='userName-id' bsSize='large'>
+                              <FormGroup
+                                autocomplete='new-password'
+                                controlId='userName-id'
+                                bsSize='large'
+                              >
                                 <ControlLabel>Username</ControlLabel>
                                 <FormControl
                                   type='text'
-                                  autoFocus
+                                  onFocus
                                   name='userName'
                                   value={this.state.userName}
                                   onChange={this.updateUserNameField.bind(this)}
@@ -316,13 +318,14 @@ class AddUser extends Component {
                               <FormGroup
                                 controlId='confirmPassword-id'
                                 bsSize='large'
+                                autocomplete='off'
                               >
                                 <ControlLabel>Confirm password</ControlLabel>
                                 <FormControl
                                   onChange={
                                     this.updateConfirmPasswordField.bind(this) // value={this.state.confirmPassword}
                                   }
-                                  type='password'
+                                  type='text'
                                   name='confirmPassword'
                                 />
                               </FormGroup>
@@ -456,6 +459,7 @@ class AddUser extends Component {
                         Cancel
                       </Button>
                     </ButtonToolbar>
+                    <Alert stack={{ limit: 3 }} />
                   </form>
                 }
               />

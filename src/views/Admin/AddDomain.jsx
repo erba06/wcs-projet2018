@@ -88,6 +88,7 @@ class AddDomain extends Component {
                                 Cancel
                               </Button>
                             </ButtonToolbar>
+                            <Alert stack={{ limit: 3 }} />
                           </Col>
                         </Row>
                       </form>

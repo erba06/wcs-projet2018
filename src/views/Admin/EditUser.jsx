@@ -9,8 +9,6 @@ import {
   ButtonToolbar
 } from 'react-bootstrap'
 
-import Alert from 'react-s-alert'
-
 import { Card } from 'components/Card/Card.jsx'
 import Button from 'components/CustomButton/CustomButton.jsx'
 import api from '../../api'
@@ -28,8 +26,6 @@ import 'react-s-alert/dist/s-alert-css-effects/genie.css'
 import 'react-s-alert/dist/s-alert-css-effects/jelly.css'
 import 'react-s-alert/dist/s-alert-css-effects/stackslide.css'
 
-// import api from 'api/api.jsx'
-
 class EditUser extends Component {
   constructor () {
     super()
@@ -40,21 +36,31 @@ class EditUser extends Component {
       email: '',
       password: '',
       confirmPassword: '',
-      roles: '',
+      userRoles: [],
+      roles: [],
       source: [],
       target: [],
       domains: [],
-
+      selectedRoles: [1],
       errors: []
     }
     console.log(this.state)
+    this.updateRolesField = this.updateRolesField.bind(this)
+    this.updateDomainsField = this.updateDomainsField.bind(this)
+    this.updateTargetField = this.updateTargetField.bind(this)
+    this.updateSourceField = this.updateSourceField.bind(this)
+    this.compareRoles = this.compareRoles.bind(this)
   }
 
   componentDidMount () {
     let arrayOfUrl = window.location.href.split('/')
-    console.log(arrayOfUrl)
     let newId = arrayOfUrl[4].split('#')[0]
     this.setState({ id: newId })
+
+    apiService.getApiEndpoint('GetRoles').then(roles => {
+      this.setState({ roles: roles.data })
+    })
+
     apiService.getApiEndpoint('GetAccount', null, { id: newId }).then(res => {
       if (res.status === 200) {
         console.log(res)
@@ -63,7 +69,7 @@ class EditUser extends Component {
         this.setState({ userName: res.data.userName })
         this.setState({ email: res.data.emailAddress })
         this.setState({ confirmPassword: res.data.confirmpassword })
-        this.setState({ roles: res.data.roles })
+        this.setState({ userRoles: res.data.roles })
 
         if (res.data.sources.length === 1) {
           this.setState({ source: res.data.sources[0].languageName })
@@ -86,6 +92,7 @@ class EditUser extends Component {
           this.setState({
             domains: res.data.domains.map(dom => dom.domainName)
           })
+          this.compareRoles(), res => this.setState({ selectedRoles: res })
         }
       }
     })
@@ -117,21 +124,27 @@ class EditUser extends Component {
     return errors
   }
 
-  /* handleSubmit = (e) => {
-    e.preventDefault();
-
-    const { name, email, password } = this.state;
-
-    const errors = this.validate(name, email, password);
-    if (errors.length > 0) {
-      this.setState({ errors });
-      return;
-    }
-}
-*/
   handleChange (e) {
     this.setState({ value: e.target.value })
   }
+  /* compare user's roles to list of roles to get the id of the selected roles()
+and use them to update the selectedRoles state which highlight the selected
+roles in the dropdown list */
+  compareRoles () {
+    let arrSelectedRoles = []
+    for (var i = 0; i < this.state.userRoles.length; i++) {
+      for (var j = 0; j < this.state.roles.length; j++) {
+        if (this.state.roles[j].name == this.state.userRoles[i]) {
+          arrSelectedRoles.push(this.state.roles[j].id)
+        }
+      }
+    }
+    console.log(arrSelectedRoles)
+
+    this.setState({ selectedRoles: arrSelectedRoles })
+    console.log(this.state)
+  }
+
   updateFirstNameField (event) {
     const firstName = event.target.value
     this.setState({ firstName }) //  autre methode this.setState({ firstName: event.target.value})
@@ -166,8 +179,19 @@ class EditUser extends Component {
   }
 
   updateRolesField (event) {
-    const roles = event.target.value
-    this.setState({ roles })
+    let opts = []
+
+    let opt
+
+    for (let i = 0, len = event.target.options.length; i < len; i++) {
+      opt = event.target.options[i]
+
+      if (opt.selected) {
+        opts.push(parseInt(opt.value))
+      }
+    }
+    console.log('opts: ', opts)
+    this.setState({ selectedRoles: opts })
   }
 
   updateSourceField (event) {
@@ -199,9 +223,10 @@ class EditUser extends Component {
   }
 
   render () {
+    const roles = this.state.roles
     const { errors } = this.state
     const user = this.state
-    console.log(user)
+    console.log(this.state)
 
     return (
       <div className='content'>
@@ -318,7 +343,30 @@ class EditUser extends Component {
                           </legend>
                           <Row>
                             <Col md={6}>
-                              <FormGroup controlId='role-id' bsSize='large'>
+                              <FormGroup controlId='formControlsSelectMultipleRole'>
+                                <ControlLabel>
+                                  Role(s) within the organisation
+                                </ControlLabel>
+                                <FormControl
+                                  componentClass='select'
+                                  multiple
+                                  onChange={this.updateRolesField.bind(this)}
+                                  value={this.state.selectedRoles}
+                                >
+                                  <option value='select'>
+                                    select (multiple)
+                                  </option>
+                                  {roles.map(roles => {
+                                    return (
+                                      <option value={roles.id}>
+                                        {roles.id}-{roles.name}
+                                      </option>
+                                    )
+                                  })}
+                                </FormControl>
+                              </FormGroup>
+                              {/* {this.state.userRoles} */}
+                              {/* <FormGroup controlId='role-id' bsSize='large'>
                                 <ControlLabel>
                                   Role(s) within the organisation
                                 </ControlLabel>
@@ -329,7 +377,7 @@ class EditUser extends Component {
                                   value={this.state.roles}
                                   onChange={this.updateRolesField.bind(this)}
                                 />
-                              </FormGroup>
+                                </FormGroup> */}
                             </Col>
                             <Col md={6}>
                               <FormGroup controlId='domain-id' bsSize='large'>
@@ -378,8 +426,10 @@ class EditUser extends Component {
                     <ButtonToolbar>
                       <Button
                         onClick={this.handleGenie}
-                        onClick={() => {console.log(user)
-                          api.editUser(user)}}
+                        onClick={() => {
+                          console.log(user)
+                          api.editUser(user)
+                        }}
                         bsStyle='info'
                         pullRight
                         fill

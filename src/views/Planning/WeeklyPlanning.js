@@ -6,6 +6,7 @@ import SelectTranslators from 'components/Planning/SelectTranslators'
 import WeekView from 'components/Planning/WeekView'
 import Filter from '../../components/Planning/Filter'
 import WeekTasks from 'components/Planning/WeekTasks'
+import WeekCalendar from 'components/Planning/WeekCalendar'
 import api from '../../api'
 import apiService from '../../api/apiService'
 
@@ -124,7 +125,7 @@ class WeeklyPlanning extends Component {
                     domains={this.state.domains}
                     languages={this.state.languages}
                   />
-                  <WeekTasks />
+                  <WeekCalendar />
                 </div>
               </div>
             }

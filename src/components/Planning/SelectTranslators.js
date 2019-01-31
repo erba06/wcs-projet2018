@@ -19,6 +19,9 @@ class SelectTranslators extends Component {
     if (oldProps !== newProps) {
       this.setState({ selectedDomain: newProps.selectedDomain })
     }
+    console.log(newProps)
+    console.log(oldProps)
+    console.log(this.state)
   }
 
   render () {

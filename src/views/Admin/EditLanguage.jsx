@@ -42,8 +42,7 @@ class EditLanguage extends Component {
     console.log(arrayOfUrl)
     let newId = arrayOfUrl[4].split('#')[0]
     this.setState({ id: newId })
-    apiService.getApiEndpoint('GetLanguage', null, { id: newId })
-    .then(res => {
+    apiService.getApiEndpoint('GetLanguage', null, { id: newId }).then(res => {
       if (res.status === 200) {
         console.log(res)
         this.setState({ languageName: res.data.name })
@@ -213,6 +212,7 @@ class EditLanguage extends Component {
                             Cancel
                           </Button>
                         </ButtonToolbar>
+                        <Alert stack={{ limit: 3 }} />
                       </Col>
                     </Row>
                   </form>

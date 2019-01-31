@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-
 import Alert from 'react-s-alert'
 import { ButtonGroup, Grid, Row, Col, Table } from 'react-bootstrap'
 import Button from 'components/CustomButton/CustomButton.jsx'
@@ -23,8 +22,7 @@ class ManageDomains extends Component {
 
   componentDidMount () {
     console.log(this.state)
-    apiService.getApiEndpoint('GetDomains')
-    .then(this.updateState)
+    apiService.getApiEndpoint('GetDomains').then(this.updateState)
     console.log(this.state)
   }
 
@@ -48,30 +46,37 @@ class ManageDomains extends Component {
     const domains = this.state.domains
     console.log(domains)
 
-    return <div className="content">
+    return (
+      <div className='content'>
         <Grid fluid>
           <Row>
             <Col md={12}>
-              <Card title="Manage Domains" category="Your internal translation requests marketplace" ctTableFullWidth ctTableResponsive content={<div>
-                    <ul className="breadcrumb">
+              <Card
+                title='Manage Domains'
+                category='Your internal translation requests marketplace'
+                ctTableFullWidth
+                ctTableResponsive
+                content={
+                  <div>
+                    <ul className='breadcrumb'>
                       <li>
-                        <Link to="/manageusers">
-                          <a href="ManageUsersPage">Manage Users</a>
+                        <Link to='/manageusers'>
+                          <a href='ManageUsersPage'>Manage Users</a>
                         </Link>
                       </li>
                       <li>
-                        <Link to="/manageroles">
-                          <a href="ManageRolesPage">Manage Roles</a>
+                        <Link to='/manageroles'>
+                          <a href='ManageRolesPage'>Manage Roles</a>
                         </Link>
                       </li>
                       <li>
-                      <Link to="/managelanguages">
-                        <a href="ManageLanguagesPage">Manage Languages</a>
-                      </Link>
-                        </li>
+                        <Link to='/managelanguages'>
+                          <a href='ManageLanguagesPage'>Manage Languages</a>
+                        </Link>
+                      </li>
                     </ul>
                     <Table striped hover>
-                      <div id="tableGoesHere" class="col-md-6" />
+                      <div id='tableGoesHere' class='col-md-6' />
                       <thead>
                         <tr>
                           <th>Id</th>
@@ -81,37 +86,53 @@ class ManageDomains extends Component {
                       </thead>
                       <tbody>
                         {domains.map((prop, key) => {
-                          return <tr key={key}>
+                          return (
+                            <tr key={key}>
                               <td>{prop.id}</td>
                               <td>
                                 <ol>{prop.name}</ol>
                               </td>
                               <td>
-                                <ButtonGroup className="buttonManagePages">
-                                  <Link to="/editdomain/:id">
-                                    <Button onClick={() => api.getDomain(prop.id)} bsSize="sm" bsStyle="primary" fill>
-                                      <i class="far fa-edit" /> Edit
+                             {/*}   <ButtonGroup className='buttonManagePages'> */}
+                                  <Link to='/editdomain/:id'>
+                                    <Button
+                                      onClick={() => api.getDomain(prop.id)}
+                                      bsSize='default'
+                                      bsStyle='primary'
+                                      fill
+                                    >
+                                      <i class='far fa-edit' /> Edit
                                     </Button>
                                   </Link>
-                                  <Button onClick={() => api.deleteDomain(prop.id)} bsSize="sm" bsStyle="info" fill>
-                                    <i class="fas fa-trash-alt" /> Delete
+                                  <Button
+                                    onClick={() => api.deleteDomain(prop.id)}
+                                    bsSize='default'
+                                    bsStyle='info'
+                                    fill
+                                  >
+                                    <i class='fas fa-trash-alt' /> Delete
                                   </Button>
-                                </ButtonGroup>
+                         {/*} </ButtonGroup> */}
                               </td>
-                            </tr>;
+                            </tr>
+                          )
                         })}
                       </tbody>
                     </Table>
-                  </div>} />
-              <Link to="/adddomain">
-                <Button bsStyle="info" pullLeft fill type="submit">
+                  </div>
+                }
+              />
+              <Link to='/adddomain'>
+                <Button bsStyle='info' pullLeft fill type='submit'>
                   Add domain
                 </Button>
+                <Alert stack={{ limit: 3 }} />
               </Link>
             </Col>
           </Row>
         </Grid>
-      </div>;
+      </div>
+    )
   }
 }
 

@@ -95,11 +95,11 @@ class ManageLanguages extends Component {
                                 {prop.isNeutral ? <ol>Yes</ol> : <ol>No</ol>}
                               </td>
                               <td>
-                                <ButtonGroup className='buttonManagePages'>
+                             {/*}   <ButtonGroup className='buttonManagePages'> */}
                                   <Link to='/editlanguage/:id'>
                                     <Button
                                       onClick={() => api.getLanguage(prop.id)}
-                                      bsSize='sm'
+                                      bsSize='default'
                                       bsStyle='primary'
                                       fill
                                     >
@@ -111,13 +111,13 @@ class ManageLanguages extends Component {
                                       console.log(prop)
                                       api.deleteLanguage(prop)
                                     }}
-                                    bsSize='sm'
+                                    bsSize='default'
                                     bsStyle='info'
                                     fill
                                   >
                                     <i className='fas fa-trash-alt' /> Delete
                                   </Button>
-                                </ButtonGroup>
+                               {/*} </ButtonGroup> */}
                               </td>
                             </tr>
                           )
@@ -131,6 +131,7 @@ class ManageLanguages extends Component {
                 <Button bsStyle='info' pullleft='true' fill type='submit'>
                   Add language
                 </Button>
+                        <Alert stack={{ limit: 3 }} />
               </Link>
             </Col>
           </Row>

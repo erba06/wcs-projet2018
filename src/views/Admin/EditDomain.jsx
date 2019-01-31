@@ -89,7 +89,8 @@ class EditDomain extends Component {
                               <Button
                                 onClick={() => {
                                   console.log(domains)
-                                  api.editDomain(domains)}}
+                                  api.editDomain(domains)
+                                }}
                                 bsStyle='info'
                                 pullLeft
                                 fill
@@ -106,6 +107,7 @@ class EditDomain extends Component {
                                 Cancel
                               </Button>
                             </ButtonToolbar>
+                            <Alert stack={{ limit: 3 }} />
                           </Col>
                         </Row>
                       </form>
