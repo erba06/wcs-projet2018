@@ -130,12 +130,9 @@ const editUser = prop => {
         emailAddress: prop.email,
         roles: prop.selectedRoles,
         password: prop.password,
-        // sourceLanguages: prop.sources,
-        // targetLanguages: prop.targets,
+        sourceLanguages: prop.selectedSources,
+        targetLanguages: prop.selectedTargets,
         domains: prop.selectedDomains,
-        sourceLanguages: [],
-        targetLanguages: [],
-
         profilePictureLink: prop.profilePictureLink,
         active: prop.active
       },
@@ -192,6 +189,8 @@ const getUser = id => {
         hashType: 'noslash' // Omit the leading slash
       })
       history.push(`/edituser/${res.data.id}`)
+    } else {
+      console.log(res.status)
     }
   })
 }

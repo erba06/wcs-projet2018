@@ -36,12 +36,17 @@ class EditUser extends Component {
       email: '',
       password: '',
       confirmPassword: '',
+      languages: [],
       userRoles: [],
       roles: [],
       source: [],
       target: [],
       domains: [],
-      selectedRoles: [1],
+      selectedDomains: [],
+      selectedDomains: [],
+      selectedRoles: [],
+      selectedSources: [],
+      selectedTargets: [],
       errors: []
     }
     console.log(this.state)
@@ -50,18 +55,27 @@ class EditUser extends Component {
     this.updateTargetField = this.updateTargetField.bind(this)
     this.updateSourceField = this.updateSourceField.bind(this)
     this.compareRoles = this.compareRoles.bind(this)
+    this.compareSources = this.compareSources.bind(this)
+    this.compareDomains = this.compareDomains.bind(this)
   }
 
+  syncDatas = () => {
+    apiService.getApiEndpoint('GetDomains').then(domains => {
+      this.setState({ domains: domains.data })
+    })
+    apiService.getApiEndpoint('GetRoles').then(roles => {
+      this.setState({ roles: roles.data })
+    })
+
+    apiService.getApiEndpoint('GetLanguages').then(languages => {
+      this.setState({ languages: languages.data })
+    })
+  }
   componentDidMount () {
     let arrayOfUrl = window.location.href.split('/')
     let newId = arrayOfUrl[4].split('#')[0]
     this.setState({ id: newId })
-
-    apiService.getApiEndpoint('GetRoles').then(roles => {
-      this.setState({ roles: roles.data })
-    })
-    apiService.getApiEndpoint('GetDomains')
-      .then(domains => { this.setState({ domains: domains.data }) })
+    this.syncDatas()
 
     apiService.getApiEndpoint('GetAccount', null, { id: newId }).then(res => {
       if (res.status === 200) {
@@ -73,32 +87,36 @@ class EditUser extends Component {
         this.setState({ confirmPassword: res.data.confirmpassword })
         this.setState({ userRoles: res.data.roles })
         this.setState({ userDomains: res.data.domains })
+        this.setState({ userSources: res.data.sources })
 
-
-        if (res.data.sources.length === 1) {
+        {
+          /* if (res.data.sources.length === 1) {
           this.setState({ source: res.data.sources[0].languageName })
         } else {
           this.setState({
             source: res.data.sources.map(t => t.languageName)
           })
+        } */
         }
-        if (res.data.targets.length === 1) {
+        {
+          /* if (res.data.targets.length === 1) {
           this.setState({ target: res.data.targets[0].languageName })
         } else {
           this.setState({
             target: res.data.targets.map(t => t.languageName)
           })
           console.log(this.state)
+        } */
         }
         if (res.data.domains.length === 1) {
-          this.setState({ domains: res.data.domains[0] })
-        } else {
+          //  this.setState({ domains: res.data.domains[0] })
+          // } else {
           // this.setState({
           //   domains: res.data.domains.map(dom => dom.domainName)
           // })
           this.compareRoles(), res => this.setState({ selectedRoles: res })
           this.compareDomains(), res => this.setState({ selectedDomains: res })
-        
+          this.compareSources(), res => this.setState({ selectedSources: res })
         }
       }
     })
@@ -150,11 +168,13 @@ roles in the dropdown list */
     this.setState({ selectedRoles: arrSelectedRoles })
     console.log(this.state)
   }
-  compareDomains() {
+  compareDomains () {
     let arrSelectedDomains = []
     for (var i = 0; i < this.state.userDomains.length; i++) {
       for (var j = 0; j < this.state.domains.length; j++) {
-        if (this.state.domains[j].name == this.state.userDomains[i].domainName) {
+        if (
+          this.state.domains[j].name == this.state.userDomains[i].domainName
+        ) {
           arrSelectedDomains.push(this.state.domains[j].id)
         }
       }
@@ -162,6 +182,24 @@ roles in the dropdown list */
     console.log(arrSelectedDomains)
 
     this.setState({ selectedDomains: arrSelectedDomains })
+    console.log(this.state)
+  }
+
+  compareSources () {
+    let arrSelectedSources = []
+    for (var i = 0; i < this.state.userSources.length; i++) {
+      for (var j = 0; j < this.state.languages.length; j++) {
+        if (
+          this.state.languages[j].name == this.state.userSources[i]
+        ) {
+          arrSelectedSources.push(this.state.languages[j].id)
+        }
+      }
+    }
+
+    this.setState({ selectedSources: arrSelectedSources })
+    console.log(arrSelectedSources)
+    
     console.log(this.state)
   }
 
@@ -215,12 +253,35 @@ roles in the dropdown list */
   }
 
   updateSourceField (event) {
-    const source = event.target.value
-    this.setState({ source })
+    let opts = []
+
+    let opt
+
+    for (let i = 0, len = event.target.options.length; i < len; i++) {
+      opt = event.target.options[i]
+
+      if (opt.selected) {
+        opts.push(parseInt(opt.value))
+      }
+    }
+    console.log('opts: ', opts)
+    this.setState({ selectedSources: opts })
   }
-  updateTargetField (event) {
-    const target = event.target.value
-    this.setState({ target })
+
+  updateTargetField(event) {
+    let opts = []
+
+    let opt
+
+    for (let i = 0, len = event.target.options.length; i < len; i++) {
+      opt = event.target.options[i]
+
+      if (opt.selected) {
+        opts.push(parseInt(opt.value))
+      }
+    }
+    console.log('opts: ', opts)
+    this.setState({ selectedTargets: opts })
   }
 
   updateDomainsField = event => {
@@ -239,7 +300,6 @@ roles in the dropdown list */
     this.setState({ selectedDomains: opts })
   }
 
-
   handleSubmit = event => {
     event.preventDefault()
     const user = this.state
@@ -255,6 +315,7 @@ roles in the dropdown list */
   }
 
   render () {
+    const languages = this.state.languages
     const roles = this.state.roles
     const { errors } = this.state
     const user = this.state
@@ -404,10 +465,10 @@ roles in the dropdown list */
                               <FormGroup controlId='formControlsSelectMultiple'>
                                 <ControlLabel>Domains</ControlLabel>
                                 <FormControl
+                                  multiple
                                   componentClass='select'
                                   onChange={this.updateDomainsField}
                                   value={this.state.selectedDomains}
-                                  multiple
                                 >
                                   <option value='select'>
                                     select (multiple)
@@ -423,29 +484,52 @@ roles in the dropdown list */
                           </Row>
                           <Row>
                             <Col md={6}>
-                              <FormGroup controlId='password' bsSize='large'>
+                              <FormGroup controlId='formControlsSelectMultiple'>
                                 <ControlLabel>
                                   Source language (for translator role)
                                 </ControlLabel>
                                 <FormControl
-                                  value={this.state.source}
+                                  componentClass='select'
+                                  multiple
                                   onChange={this.updateSourceField.bind(this)}
-                                  type='text'
-                                  name='source'
-                                />
+                                  value={this.state.selectedSources}
+                                >
+                                  <option value='select'>
+                                    select (multiple)
+                                  </option>
+                                  {languages.map(languages => {
+                                    return (
+                                      <option value={languages.id}>
+                                        {languages.id}-{languages.name}
+                                      </option>
+                                    )
+                                  })}
+                                </FormControl>
                               </FormGroup>
                             </Col>
+                            
                             <Col md={6}>
-                              <FormGroup controlId='target' bsSize='large'>
+                              <FormGroup controlId='formControlsSelectMultiple'>
                                 <ControlLabel>
                                   Target language (for translator role)
                                 </ControlLabel>
                                 <FormControl
-                                  value={this.state.target}
+                                  componentClass='select'
+                                  multiple
                                   onChange={this.updateTargetField.bind(this)}
-                                  type='text'
-                                  name='target'
-                                />
+                                  value={this.state.selectedTargets}
+                                >
+                                  <option value='select'>
+                                    select (multiple)
+                                  </option>
+                                  {languages.map((languages, index) => {
+                                    return (
+                                      <option value={languages.id}>
+                                        {languages.id}-{languages.name}
+                                      </option>
+                                    )
+                                  })}
+                                </FormControl>
                               </FormGroup>
                             </Col>
                           </Row>

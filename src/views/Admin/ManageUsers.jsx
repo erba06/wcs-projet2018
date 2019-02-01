@@ -68,7 +68,7 @@ class ManageUsers extends Component {
                       </li>
                     </ul>
                     <Table striped hover>
-                      <div id='tableGoesHere' class='col-md-6' />
+                      <div id='tableGoesHere' className='col-md-6' />
 
                       <thead>
                         <tr>
@@ -100,7 +100,7 @@ class ManageUsers extends Component {
                               <td>
                                 {prop.roles.length === 1
                                   ? prop.roles
-                                  : prop.roles.map(roles => <li>{roles}</li>)}
+                                  : prop.roles.map((roles, key) => <li key={key}>{roles}</li>)}
                               </td>
                               <td>
                                 {prop.sources.length === 0
@@ -152,7 +152,7 @@ class ManageUsers extends Component {
                                     </Button>
                                     <Button
                                       onClick={() => api.loginAsUser(prop.id)}
-                                      bsStyle = 'dafault'
+                                      bsStyle = 'default'
 
                                       fill
                                     >
