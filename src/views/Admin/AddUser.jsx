@@ -221,7 +221,7 @@ class AddUser extends Component {
     const selectedSources = this.state.selectedSources
     const selectedTargets = this.state.selectedTargets
     const selectedDomains = this.state.selectedDomains
-    // const selectedRoleId = this.state.selectedRoleId
+    const selectedRoleId = this.state.selectedRoleId
     console.log(this.state)
 
     return (
@@ -377,11 +377,11 @@ class AddUser extends Component {
                                   <option value='select'>
                                     select (multiple)
                                   </option>
-                                  {domains.map((domain, index) => {
+                                 {domains.map((domain) => {
                                     return (
                                       <option value={domain.id}>
                                         {domain.id}-{domain.name}
-                                      </option>
+                                      </option> 
                                     )
                                   })}
                                 </FormControl>

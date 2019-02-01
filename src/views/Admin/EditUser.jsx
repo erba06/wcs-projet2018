@@ -60,6 +60,8 @@ class EditUser extends Component {
     apiService.getApiEndpoint('GetRoles').then(roles => {
       this.setState({ roles: roles.data })
     })
+    apiService.getApiEndpoint('GetDomains')
+      .then(domains => { this.setState({ domains: domains.data }) })
 
     apiService.getApiEndpoint('GetAccount', null, { id: newId }).then(res => {
       if (res.status === 200) {
@@ -70,6 +72,8 @@ class EditUser extends Component {
         this.setState({ email: res.data.emailAddress })
         this.setState({ confirmPassword: res.data.confirmpassword })
         this.setState({ userRoles: res.data.roles })
+        this.setState({ userDomains: res.data.domains })
+
 
         if (res.data.sources.length === 1) {
           this.setState({ source: res.data.sources[0].languageName })
@@ -87,12 +91,14 @@ class EditUser extends Component {
           console.log(this.state)
         }
         if (res.data.domains.length === 1) {
-          this.setState({ domains: res.data.domains[0].domainName })
+          this.setState({ domains: res.data.domains[0] })
         } else {
-          this.setState({
-            domains: res.data.domains.map(dom => dom.domainName)
-          })
+          // this.setState({
+          //   domains: res.data.domains.map(dom => dom.domainName)
+          // })
           this.compareRoles(), res => this.setState({ selectedRoles: res })
+          this.compareDomains(), res => this.setState({ selectedDomains: res })
+        
         }
       }
     })
@@ -142,6 +148,20 @@ roles in the dropdown list */
     console.log(arrSelectedRoles)
 
     this.setState({ selectedRoles: arrSelectedRoles })
+    console.log(this.state)
+  }
+  compareDomains() {
+    let arrSelectedDomains = []
+    for (var i = 0; i < this.state.userDomains.length; i++) {
+      for (var j = 0; j < this.state.domains.length; j++) {
+        if (this.state.domains[j].name == this.state.userDomains[i].domainName) {
+          arrSelectedDomains.push(this.state.domains[j].id)
+        }
+      }
+    }
+    console.log(arrSelectedDomains)
+
+    this.setState({ selectedDomains: arrSelectedDomains })
     console.log(this.state)
   }
 
@@ -203,10 +223,22 @@ roles in the dropdown list */
     this.setState({ target })
   }
 
-  updateDomainsField (event) {
-    const domains = event.target.value
-    this.setState({ domains })
+  updateDomainsField = event => {
+    let opts = []
+
+    let opt
+
+    for (let i = 0, len = event.target.options.length; i < len; i++) {
+      opt = event.target.options[i]
+
+      if (opt.selected) {
+        opts.push(parseInt(opt.value))
+      }
+    }
+    console.log('opts: ', opts)
+    this.setState({ selectedDomains: opts })
   }
+
 
   handleSubmit = event => {
     event.preventDefault()
@@ -226,6 +258,8 @@ roles in the dropdown list */
     const roles = this.state.roles
     const { errors } = this.state
     const user = this.state
+    const domains = this.state.domains
+
     console.log(this.state)
 
     return (
@@ -365,30 +399,25 @@ roles in the dropdown list */
                                   })}
                                 </FormControl>
                               </FormGroup>
-                              {/* {this.state.userRoles} */}
-                              {/* <FormGroup controlId='role-id' bsSize='large'>
-                                <ControlLabel>
-                                  Role(s) within the organisation
-                                </ControlLabel>
-                                <FormControl
-                                  type='text'
-                                  autoFocus
-                                  name='roles'
-                                  value={this.state.roles}
-                                  onChange={this.updateRolesField.bind(this)}
-                                />
-                                </FormGroup> */}
                             </Col>
                             <Col md={6}>
-                              <FormGroup controlId='domain-id' bsSize='large'>
-                                <ControlLabel>Domain(s)</ControlLabel>
+                              <FormGroup controlId='formControlsSelectMultiple'>
+                                <ControlLabel>Domains</ControlLabel>
                                 <FormControl
-                                  type='text'
-                                  autoFocus
-                                  name='domain'
-                                  value={this.state.domains}
-                                  onChange={this.updateDomainsField.bind(this)}
-                                />
+                                  componentClass='select'
+                                  onChange={this.updateDomainsField}
+                                  value={this.state.selectedDomains}
+                                  multiple
+                                >
+                                  <option value='select'>
+                                    select (multiple)
+                                  </option>
+                                  {domains.map(domain => (
+                                    <option value={domain.id}>
+                                      {domain.id}-{domain.name}
+                                    </option>
+                                  ))}
+                                </FormControl>
                               </FormGroup>
                             </Col>
                           </Row>

@@ -128,11 +128,14 @@ const editUser = prop => {
         firstName: prop.firstName,
         lastName: prop.lastName,
         emailAddress: prop.email,
-        roles: prop.roles,
+        roles: prop.selectedRoles,
         password: prop.password,
-        sourceLanguages: prop.sources,
-        targetLanguages: prop.targets,
-        domains: prop.domains,
+        // sourceLanguages: prop.sources,
+        // targetLanguages: prop.targets,
+        domains: prop.selectedDomains,
+        sourceLanguages: [],
+        targetLanguages: [],
+
         profilePictureLink: prop.profilePictureLink,
         active: prop.active
       },
@@ -141,9 +144,9 @@ const editUser = prop => {
     .then(res => {
       if (res.status === 200 || 204) {
         Alert.success('The user has been edited')
-        //setTimeout(() => {
-        //  window.location.href = '/editrole/2#/manageusers'
-       // }, 500)
+        setTimeout(() => {
+          window.location.href = '/editrole/2#/manageusers'
+        }, 500)
       } else {
         Alert.error('Error, try again')
       }
