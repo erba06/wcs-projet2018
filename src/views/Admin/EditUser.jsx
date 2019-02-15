@@ -8,6 +8,7 @@ import {
   FormControl,
   ButtonToolbar
 } from 'react-bootstrap'
+import { Link, withRouter } from 'react-router-dom'
 
 import { Card } from 'components/Card/Card.jsx'
 import Button from 'components/CustomButton/CustomButton.jsx'
@@ -26,16 +27,17 @@ import 'react-s-alert/dist/s-alert-css-effects/genie.css'
 import 'react-s-alert/dist/s-alert-css-effects/jelly.css'
 import 'react-s-alert/dist/s-alert-css-effects/stackslide.css'
 
+
 class EditUser extends Component {
-  constructor () {
-    super()
+  constructor(props) {
+    super(props);
     this.state = {
-      firstName: '',
-      lastName: '',
-      userName: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
+      firstName: "",
+      lastName: "",
+      userName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
       languages: [],
       userRoles: [],
       roles: [],
@@ -43,51 +45,62 @@ class EditUser extends Component {
       target: [],
       domains: [],
       selectedDomains: [],
-      selectedDomains: [],
       selectedRoles: [],
       selectedSources: [],
       selectedTargets: [],
-      errors: []
-    }
-    console.log(this.state)
-    this.updateRolesField = this.updateRolesField.bind(this)
-    this.updateDomainsField = this.updateDomainsField.bind(this)
-    this.updateTargetField = this.updateTargetField.bind(this)
-    this.updateSourceField = this.updateSourceField.bind(this)
-    this.compareRoles = this.compareRoles.bind(this)
-    this.compareSources = this.compareSources.bind(this)
-    this.compareDomains = this.compareDomains.bind(this)
+      errors: [],
+      newId2: [],
+    };
+    console.log(this.state);
+    this.updateRolesField = this.updateRolesField.bind(this);
+    this.updateDomainsField = this.updateDomainsField.bind(this);
+    this.updateTargetField = this.updateTargetField.bind(this);
+    this.updateSourceField = this.updateSourceField.bind(this);
+    this.compareRoles = this.compareRoles.bind(this);
+    this.compareSources = this.compareSources.bind(this);
+    this.compareTargets = this.compareTargets.bind(this);
+    this.compareDomains = this.compareDomains.bind(this);
   }
 
   syncDatas = () => {
-    apiService.getApiEndpoint('GetDomains').then(domains => {
-      this.setState({ domains: domains.data })
-    })
-    apiService.getApiEndpoint('GetRoles').then(roles => {
-      this.setState({ roles: roles.data })
-    })
+    apiService.getApiEndpoint("GetDomains").then(domains => {
+      this.setState({ domains: domains.data });
+    });
+    apiService.getApiEndpoint("GetRoles").then(roles => {
+      this.setState({ roles: roles.data });
+    });
 
-    apiService.getApiEndpoint('GetLanguages').then(languages => {
-      this.setState({ languages: languages.data })
-    })
+    apiService.getApiEndpoint("GetLanguages").then(languages => {
+      this.setState({ languages: languages.data });
+    });
+  };
+
+  componentWillUpdate() {
+    let arrayOfUrl = window.location.href.split("/");
+    let newId2 = arrayOfUrl[4].split("#")[0];
+    console.log("IDTEST2 " + newId2);
   }
-  componentDidMount () {
-    let arrayOfUrl = window.location.href.split('/')
-    let newId = arrayOfUrl[4].split('#')[0]
-    this.setState({ id: newId })
-    this.syncDatas()
 
-    apiService.getApiEndpoint('GetAccount', null, { id: newId }).then(res => {
+  componentDidMount() {
+    let arrayOfUrl = window.location.href.split("/");
+    let newId = arrayOfUrl[4].split("#")[0];
+    console.log("THE_ID: " + newId);
+    this.setState({ newId2: newId });
+
+    this.syncDatas();
+
+    apiService.getApiEndpoint("GetAccount", null, { id: newId }).then(res => {
       if (res.status === 200) {
-        console.log(res)
-        this.setState({ firstName: res.data.firstName })
-        this.setState({ lastName: res.data.lastName })
-        this.setState({ userName: res.data.userName })
-        this.setState({ email: res.data.emailAddress })
-        this.setState({ confirmPassword: res.data.confirmpassword })
-        this.setState({ userRoles: res.data.roles })
-        this.setState({ userDomains: res.data.domains })
-        this.setState({ userSources: res.data.sources })
+        console.log("2e APPEL " + newId);
+        this.setState({ firstName: res.data.firstName });
+        this.setState({ lastName: res.data.lastName });
+        this.setState({ userName: res.data.userName });
+        this.setState({ email: res.data.emailAddress });
+        this.setState({ confirmPassword: res.data.confirmpassword });
+        this.setState({ userRoles: res.data.roles });
+        this.setState({ userDomains: res.data.domains });
+        this.setState({ userSources: res.data.sources });
+        this.setState({ userTargets: res.data.targets });
 
         {
           /* if (res.data.sources.length === 1) {
@@ -97,6 +110,7 @@ class EditUser extends Component {
             source: res.data.sources.map(t => t.languageName)
           })
         } */
+          console.log(this.state);
         }
         {
           /* if (res.data.targets.length === 1) {
@@ -108,250 +122,264 @@ class EditUser extends Component {
           console.log(this.state)
         } */
         }
-        if (res.data.domains.length === 1) {
+        if (res.data) {
           //  this.setState({ domains: res.data.domains[0] })
           // } else {
           // this.setState({
           //   domains: res.data.domains.map(dom => dom.domainName)
           // })
-          this.compareRoles(), res => this.setState({ selectedRoles: res })
-          this.compareDomains(), res => this.setState({ selectedDomains: res })
-          this.compareSources(), res => this.setState({ selectedSources: res })
+          this.compareRoles(), res => this.setState({ selectedRoles: res });
+          this.compareDomains(), res => this.setState({ selectedDomains: res });
+          this.compareSources(), res => this.setState({ selectedSources: res });
+          this.compareTargets(), res => this.setState({ selectedTargets: res });
         }
       }
-    })
+    });
   }
 
-  validate (name, email, password) {
+  validate(name, email, password) {
     // we are going to store errors for all fields
     // in a signle array
-    const errors = []
+    const errors = [];
 
     if (name.length === 0) {
-      errors.push("Name can't be empty")
+      errors.push("Name can't be empty");
     }
 
     if (email.length < 5) {
-      errors.push('Email should be at least 5 charcters long')
+      errors.push("Email should be at least 5 charcters long");
     }
-    if (email.split('').filter(x => x === '@').length !== 1) {
-      errors.push('Email should contain a @')
+    if (email.split("").filter(x => x === "@").length !== 1) {
+      errors.push("Email should contain a @");
     }
-    if (email.indexOf('.') === -1) {
-      errors.push('Email should contain at least one dot')
+    if (email.indexOf(".") === -1) {
+      errors.push("Email should contain at least one dot");
     }
 
     if (password.length < 6) {
-      errors.push('Password should be at least 6 characters long')
+      errors.push("Password should be at least 6 characters long");
     }
 
-    return errors
+    return errors;
   }
 
-  handleChange (e) {
-    this.setState({ value: e.target.value })
+  handleChange(e) {
+    this.setState({ value: e.target.value });
   }
   /* compare user's roles to list of roles to get the id of the selected roles()
 and use them to update the selectedRoles state which highlight the selected
 roles in the dropdown list */
-  compareRoles () {
-    let arrSelectedRoles = []
+  compareRoles() {
+    let arrSelectedRoles = [];
     for (var i = 0; i < this.state.userRoles.length; i++) {
       for (var j = 0; j < this.state.roles.length; j++) {
         if (this.state.roles[j].name == this.state.userRoles[i]) {
-          arrSelectedRoles.push(this.state.roles[j].id)
+          arrSelectedRoles.push(this.state.roles[j].id);
         }
       }
     }
-    console.log(arrSelectedRoles)
+    console.log(arrSelectedRoles);
 
-    this.setState({ selectedRoles: arrSelectedRoles })
-    console.log(this.state)
+    this.setState({ selectedRoles: arrSelectedRoles });
+    console.log(this.state);
   }
-  compareDomains () {
-    let arrSelectedDomains = []
+  compareDomains() {
+    let arrSelectedDomains = [];
     for (var i = 0; i < this.state.userDomains.length; i++) {
       for (var j = 0; j < this.state.domains.length; j++) {
         if (
           this.state.domains[j].name == this.state.userDomains[i].domainName
         ) {
-          arrSelectedDomains.push(this.state.domains[j].id)
+          arrSelectedDomains.push(this.state.domains[j].id);
         }
       }
     }
-    console.log(arrSelectedDomains)
+    console.log(arrSelectedDomains);
 
-    this.setState({ selectedDomains: arrSelectedDomains })
-    console.log(this.state)
+    this.setState({ selectedDomains: arrSelectedDomains });
+    console.log(this.state);
   }
 
-  compareSources () {
-    let arrSelectedSources = []
+  compareSources() {
+    let arrSelectedSources = [];
     for (var i = 0; i < this.state.userSources.length; i++) {
       for (var j = 0; j < this.state.languages.length; j++) {
         if (
-          this.state.languages[j].name == this.state.userSources[i]
+          this.state.languages[j].name == this.state.userSources[i].languageName
         ) {
-          arrSelectedSources.push(this.state.languages[j].id)
+          arrSelectedSources.push(this.state.languages[j].id);
         }
       }
     }
 
-    this.setState({ selectedSources: arrSelectedSources })
-    console.log(arrSelectedSources)
-    
-    console.log(this.state)
+    this.setState({ selectedSources: arrSelectedSources });
+    console.log("SOURCES:" + arrSelectedSources);
   }
-
-  updateFirstNameField (event) {
-    const firstName = event.target.value
-    this.setState({ firstName }) //  autre methode this.setState({ firstName: event.target.value})
-    console.log(firstName)
-  }
-
-  updateLastNameField (event) {
-    const lastName = event.target.value
-    this.setState({ lastName })
-    console.log(lastName)
-  }
-
-  updateUserNameField (event) {
-    const userName = event.target.value
-    this.setState({ userName })
-    console.log(userName)
-  }
-
-  updateEmailField (event) {
-    const email = event.target.value
-    this.setState({ email })
-  }
-
-  updatePasswordField (event) {
-    const password = event.target.value
-    this.setState({ password })
-  }
-
-  updateConfirmPasswordField (event) {
-    const confirmPassword = event.target.value
-    this.setState({ confirmPassword })
-  }
-
-  updateRolesField (event) {
-    let opts = []
-
-    let opt
-
-    for (let i = 0, len = event.target.options.length; i < len; i++) {
-      opt = event.target.options[i]
-
-      if (opt.selected) {
-        opts.push(parseInt(opt.value))
+  compareTargets() {
+    let arrSelectedTargets = [];
+    for (var i = 0; i < this.state.userTargets.length; i++) {
+      for (var j = 0; j < this.state.languages.length; j++) {
+        if (
+          this.state.languages[j].name == this.state.userTargets[i].languageName
+        ) {
+          arrSelectedTargets.push(this.state.languages[j].id);
+        }
       }
     }
-    console.log('opts: ', opts)
-    this.setState({ selectedRoles: opts })
+
+    this.setState({ selectedTargets: arrSelectedTargets });
+    console.log("TARGETS:" + arrSelectedTargets);
   }
 
-  updateSourceField (event) {
-    let opts = []
+  updateFirstNameField(event) {
+    const firstName = event.target.value;
+    this.setState({ firstName }); //  autre methode this.setState({ firstName: event.target.value})
+    console.log(firstName);
+  }
 
-    let opt
+  updateLastNameField(event) {
+    const lastName = event.target.value;
+    this.setState({ lastName });
+    console.log(lastName);
+  }
+
+  updateUserNameField(event) {
+    const userName = event.target.value;
+    this.setState({ userName });
+    console.log(userName);
+  }
+
+  updateEmailField(event) {
+    const email = event.target.value;
+    this.setState({ email });
+  }
+
+  updatePasswordField(event) {
+    const password = event.target.value;
+    this.setState({ password });
+  }
+
+  updateConfirmPasswordField(event) {
+    const confirmPassword = event.target.value;
+    this.setState({ confirmPassword });
+  }
+
+  updateRolesField(event) {
+    let opts = [];
+
+    let opt;
 
     for (let i = 0, len = event.target.options.length; i < len; i++) {
-      opt = event.target.options[i]
+      opt = event.target.options[i];
 
       if (opt.selected) {
-        opts.push(parseInt(opt.value))
+        opts.push(parseInt(opt.value));
       }
     }
-    console.log('opts: ', opts)
-    this.setState({ selectedSources: opts })
+    console.log("opts: ", opts);
+    this.setState({ selectedRoles: opts });
+  }
+
+  updateSourceField(event) {
+    let opts = [];
+
+    let opt;
+
+    for (let i = 0, len = event.target.options.length; i < len; i++) {
+      opt = event.target.options[i];
+
+      if (opt.selected) {
+        opts.push(parseInt(opt.value));
+      }
+    }
+    console.log("opts: ", opts);
+    this.setState({ selectedSources: opts });
   }
 
   updateTargetField(event) {
-    let opts = []
+    let opts = [];
 
-    let opt
+    let opt;
 
     for (let i = 0, len = event.target.options.length; i < len; i++) {
-      opt = event.target.options[i]
+      opt = event.target.options[i];
 
       if (opt.selected) {
-        opts.push(parseInt(opt.value))
+        opts.push(parseInt(opt.value));
       }
     }
-    console.log('opts: ', opts)
-    this.setState({ selectedTargets: opts })
+    console.log("opts: ", opts);
+    this.setState({ selectedTargets: opts });
   }
 
   updateDomainsField = event => {
-    let opts = []
+    let opts = [];
 
-    let opt
+    let opt;
 
     for (let i = 0, len = event.target.options.length; i < len; i++) {
-      opt = event.target.options[i]
+      opt = event.target.options[i];
 
       if (opt.selected) {
-        opts.push(parseInt(opt.value))
+        opts.push(parseInt(opt.value));
       }
     }
-    console.log('opts: ', opts)
-    this.setState({ selectedDomains: opts })
-  }
+    console.log("opts: ", opts);
+    this.setState({ selectedDomains: opts });
+  };
 
   handleSubmit = event => {
-    event.preventDefault()
-    const user = this.state
-    console.log(user)
+    event.preventDefault();
+    const user = this.state;
+    console.log(user);
+  };
+
+  handleGenie(event) {
+    event.preventDefault();
+    alert.success("User has been updated!", {
+      position: "bottom-right",
+      effect: "genie",
+    });
   }
 
-  handleGenie (event) {
-    event.preventDefault()
-    alert.success('User has been updated!', {
-      position: 'bottom-right',
-      effect: 'genie'
-    })
-  }
+  render() {
+    const languages = this.state.languages;
+    const roles = this.state.roles;
+    const { errors } = this.state;
+    const user = this.state;
+    const domains = this.state.domains;
 
-  render () {
-    const languages = this.state.languages
-    const roles = this.state.roles
-    const { errors } = this.state
-    const user = this.state
-    const domains = this.state.domains
-
-    console.log(this.state)
+    console.log(this.state);
 
     return (
-      <div className='content'>
+      <div className="content">
         <Grid fluid>
           <Row>
             <Col md={12}>
               <Card
-                title='Edit user'
+                title="Edit user"
                 content={
-                  <form action='#' onSubmit={this.handleSubmit}>
+                  <form action="#" onSubmit={this.handleSubmit}>
                     <Row>
                       {errors.map(error => (
                         <p key={error}>Error: {error}</p>
                       ))}
                       <Col md={12}>
-                        <fieldset className='scheduler-border'>
-                          <legend className='scheduler-border'>
+                        <fieldset className="scheduler-border">
+                          <legend className="scheduler-border">
                             Contact info
                           </legend>
                           <Row>
                             <Col md={6}>
                               <FormGroup
-                                controlId='firstName-id'
-                                bsSize='large'
+                                controlId="firstName-id"
+                                bsSize="large"
                               >
                                 <ControlLabel>First name</ControlLabel>
                                 <FormControl
-                                  type='text'
+                                  type="text"
                                   autoFocus
-                                  name='firstName'
+                                  name="firstName"
                                   value={this.state.firstName}
                                   onChange={this.updateFirstNameField.bind(
                                     this
@@ -360,11 +388,11 @@ roles in the dropdown list */
                               </FormGroup>
                             </Col>
                             <Col md={6}>
-                              <FormGroup controlId='lastName-id' bsSize='large'>
+                              <FormGroup controlId="lastName-id" bsSize="large">
                                 <ControlLabel>Last name</ControlLabel>
                                 <FormControl
-                                  type='text'
-                                  name='lastName'
+                                  type="text"
+                                  name="lastName"
                                   value={this.state.lastName}
                                   autoFocus
                                   onChange={this.updateLastNameField.bind(this)}
@@ -374,24 +402,24 @@ roles in the dropdown list */
                           </Row>
                           <Row>
                             <Col md={6}>
-                              <FormGroup controlId='userName-id' bsSize='large'>
+                              <FormGroup controlId="userName-id" bsSize="large">
                                 <ControlLabel>Username</ControlLabel>
                                 <FormControl
-                                  type='text'
+                                  type="text"
                                   autoFocus
-                                  name='userName'
+                                  name="userName"
                                   value={this.state.userName}
                                   onChange={this.updateUserNameField.bind(this)}
                                 />
                               </FormGroup>
                             </Col>
                             <Col md={6}>
-                              <FormGroup controlId='email-id' bsSize='large'>
+                              <FormGroup controlId="email-id" bsSize="large">
                                 <ControlLabel>Email</ControlLabel>
                                 <FormControl
-                                  type='text'
+                                  type="text"
                                   autoFocus
-                                  name='email'
+                                  name="email"
                                   value={this.state.email}
                                   onChange={this.updateEmailField.bind(this)}
                                 />
@@ -400,11 +428,11 @@ roles in the dropdown list */
                           </Row>
                           <Row>
                             <Col md={6}>
-                              <FormGroup controlId='password-id' bsSize='large'>
+                              <FormGroup controlId="password-id" bsSize="large">
                                 <ControlLabel>Password</ControlLabel>
                                 <FormControl
-                                  type='text'
-                                  name='password'
+                                  type="text"
+                                  name="password"
                                   value={this.state.password}
                                   onChange={this.updatePasswordField.bind(this)}
                                 />
@@ -412,8 +440,8 @@ roles in the dropdown list */
                             </Col>
                             <Col md={6}>
                               <FormGroup
-                                controlId='confirmPassword-id'
-                                bsSize='large'
+                                controlId="confirmPassword-id"
+                                bsSize="large"
                               >
                                 <ControlLabel>Confirm password</ControlLabel>
                                 <FormControl
@@ -421,8 +449,8 @@ roles in the dropdown list */
                                   onChange={this.updateConfirmPasswordField.bind(
                                     this
                                   )}
-                                  type='password'
-                                  name='confirmPassword'
+                                  type="password"
+                                  name="confirmPassword"
                                 />
                               </FormGroup>
                             </Col>
@@ -432,23 +460,23 @@ roles in the dropdown list */
                     </Row>
                     <Row>
                       <Col md={12}>
-                        <fieldset className='scheduler-border'>
-                          <legend className='scheduler-border'>
+                        <fieldset className="scheduler-border">
+                          <legend className="scheduler-border">
                             Role & Language info
                           </legend>
                           <Row>
                             <Col md={6}>
-                              <FormGroup controlId='formControlsSelectMultipleRole'>
+                              <FormGroup controlId="formControlsSelectMultipleRole">
                                 <ControlLabel>
                                   Role(s) within the organisation
                                 </ControlLabel>
                                 <FormControl
-                                  componentClass='select'
+                                  componentClass="select"
                                   multiple
                                   onChange={this.updateRolesField.bind(this)}
                                   value={this.state.selectedRoles}
                                 >
-                                  <option value='select'>
+                                  <option value="select">
                                     select (multiple)
                                   </option>
                                   {roles.map(roles => {
@@ -456,25 +484,27 @@ roles in the dropdown list */
                                       <option value={roles.id}>
                                         {roles.id}-{roles.name}
                                       </option>
-                                    )
+                                    );
                                   })}
                                 </FormControl>
                               </FormGroup>
                             </Col>
                             <Col md={6}>
-                              <FormGroup controlId='formControlsSelectMultiple'>
+                              <FormGroup controlId="formControlsSelectMultiple">
                                 <ControlLabel>Domains</ControlLabel>
                                 <FormControl
                                   multiple
-                                  componentClass='select'
+                                  componentClass="select"
                                   onChange={this.updateDomainsField}
                                   value={this.state.selectedDomains}
                                 >
-                                  <option value='select'>
+                                  {" "}
+                                  key={domains.id}
+                                  <option value="select">
                                     select (multiple)
                                   </option>
-                                  {domains.map(domain => (
-                                    <option value={domain.id}>
+                                  {domains.map((domain, index) => (
+                                    <option key={index} value={domain.id}>
                                       {domain.id}-{domain.name}
                                     </option>
                                   ))}
@@ -484,50 +514,50 @@ roles in the dropdown list */
                           </Row>
                           <Row>
                             <Col md={6}>
-                              <FormGroup controlId='formControlsSelectMultiple'>
+                              <FormGroup controlId="formControlsSelectMultiple">
                                 <ControlLabel>
                                   Source language (for translator role)
                                 </ControlLabel>
                                 <FormControl
-                                  componentClass='select'
+                                  componentClass="select"
                                   multiple
                                   onChange={this.updateSourceField.bind(this)}
                                   value={this.state.selectedSources}
                                 >
-                                  <option value='select'>
-                                    select (multiple)
-                                  </option>
-                                  {languages.map(languages => {
-                                    return (
-                                      <option value={languages.id}>
-                                        {languages.id}-{languages.name}
-                                      </option>
-                                    )
-                                  })}
-                                </FormControl>
-                              </FormGroup>
-                            </Col>
-                            
-                            <Col md={6}>
-                              <FormGroup controlId='formControlsSelectMultiple'>
-                                <ControlLabel>
-                                  Target language (for translator role)
-                                </ControlLabel>
-                                <FormControl
-                                  componentClass='select'
-                                  multiple
-                                  onChange={this.updateTargetField.bind(this)}
-                                  value={this.state.selectedTargets}
-                                >
-                                  <option value='select'>
+                                  <option value="select">
                                     select (multiple)
                                   </option>
                                   {languages.map((languages, index) => {
                                     return (
-                                      <option value={languages.id}>
+                                      <option key={index} value={languages.id}>
                                         {languages.id}-{languages.name}
                                       </option>
-                                    )
+                                    );
+                                  })}
+                                </FormControl>
+                              </FormGroup>
+                            </Col>
+
+                            <Col md={6}>
+                              <FormGroup controlId="formControlsSelectMultiple">
+                                <ControlLabel>
+                                  Target language (for translator role)
+                                </ControlLabel>
+                                <FormControl
+                                  componentClass="select"
+                                  multiple
+                                  onChange={this.updateTargetField.bind(this)}
+                                  value={this.state.selectedTargets}
+                                >
+                                  <option value="select">
+                                    select (multiple)
+                                  </option>
+                                  {languages.map((languages, index) => {
+                                    return (
+                                      <option key={index} value={languages.id}>
+                                        {languages.id}-{languages.name}
+                                      </option>
+                                    );
                                   })}
                                 </FormControl>
                               </FormGroup>
@@ -540,17 +570,18 @@ roles in the dropdown list */
                       <Button
                         onClick={this.handleGenie}
                         onClick={() => {
-                          console.log(user)
-                          api.editUser(user)
+                          console.log(user);
+                          this.reset;
+                          api.editUser(user);
                         }}
-                        bsStyle='info'
+                        bsStyle="info"
                         pullRight
                         fill
-                        type='submit'
+                        type="submit"
                       >
                         Submit
                       </Button>
-                      <Button bsStyle='default' pullRight fill type='submit'>
+                      <Button bsStyle="default" pullRight fill type="submit">
                         Cancel
                       </Button>
                     </ButtonToolbar>
@@ -561,8 +592,8 @@ roles in the dropdown list */
           </Row>
         </Grid>
       </div>
-    )
+    );
   }
 }
 
-export default EditUser
+export default withRouter(EditUser)

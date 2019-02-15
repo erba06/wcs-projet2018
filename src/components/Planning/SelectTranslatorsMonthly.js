@@ -8,11 +8,14 @@ import ResultPanel from '../../components/Planning/ResultPanel'
 import ResultPanelGreyed from '../../components/Planning/ResultPanelGreyed'
 
 class SelectTranslatorsMonthly extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       isSelected: false,
-      selectedDomain: ''
+      selectedTargetLanguage: 'select',
+      selectedSourceLanguage: 'select',
+      selectedDomain: 'select',
+      filteredAccounts: 'select'
     }
     console.log(this.props)
     this.greyOut = this.greyOut.bind(this)
@@ -23,7 +26,7 @@ class SelectTranslatorsMonthly extends Component {
     console.log(props)
   }
 
-  greyOut (accountId) {
+  greyOut(accountId) {
     let div = document.getElementById(accountId)
     var c = window.getComputedStyle(div).backgroundColor
     if (c === 'rgb(251, 249, 252)') {
@@ -33,33 +36,36 @@ class SelectTranslatorsMonthly extends Component {
     }
   }
 
-  componentDidUpdate (oldProps) {
+  componentDidUpdate(oldProps) {
     const newProps = this.props
 
     if (oldProps !== newProps) {
       this.setState({ selectedDomain: newProps.selectedDomain })
+      this.setState({ selectedSourceLanguage : newProps.selectedSourceLanguage })
+      this.setState({ selectedTargetLanguage: newProps.selectedTargetLanguage })
     }
     console.log(newProps)
     console.log(oldProps)
     console.log(this.state)
   }
 
-  render () {
+  render() {
     const accounts = this.props.accounts
     const isSelected = this.state.isSelected
     const isGreyed = this.state.isGreyed
     const selectedDomain = this.props.selectedDomain
     const selectedSourceLanguage = this.props.selectedSourceLanguage
     const selectedTargetLanguage = this.props.selectedTargetLanguage
-
     const filteredAccounts = this.props.filteredAccounts
+   
+
     console.log(this.props)
     console.log(this.state)
 
     return (
       <div className='select-translators'>
         <Panel bsStyle='primary'>
-          <Panel.Heading>
+          <Panel.Heading id="mypanel">
             <Panel.Title componentClass='h3'>
               <i className='pe-7s-note2' /> Translators
               <SelectButton passPropsIsSelected={this.updateIsSelected} />
@@ -69,14 +75,15 @@ class SelectTranslatorsMonthly extends Component {
 
           <Panel.Body className='translators'>
             {filteredAccounts == undefined ||
-            selectedDomain == 'select' ||
-            selectedSourceLanguage == 'select' ||
-            selectedTargetLanguage == 'select'
+              selectedDomain == 'select' &&
+              selectedSourceLanguage == 'select' &&
+              selectedTargetLanguage == 'select'
               ? accounts.map((account, i) => {
                 let isTranslators = api.isTranslator(account.roles)
                 let domains = api.displayDomains(account)
                 let languages = api.displayLanguagesInResultPanel(account)
                 let translators = api.displayTranslatorOnly(account.roles)
+                
 
                 if (isTranslators && !isSelected) {
                   return (
@@ -91,7 +98,7 @@ class SelectTranslatorsMonthly extends Component {
                       <div className='list-translator-text'>
                         <div className='translator-info'>
                           <span className='label label-success label-as-badge'>
-                              Junior
+                            Junior
                           </span>
                           <div className='translator-name'>{translators}</div>
                           <div className='lg-target-source'>{languages}</div>
@@ -121,18 +128,29 @@ class SelectTranslatorsMonthly extends Component {
 
                 if (isTranslators && !isSelected) {
                   return (
-                    <ResultPanel
+                    <div
+                      className='list-translators'
                       key={i}
-                      id={account.id}
-                      translators={translators}
-                      languages={languages}
-                      domains={domains}
                       style={{ backgroundColor: 'rgb(251, 249, 252)' }}
-                    />
+                      id={account.id}
+                      onClick={e => this.greyOut(account.id, e)}
+                    >
+                      <i className='fas fa-2x fa-user' />
+                      <div className='list-translator-text'>
+                        <div className='translator-info'>
+                          <span className='label label-success label-as-badge'>
+                            Junior
+                          </span>
+                          <div className='translator-name'>{translators}</div>
+                          <div className='lg-target-source'>{languages}</div>
+                          <div className='domain'>{domains}</div>
+                        </div>
+                      </div>
+                    </div>
                   )
                 } else if (isTranslators && isSelected) {
                   return (
-                    <ResultPanel
+                    <ResultPanelGreyed
                       key={i}
                       id={account.id}
                       translators={translators}

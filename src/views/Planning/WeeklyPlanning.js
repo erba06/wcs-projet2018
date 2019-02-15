@@ -5,10 +5,10 @@ import 'assets/css/admin.css'
 import SelectTranslators from 'components/Planning/SelectTranslators'
 import WeekView from 'components/Planning/WeekView'
 import Filter from '../../components/Planning/Filter'
-import WeekTasks from 'components/Planning/WeekTasks'
 import WeekCalendar from 'components/Planning/WeekCalendar'
 import api from '../../api'
 import apiService from '../../api/apiService'
+// declare var $: any
 
 class WeeklyPlanning extends Component {
   constructor (props) {
@@ -18,9 +18,10 @@ class WeeklyPlanning extends Component {
       languages: [],
       domains: [],
       accounts: [],
-      selectedTargetLanguage: '',
-      selectedSourceLanguage: '',
-      selectedDomain: ''
+      selectedTargetLanguage: 'select',
+      selectedSourceLanguage: 'select',
+      selectedDomain: 'select',
+      filteredAccounts: 'select'
     }
     console.log(this.state)
   }
@@ -37,38 +38,345 @@ class WeeklyPlanning extends Component {
     this.setState({ selectedDomain: props })
     this.filterAccountDomain(props)
   }
+
+  /* FILTERS */
+
   filterAccountDomain = selectedDomain => {
     let accounts = this.state.accounts
-    let filteredAccounts = accounts.filter(
-      account => api.displayDomains(account) == selectedDomain
-    )
-    console.log(filteredAccounts)
-    this.setState({ filteredAccounts: filteredAccounts })
-    console.log(this.state)
+    if (
+      selectedDomain !== 'select' &&
+      (this.state.selectedSourceLanguage == 'select' &&
+        this.state.selectedTargetLanguage == 'select')
+    ) {
+      console.log('SELECTEDOM' + selectedDomain)
+      let filteredAccountsByDomains = accounts.filter(account => {
+        return (
+          api.displayDomains(account) !== null &&
+          api.displayDomains(account).includes(selectedDomain)
+        )
+      })
+      this.setState({ filteredAccounts: filteredAccountsByDomains })
+
+      console.log('render11')
+    }
+
+    if (
+      selectedDomain == 'select' &&
+      this.state.selectedSourceLanguage == 'select' &&
+      this.state.selectedTargetLanguage == 'select'
+    ) {
+      this.setState({ filteredAccounts: this.state.accounts })
+    }
+
+    if (
+      selectedDomain == 'select' &&
+      this.state.selectedSourceLanguage !== 'select' &&
+      this.state.selectedTargetLanguage == 'select'
+    ) {
+      let filteredAccountsBySource = accounts.filter(account => {
+        return (
+          api.checkSourceLanguages(account) !== null &&
+          api
+            .checkSourceLanguages(account)
+            .includes(this.state.selectedSourceLanguage)
+        )
+      })
+      this.setState({ filteredAccounts: filteredAccountsBySource })
+      console.log('render12')
+
+    }
+    if (
+      selectedDomain !== 'select' &&
+      this.state.selectedSourceLanguage !== 'select' &&
+      this.state.selectedTargetLanguage == 'select'
+    ) {
+      let filteredAccountsByDomainsAndSource = accounts
+        .filter(account => {
+          return (
+            api.checkSourceLanguages(account) !== null &&
+            api
+              .checkSourceLanguages(account)
+              .includes(this.state.selectedSourceLanguage)
+          )
+        })
+        .filter(account => {
+          api.displayDomains(account) !== null &&
+            api.displayDomains(account).includes(this.state.selectedDomain)
+        })
+      this.setState({ filteredAccounts: filteredAccountsByDomainsAndSource })
+      console.log('render13')
+      console.log(filteredAccountsByDomainsAndSource)
+
+    }
+    if (this.state.filteredAccounts !== [] && this.state.selectedDomain !== 'select') {
+      let filteredAccountsByDomainsAndOther = this.state.filteredAccounts.filter(account => {
+        return (
+          api.displayDomains(account) !== null &&
+          api.displayDomains(account).includes(this.state.selectedDomain)
+        )
+      })
+      this.setState({ filteredAccounts: filteredAccountsByDomainsAndOther })
+
+    }
+    if (
+      selectedDomain !== 'select' &&
+      this.state.selectedSourceLanguage !== 'select' &&
+      this.state.selectedTargetLanguage !== 'select'
+    ) {
+      let filteredAccountsByDomainsAndSourceAndTargets = accounts.filter(
+        account => {
+          (
+            api.checkSourceLanguages(account) !== null &&
+            api
+              .checkSourceLanguages(account)
+              .includes(this.state.selectedSourceLanguage)
+          ).filter(res => {
+            (
+              api.checkTargetLanguages(res) !== null &&
+              api
+                .checkTargetLanguages(res)
+                .includes(this.state.selectedTargetLanguage)
+            )
+          })
+        }
+      )
+      this.setState({
+        filteredAccounts: filteredAccountsByDomainsAndSourceAndTargets
+      })
+      console.log('render14')
+
+    }
+    if (
+      selectedDomain !== 'select' &&
+      this.state.selectedSourceLanguage !== 'select' &&
+      this.state.selectedTargetLanguage !== 'select'
+    ) {
+      let filteredAccountsByDomainsAndSourceAndTargets = accounts
+        .filter(account => {
+          return (
+            api.checkSourceLanguages(account) !== null &&
+            api
+              .checkSourceLanguages(account)
+              .includes(this.state.selectedSourceLanguage)
+          )
+        })
+        .filter(account => {
+          return (
+            api.checkTargetLanguages(account) !== null &&
+            api
+              .checkTargetLanguages(account)
+              .includes(this.state.selectedTargetLanguage)
+          )
+        })
+      this.setState({
+        filteredAccounts: filteredAccountsByDomainsAndSourceAndTargets
+      })
+      console.log('render15')
+    }
   }
 
   filterAccountSource = selectedSourceLanguage => {
     let accounts = this.state.accounts
-    let filteredAccountsBySource = accounts.filter(
-      account => api.checkSourceLanguages(account) == selectedSourceLanguage
-    )
-    this.setState({ filteredAccounts: filteredAccountsBySource })
+    if (
+      selectedSourceLanguage !== 'select' &&
+      this.state.selectedDomain == 'select' &&
+      this.state.selectedTargetLanguage == 'select'
+    ) {
+      let filteredAccountsBySource = accounts.filter(account => {
+        return (
+          api.checkSourceLanguages(account) !== null &&
+          api.checkSourceLanguages(account).includes(selectedSourceLanguage)
+        )
+      })
+      this.setState({ filteredAccounts: filteredAccountsBySource })
+      console.log('FILTRES: ')
+      console.log(filteredAccountsBySource)
+      console.log('render1')
+    }
+    if (this.state.filteredAccounts!== [] && this.state.selectedDomain!== 'select')
+    {
+      let filteredAccountsByDomainsAndOther = this.state.filteredAccounts.filter(account => {
+        return (
+          api.displayDomains(account) !== null &&
+          api.displayDomains(account).includes(this.state.selectedDomain)
+        )
+      })
+      this.setState({ filteredAccounts: filteredAccountsByDomainsAndOther })
+      
+      console.log(filteredAccountsByDomainsAndOther)
+    console.log('render16')
+     }
+    if (
+      selectedSourceLanguage == 'select' &&
+      this.state.selectedSourceLanguage == 'select' &&
+      this.state.selectedTargetLanguage == 'select'
+    ) {
+      this.setState({ filteredAccounts: this.state.accounts })
+      console.log('render2')
+    }
+    if (
+      this.state.selectedTargetLanguage !== 'select' &&
+      this.state.selectedDomain == 'select' &&
+      this.state.selectedSourceLanguage == 'select'
+    ) {
+      let filteredAccountsByTarget = accounts.filter(account => {
+        return (
+          api.checkTargetLanguages(account) !== null &&
+          api.checkTargetLanguages(account).includes(this.state.selectedTargetLanguage)
+        )
+      })
+      this.setState({ filteredAccounts: filteredAccountsByTarget })
+      console.log(filteredAccountsByTarget)
+      console.log('render17')
+    }
 
-    console.log(filteredAccountsBySource)
-    console.log(this.state)
+    if (
+      selectedSourceLanguage == 'select' &&
+      this.state.selectedDomain !== 'select' &&
+      this.state.selectedTargetLanguage == 'select'
+    ) {
+      let filteredAccountsByDomains = accounts.filter(account => {
+        return (
+          api.displayDomains(account) !== null &&
+          api.displayDomains(account).includes(this.state.selectedDomain)
+        )
+      })
+      this.setState({ filteredAccounts: filteredAccountsByDomains })
+      console.log('render3')
+    }
+    if (
+      selectedSourceLanguage !== 'select' &&
+      this.state.selectedDomain !== 'select' &&
+      this.state.selectedDomain == 'select'
+    ) {
+      let filteredAccountsBySourceAndDomain = this.state.accounts
+        .filter(account => {
+          return api.displayDomains(account) == this.state.selectedDomain
+        })
+        .filter(account => {
+          return (
+            api.checkSourceLanguages(account) !== null &&
+            api.checkSourceLanguages(account) == selectedSourceLanguage
+          )
+        })
+      this.setState({ filteredAccounts: filteredAccountsBySourceAndDomain })
+      console.log('render4')
+    }
+    if (
+      this.state.filteredAccounts !== 'select' &&
+      this.state.selectedDomain == 'select' &&
+      selectedSourceLanguage !== 'select'
+    ) {
+      let filteredAccountsBySourceAndTarget = this.state.filteredAccounts
+        .filter(account => {
+          return (
+            api.checkSourceLanguages(account) !== null &&
+            api.checkSourceLanguages(account).includes(selectedSourceLanguage)
+          )
+        })
+    
+      this.setState({ filteredAccounts: filteredAccountsBySourceAndTarget })
+      console.log('render5')
+    }
   }
 
   filterAccountTarget = selectedTargetLanguage => {
     let accounts = this.state.accounts
-    let filteredAccountsByTarget = accounts.filter(
-      account =>
-        api.checkTargetLanguages(account) !== null &&
-        api.checkTargetLanguages(account).includes(selectedTargetLanguage)
-    )
+    if (
+      selectedTargetLanguage !== 'select' &&
+      this.state.selectedDomain == 'select' &&
+      this.state.selectedSourceLanguage == 'select'
+    ) {
+      let filteredAccountsByTarget = accounts.filter(account => {
+        return (
+          api.checkTargetLanguages(account) !== null &&
+          api.checkTargetLanguages(account).includes(selectedTargetLanguage)
+        )
+      })
+      this.setState({ filteredAccounts: filteredAccountsByTarget })
+      console.log(filteredAccountsByTarget)
+      console.log('render6')
+    }
 
-    this.setState({ filteredAccounts: filteredAccountsByTarget })
-
-    console.log(filteredAccountsByTarget)
+    if (
+      selectedTargetLanguage == 'select' &&
+      this.state.selectedDomain == 'select' &&
+      this.state.selectedSourceLanguage == 'select'
+    ) {
+      this.setState({ filteredAccounts: this.state.accounts })
+    }
+    if (
+      selectedTargetLanguage == 'select' &&
+      this.state.selectedDomain !== 'select' &&
+      this.state.selectedSourceLanguage !== 'select'
+    ) {
+      let filteredAccountsBySourceAndDomain = accounts
+        .filter(account => {
+          return (
+            api.checkSourceLanguages(account) !== null &&
+            api
+              .checkSourceLanguages(account)
+              .includes(this.state.selectedSourceLanguage)
+          )
+        })
+        .filter(res => {
+          return api.displayDomains(res) == this.state.selectedDomain
+        })
+      this.setState({ filteredAccounts: filteredAccountsBySourceAndDomain })
+      console.log('RESULTATS: ' + filteredAccountsBySourceAndDomain)
+      console.log('render7')
+    }
+    if (
+      selectedTargetLanguage == 'select' &&
+      this.state.selectedDomain == 'select' &&
+      this.state.selectedSourceLanguage !== 'select'
+    ) {
+      let filteredAccountsBySource = accounts.filter(account => {
+        return (
+          api.checkSourceLanguages(account) !== null &&
+          api
+            .checkSourceLanguages(account)
+            .includes(this.state.selectedSourceLanguage)
+        )
+      })
+      this.setState({ filteredAccounts: filteredAccountsBySource })
+      console.log('RESULTATS: ' + filteredAccountsBySource)
+      console.log('render8')
+    }
+    if (
+      selectedTargetLanguage !== 'select' &&
+      this.state.selectedDomain == 'select' &&
+      this.state.selectedSourceLanguage !== 'select'
+    ) {
+      let filteredAccountsBySourceAndTarget = accounts
+        .filter(account => {
+          return (
+            api.checkSourceLanguages(account) !== null &&
+            api
+              .checkSourceLanguages(account)
+              .includes(this.state.selectedSourceLanguage)
+          )
+        })
+        .filter(account => {
+          return (
+            api.checkTargetLanguages(account) !== null &&
+            api.checkTargetLanguages(account).includes(selectedTargetLanguage)
+          )
+        })
+      this.setState({ filteredAccounts: filteredAccountsBySourceAndTarget })
+      console.log('render9')
+    }
+    if (
+      selectedTargetLanguage == 'select' &&
+      this.state.selectedDomain !== 'select' &&
+      this.state.selectedSourceLanguage == 'select'
+    ) {
+      let filteredAccountsByDomains = accounts.filter(account => {
+        return api.displayDomains(account) == this.state.selectedDomain
+      })
+      this.setState({ filteredAccounts: filteredAccountsByDomains })
+      console.log('render10')
+    }
   }
 
   syncDatas = () => {
@@ -95,6 +403,9 @@ class WeeklyPlanning extends Component {
     const domains = this.state.domains
     const languages = this.state.languages
     const selectedDomain = this.state.selectedDomain
+    const selectedSourceLanguage = this.state.selectedSourceLanguage
+    const selectedTargetLanguage = this.state.selectedTargetLanguage
+    const filteredAccounts = this.state.filteredAccounts
     console.log(this.state)
 
     return (
@@ -106,8 +417,8 @@ class WeeklyPlanning extends Component {
             ctTableFullWidth
             ctTableResponsive
             content={
-              <div>
-                <div className='container-week-view'>
+              <div className='container-week-view-global'>
+                <div className='container-week-view-top'>
                   <SelectTranslators
                     accounts={this.state.accounts}
                     filteredAccounts={this.state.filteredAccounts}
@@ -115,9 +426,6 @@ class WeeklyPlanning extends Component {
                     selectedSourceLanguage={this.state.selectedSourceLanguage}
                     selectedDomain={this.state.selectedDomain}
                   />
-                  <WeekView passFilteredDomain={this.props.filteredDomain} />
-                </div>
-                <div className='container-week-view-bottom'>
                   <Filter
                     passSelectedTargetLanguage={this.updateTargetState}
                     passSelectedSourceLanguage={this.updateSourceState}
@@ -125,6 +433,9 @@ class WeeklyPlanning extends Component {
                     domains={this.state.domains}
                     languages={this.state.languages}
                   />
+                  <WeekView passFilteredDomain={this.props.filteredDomain} />
+                </div>
+                <div className='container-week-view-bottom'>
                   <WeekCalendar />
                 </div>
               </div>

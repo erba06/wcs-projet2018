@@ -3,7 +3,6 @@ import ManageLanguages from './views/Admin/ManageLanguages'
 import ManageDomains from './views/Admin/ManageDomains'
 import apiService from '../../api/apiService'
 
-
 class App extends Component {
   constructor (props) {
     super(props)

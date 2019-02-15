@@ -25,7 +25,7 @@ class MonthView extends React.Component {
     return (
       <div className='month-view'>
         <Panel className="month-view-panel" bsStyle='primary'>
-          <Panel.Heading>
+          <Panel.Heading id="mypanel">
             <Panel.Title componentClass='h3'>
               <i className='fas fa-calendar-week' />
               Translator month view

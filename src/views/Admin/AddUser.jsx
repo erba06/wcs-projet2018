@@ -427,7 +427,7 @@ class AddUser extends Component {
                                   <option value='select'>
                                     select (multiple)
                                   </option>
-                                  {languages.map((languages, index) => {
+                                  {languages.map((languages) => {
                                     return (
                                       <option value={languages.id}>
                                         {languages.id}-{languages.name}

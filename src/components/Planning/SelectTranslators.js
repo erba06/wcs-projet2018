@@ -9,7 +9,10 @@ class SelectTranslators extends Component {
     super(props)
     this.state = {
       isSelected: false,
-      selectedDomain: ''
+      selectedTargetLanguage: 'select',
+      selectedSourceLanguage: 'select',
+      selectedDomain: 'select',
+      filteredAccounts: 'select'
     }
     console.log(this.props)
   }
@@ -25,6 +28,7 @@ class SelectTranslators extends Component {
   }
 
   render () {
+    console.log(this.props)
     const accounts = this.props.accounts
     const selectedDomain = this.props.selectedDomain
     const selectedSourceLanguage = this.props.selectedSourceLanguage
@@ -35,9 +39,9 @@ class SelectTranslators extends Component {
     console.log(this.state)
 
     return (
-      <div className='select-translators'>
+      <div className='select-translators-week'>
         <Panel bsStyle='primary'>
-          <Panel.Heading>
+          <Panel.Heading id="mypanel">
             <Panel.Title componentClass='h3'>
               <i className='pe-7s-note2' /> Translators
             </Panel.Title>
@@ -45,13 +49,13 @@ class SelectTranslators extends Component {
 
           <Panel.Body>
             {filteredAccounts === undefined ||
-            selectedDomain === 'select' ||
-            selectedSourceLanguage === 'select' ||
-            selectedTargetLanguage === 'select'
+            (selectedDomain === 'select' &&
+              selectedSourceLanguage === 'select' &&
+              selectedTargetLanguage === 'select')
               ? accounts.map((account, i) => {
                 let isTranslators = api.isTranslator(account.roles)
                 let domains = api.displayDomains(account)
-                let languages = api.displayLanguages(account)
+                let languages = api.displayLanguagesInResultPanel(account)
                 let translators = api.displayTranslatorOnly(account.roles)
 
                 if (isTranslators) {
@@ -71,8 +75,9 @@ class SelectTranslators extends Component {
                 let domains = api.displayDomains(account)
                 let languages = api.displayLanguages(account)
                 let translators = api.displayTranslatorOnly(account.roles)
-
+                
                 if (isTranslators) {
+                  
                   return (
                     <ResultPanel
                       key={i}

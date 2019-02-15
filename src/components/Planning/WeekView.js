@@ -25,7 +25,7 @@ class WeekView extends React.Component {
     return (
       <div className='week-view'>
         <Panel bsStyle='primary'>
-          <Panel.Heading>
+          <Panel.Heading id="mypanel">
             <Panel.Title componentClass='h3'>
               <i className='fas fa-calendar-week' />
               Translator week view

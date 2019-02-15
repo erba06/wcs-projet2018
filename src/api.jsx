@@ -136,14 +136,14 @@ const editUser = prop => {
         profilePictureLink: prop.profilePictureLink,
         active: prop.active
       },
-      { id: prop.id }
+      { id: prop.newId2 }
     )
     .then(res => {
       if (res.status === 200 || 204) {
         Alert.success('The user has been edited')
-        setTimeout(() => {
-          window.location.href = '/editrole/2#/manageusers'
-        }, 500)
+        // setTimeout(() => {
+        //   window.location.href = '/editrole/2#/manageusers'
+        // }, 500)
       } else {
         Alert.error('Error, try again')
       }
@@ -185,10 +185,11 @@ const getUser = id => {
   apiService.getApiEndpoint('GetAccount', null, { id: id }).then(res => {
     if (res.status === 200) {
       console.log('succès')
-      const history = createHashHistory({
-        hashType: 'noslash' // Omit the leading slash
-      })
-      history.push(`/edituser/${res.data.id}`)
+      // const history = createHashHistory({
+      //   hashType: 'noslash' // Omit the leading slash
+      // })
+      // history.push(`/edituser/${res.data.id}`)
+      window.location.href = `/editrole/${res.data.id}#/edituser/${res.data.id}`
     } else {
       console.log(res.status)
     }
@@ -409,19 +410,20 @@ const deleteLanguage = prop => {
 }
 
 /* MONTHLY & WEEKLY PLANNING */
-const displayDomains = account => {
-  console.log(account.domains.length)
-
+const displayDomains = (account, index) => {
+ // console.log(account.domains.length)
   if (account.domains.length === 0) {
     return null
   } else if (account.domains.length === 1) {
     return account.domains[0].domainName
   } else {
-    account.domains.map(arrayOfDomains => <li>{arrayOfDomains.domainName}</li>)
+    return account.domains
+      .map(arrayOfDomains => arrayOfDomains.domainName)
+      .join('/ ')
   }
 }
 
-/* SELECT TRANSLATOR MONTHLY" */
+/* SELECT TRANSLATOR MONTHLY */
 const displayLanguages = account => {
   if (account.sources.length === 0) return null
   else if (account.sources.length === 1) {
@@ -435,7 +437,7 @@ const displayLanguages = account => {
   }
 }
 const displayLanguagesInResultPanel = account => {
-  console.log(account)
+  //console.log(account)
   if (account.sources.length === 0) return null
   else if (account.sources.length === 1 && account.targets.length === 1) {
     return (

@@ -4,7 +4,7 @@ import { Grid, Row, Col, Table } from 'react-bootstrap'
 import Button from 'components/CustomButton/CustomButton.jsx'
 import { ButtonGroup } from 'react-bootstrap'
 import Card from 'components/Card/Card.jsx'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import apiService from '../../api/apiService'
 import api from '../../api'
 
@@ -17,6 +17,10 @@ class ManageUsers extends Component {
   }
 
   componentDidMount () {
+    let arrayOfUrl = window.location.href.split('/')
+    let newId = arrayOfUrl[4].split('#')[0]
+    console.log('THE_PATH_MANAGE: ' + arrayOfUrl + newId)
+
     console.log(this.state)
     apiService
       .getApiEndpoint('GetAccounts')
@@ -83,24 +87,30 @@ class ManageUsers extends Component {
                         </tr>
                       </thead>
                       <tbody>
-                        {users.map((prop, key) => {
+                        {users.map((prop, index) => {
                           return (
-                            <tr key={key}>
-                              <td>{prop.firstName + ' ' + prop.lastName}</td>
+                            <tr>
+                              <td key={prop.id}>
+                                {prop.firstName + ' ' + prop.lastName}
+                              </td>
                               <td>
                                 {prop.domains.length === 0
                                   ? 'N/A'
                                   : prop.domains.length === 1
                                     ? prop.domains[0].domainName
                                     : prop.domains.map(arrayOfDomains => (
-                                      <li>{arrayOfDomains.domainName}</li>
+                                      <li key={prop.index} className="domainName">
+                                        {arrayOfDomains.domainName}
+                                      </li>
                                     ))}
                               </td>
                               <td>{prop.emailAddress}</td>
                               <td>
                                 {prop.roles.length === 1
                                   ? prop.roles
-                                  : prop.roles.map((roles, key) => <li key={key}>{roles}</li>)}
+                                  : prop.roles.map((roles, key) => (
+                                    <li key={key}>{roles}</li>
+                                  ))}
                               </td>
                               <td>
                                 {prop.sources.length === 0
@@ -123,7 +133,7 @@ class ManageUsers extends Component {
                               <td>{prop.active === true ? 'Yes' : 'No'}</td>
                               <td>
                                 <ButtonGroup>
-                                  <div className="buttonGroup">
+                                  <div className='buttonGroup'>
                                     <Link to='/edituser/:id'>
                                       <Button
                                         onClick={() => api.getUser(prop.id)}
@@ -152,8 +162,7 @@ class ManageUsers extends Component {
                                     </Button>
                                     <Button
                                       onClick={() => api.loginAsUser(prop.id)}
-                                      bsStyle = 'default'
-
+                                      bsStyle='default'
                                       fill
                                     >
                                       {' '}
@@ -184,4 +193,4 @@ class ManageUsers extends Component {
   }
 }
 
-export default ManageUsers
+export default withRouter(ManageUsers)

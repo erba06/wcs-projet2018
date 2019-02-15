@@ -12,6 +12,11 @@ import AddLanguage from 'views/Admin/AddLanguage.jsx'
 import AddDomain from 'views/Admin/AddDomain.jsx'
 import WeeklyPlanning from '../views/Planning/WeeklyPlanning'
 import MonthlyPlanning from '../views/Planning/MonthlyPlanning'
+import RecurringTasks from '../views/Planning/RecurringTasks'
+import Absences from '../views/Planning/Absences'
+import TaskFinder from '../views/Planning/TaskFinder'
+import WorkingHours from '../views/Planning/WorkingHours'
+
 
 const adminRoutes = [
   {
@@ -83,6 +88,26 @@ const adminRoutes = [
     path: "/monthlyplanning",
     name: "Monthly Planning",
     component: MonthlyPlanning,
+  },
+  {
+    path: "/recurringtasks",
+    name: "Recurring Tasks",
+    component: RecurringTasks,
+  },
+  {
+    path: "/absences",
+    name: "Absences",
+    component: Absences,
+  },
+  {
+    path: "/taskfinder",
+    name: "Task finder",
+    component: TaskFinder,
+  },
+  {
+    path: "/workinghours",
+    name: "Working hours",
+    component: WorkingHours,
   }
 ]
 

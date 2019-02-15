@@ -56,8 +56,10 @@ class Filter extends React.Component {
 
     return (
       <div className='planning-filter'>
-        <Panel bsStyle='primary'>
-          <Panel.Heading>
+        <Panel 
+        bsStyle='primary'
+         >
+          <Panel.Heading id="mypanel">
             <Panel.Title componentClass='h3'>
               <i className='fas fa-filter' />
               Filter

@@ -3,6 +3,7 @@ import api from '../../api'
 
 import AuthService from './AuthService'
 import '../../assets/css/authform.css'
+import Alert from 'react-s-alert'
 
 class AuthForm extends Component {
   constructor () {
@@ -63,9 +64,10 @@ class AuthForm extends Component {
     }
     api.logIn(credentials).then(response => {
       console.log('test' + response)
-      if (response.error) {
-        this.setState({ message: response.error })
-      }
+      // if (response.error) {
+      //   this.setState({ message: response.error })
+      // }
+      if (!response) {alert('Please check the connection')}
     })
   }
 

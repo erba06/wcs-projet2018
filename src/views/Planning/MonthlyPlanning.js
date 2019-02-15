@@ -8,18 +8,20 @@ import Filter from '../../components/Planning/Filter'
 import WeekTasks from 'components/Planning/WeekTasks'
 import apiService from '../../api/apiService'
 import api from '../../api'
+declare var $: any
 
 class MonthlyPlanning extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       roles: [],
       languages: [],
       domains: [],
       accounts: [],
-      selectedTargetLanguage: '',
-      selectedSourceLanguage: '',
-      selectedDomain: ''
+      selectedTargetLanguage: 'select',
+      selectedSourceLanguage: 'select',
+      selectedDomain: 'select',
+      filteredAccounts: 'select'
     }
     console.log(this.state)
   }
@@ -39,35 +41,338 @@ class MonthlyPlanning extends Component {
 
   filterAccountDomain = selectedDomain => {
     let accounts = this.state.accounts
-    let filteredAccounts = accounts.filter(
-      account => api.displayDomains(account) == selectedDomain
-    )
-    console.log(filteredAccounts)
-    this.setState({ filteredAccounts: filteredAccounts })
+    if (
+      selectedDomain !== 'select' &&
+      ((this.state.selectedSourceLanguage == 'select') &&
+        (this.state.selectedTargetLanguage == 'select' ))
+    ) {
+      console.log('SELECTEDOM' + selectedDomain)
+      let filteredAccountsByDomains = accounts.filter(account => {
+        return (
+          api.displayDomains(account) !== null &&
+          api.displayDomains(account)
+            .includes(selectedDomain)
+        )
+      })
+      this.setState({ filteredAccounts: filteredAccountsByDomains })
+      console.log('DOMAIN: ' + filteredAccountsByDomains)
+    }
+
+    if (
+      selectedDomain == 'select' &&
+      this.state.selectedSourceLanguage == 'select' &&
+      this.state.selectedTargetLanguage == 'select'
+    ) {
+      this.setState({ filteredAccounts: this.state.accounts })
+    }
+
+    // if (
+    //   selectedDomain == 'select' &&
+    //   this.state.selectedSourceLanguage !== 'select' &&
+    //   this.state.selectedTargetLanguage == 'select'
+    // ) {
+    //   let filteredAccountsBySource = accounts.filter(account => {
+    //     return (
+    //       api.checkSourceLanguages(account) !== null &&
+    //       api
+    //         .checkSourceLanguages(account)
+    //         .includes(this.state.selectedSourceLanguage)
+    //     )
+    //   })
+    //   this.setState({ filteredAccounts: filteredAccountsBySource })
+    // }
+    if (
+      selectedDomain !== 'select' &&
+      this.state.selectedSourceLanguage !== 'select' &&
+      this.state.selectedTargetLanguage == 'select'
+    ) {
+      let filteredAccountsByDomainsAndSource = accounts
+        .filter(account => {
+          return (
+            api.checkSourceLanguages(account) !== null &&
+            api
+              .checkSourceLanguages(account)
+              .includes(this.state.selectedSourceLanguage)
+          )
+        })
+        .filter(account => {
+          return api.displayDomains(account) == selectedDomain
+        })
+      this.setState({ filteredAccounts: filteredAccountsByDomainsAndSource })
+    }
+    if (
+      selectedDomain !== 'select' &&
+      this.state.selectedSourceLanguage !== 'select' &&
+      this.state.selectedTargetLanguage !== 'select'
+    ) {
+      let filteredAccountsByDomainsAndSourceAndTargets = accounts
+        .filter(account => {
+          return (
+            api.checkSourceLanguages(account) !== null &&
+            api
+              .checkSourceLanguages(account)
+              .includes(this.state.selectedSourceLanguage)
+          )
+        })
+        .filter(account => {
+          return (
+            api.checkTargetLanguages(account) !== null &&
+            api
+              .checkTargetLanguages(account)
+              .includes(this.state.selectedTargetLanguage)
+          )
+        })
+      this.setState({
+        filteredAccounts: filteredAccountsByDomainsAndSourceAndTargets
+      })
+    }
+    if (
+      selectedDomain !== 'select' &&
+      this.state.selectedSourceLanguage !== 'select' &&
+      this.state.selectedTargetLanguage !== 'select'
+    ) {
+      let filteredAccountsByDomainsAndSourceAndTargets = accounts
+        .filter(account => {
+          return (
+            api.checkSourceLanguages(account) !== null &&
+            api
+              .checkSourceLanguages(account)
+              .includes(this.state.selectedSourceLanguage)
+          )
+        })
+        .filter(account => {
+          return (
+            api.checkTargetLanguages(account) !== null &&
+            api
+              .checkTargetLanguages(account)
+              .includes(this.state.selectedTargetLanguage)
+          )
+        })
+      this.setState({
+        filteredAccounts: filteredAccountsByDomainsAndSourceAndTargets
+      })
+    }
   }
 
   filterAccountSource = selectedSourceLanguage => {
     let accounts = this.state.accounts
-    let filteredAccountsBySource = accounts.filter(
-      account => api.checkSourceLanguages(account) == selectedSourceLanguage
-    )
-    this.setState({ filteredAccounts: filteredAccountsBySource })
-
-    console.log(filteredAccountsBySource)
-    console.log(this.state)
+    if (
+      selectedSourceLanguage !== 'select' &&
+      this.state.selectedDomain == 'select' &&
+      this.state.selectedTargetLanguage == 'select'
+    ) {
+      let filteredAccountsBySource = accounts.filter(account => {
+        return (
+          api.checkSourceLanguages(account) !== null &&
+          api.checkSourceLanguages(account)
+            .includes(selectedSourceLanguage)
+        )
+      })
+      console.log('FILTRES: ' + filteredAccountsBySource)
+      this.setState({ filteredAccounts: filteredAccountsBySource })
+    }
+    if (
+      (selectedSourceLanguage == 'select') &&
+      (this.state.selectedSourceLanguage == 'select') &&
+      (this.state.selectedTargetLanguage == 'select')
+    ) {
+      this.setState({ filteredAccounts: this.state.accounts })
+    }
+    // if (
+    //   selectedSourceLanguage !== 'select' &&
+    //   this.state.filteredAccounts !== 'select' &&
+    //   this.state.selectedTargetLanguage == 'select'
+    // ) {
+    //   let filteredAccountsBySource = this.state.filteredAccounts.filter(
+    //     account => {
+    //       return (
+    //         api.checkSourceLanguages(account) !== null &&
+    //         api.checkSourceLanguages(account).includes(selectedSourceLanguage)
+    //       )
+    //     }
+    //   )
+    //   this.setState({ filteredAccounts: filteredAccountsBySource })
+    // }
+    if (
+      selectedSourceLanguage == 'select' &&
+      this.state.selectedDomain !== 'select' &&
+      this.state.selectedTargetLanguage == 'select'
+    ) {
+      let filteredAccountsByDomains = accounts.filter(account => {
+        return (
+          api.displayDomains(account) !== null &&
+          api.displayDomains(account)
+          .includes(this.state.selectedDomain)
+        )
+      })
+      this.setState({ filteredAccounts: filteredAccountsByDomains })
+    }
+    if (
+      selectedSourceLanguage !== 'select' &&
+      this.state.selectedDomain !== 'select' &&
+      this.state.selectedDomain !== 'select'
+    ) {
+      let filteredAccountsBySourceAndDomain = this.state.accounts
+        .filter(account => {
+          return api.displayDomains(account) == this.state.selectedDomain
+        })
+        .filter(account => {
+          return (
+            api.checkSourceLanguages(account) !== null &&
+            api.checkSourceLanguages(account).includes(selectedSourceLanguage)
+          )
+        })
+      this.setState({ filteredAccounts: filteredAccountsBySourceAndDomain })
+    }
+    if (
+      selectedSourceLanguage !== 'select' &&
+      this.state.selectedDomain !== 'select' &&
+      this.state.selectedTarget == 'select'
+    ) {
+      let filteredAccountsBySourceAndDomain = this.state.accounts
+        .filter(account => {
+          return api.displayDomains(account) == this.state.selectedDomain
+        })
+        .filter(account => {
+          return (
+            api.checkSourceLanguages(account) !== null &&
+            api.checkSourceLanguages(account).includes(selectedSourceLanguage)
+          )
+        })
+      this.setState({ filteredAccounts: filteredAccountsBySourceAndDomain })
+    }
+    if (
+      this.selectedTargetLanguage !== 'select' &&
+      this.state.selectedDomain == 'select' &&
+      selectedSourceLanguage !== 'select'
+    ) {
+      let filteredAccountsBySourceAndTarget = accounts
+        .filter(account => {
+          return (
+            api.checkSourceLanguages(account) !== null &&
+            api
+              .checkSourceLanguages(account)
+              .includes(selectedSourceLanguage)
+          )
+        })
+        .filter(account => {
+          return (
+            api.checkTargetLanguages(account) !== null &&
+            api.checkTargetLanguages(account).includes(this.state.selectedTargetLanguage)
+          )
+        })
+      this.setState({ filteredAccounts: filteredAccountsBySourceAndTarget })
+    }
   }
 
   filterAccountTarget = selectedTargetLanguage => {
     let accounts = this.state.accounts
-    let filteredAccountsByTarget = accounts.filter(
-      account =>
-        api.checkTargetLanguages(account) !== null &&
-        api.checkTargetLanguages(account).includes(selectedTargetLanguage)
-    )
+    if (
+      selectedTargetLanguage !== 'select' &&
+      (this.state.selectedDomain == 'select') &&
+      (this.state.selectedSourceLanguage == 'select')
+    ) {
+      let filteredAccountsByTarget = accounts.filter(account => {
+        return (
+          api.checkTargetLanguages(account) !== null &&
+          api.checkTargetLanguages(account).includes(selectedTargetLanguage)
+        )
+      })
+      this.setState({ filteredAccounts: filteredAccountsByTarget })
+      console.log(filteredAccountsByTarget)
+    }
+    if (
+      selectedTargetLanguage !== 'select' &&
+      this.state.filteredAccounts !== 'select' &&
+      this.state.filteredAccounts !== undefined
+    ) {
+      let filteredAccountsByTarget = this.state.filteredAccounts.filter(
+        account => {
+          return (
+            api.checkTargetLanguages(account) !== null &&
+            api.checkTargetLanguages(account).includes(selectedTargetLanguage)
+          )
+        }
+      )
+      this.setState({ filteredAccounts: filteredAccountsByTarget })
+      console.log(filteredAccountsByTarget)
+    }
 
-    this.setState({ filteredAccounts: filteredAccountsByTarget })
-
-    console.log(filteredAccountsByTarget)
+    if (
+      selectedTargetLanguage == 'select' &&
+      this.state.selectedDomain == 'select' &&
+      this.state.selectedSourceLanguage == 'select'
+    ) {
+      this.setState({ filteredAccounts: accounts })
+    }
+    if (
+      selectedTargetLanguage == 'select' &&
+      this.state.selectedDomain !== 'select' &&
+      this.state.selectedSourceLanguage !== 'select'
+    ) {
+      let filteredAccountsBySourceAndDomain = accounts
+        .filter(account => {
+          return (
+            api.checkSourceLanguages(account) !== null &&
+            api
+              .checkSourceLanguages(account)
+              .includes(this.state.selectedSourceLanguage)
+          )
+        })
+        .filter(account => {
+          return api.displayDomains(account) == this.state.selectedDomain
+        })
+      this.setState({ filteredAccounts: filteredAccountsBySourceAndDomain })
+      console.log('RESULTATS: ' + filteredAccountsBySourceAndDomain)
+    }
+    if (
+      selectedTargetLanguage == 'select' &&
+      this.state.selectedDomain == 'select' &&
+      this.state.selectedSourceLanguage !== 'select'
+    ) {
+      let filteredAccountsBySourceAndDomain = accounts.filter(account => {
+        return (
+          api.checkSourceLanguages(account) !== null &&
+          api
+            .checkSourceLanguages(account)
+            .includes(this.state.selectedSourceLanguage)
+        )
+      })
+      this.setState({ filteredAccounts: filteredAccountsBySourceAndDomain })
+      console.log('RESULTATS: ' + filteredAccountsBySourceAndDomain)
+    }
+    if (
+      selectedTargetLanguage !== 'select' &&
+      this.state.selectedDomain == 'select' &&
+      this.state.selectedSourceLanguage !== 'select'
+    ) {
+      let filteredAccountsBySourceAndTarget = accounts
+        .filter(account => {
+          return (
+            api.checkSourceLanguages(account) !== null &&
+            api
+              .checkSourceLanguages(account)
+              .includes(this.state.selectedSourceLanguage)
+          )
+        })
+        .filter(account => {
+          return (
+            api.checkTargetLanguages(account) !== null &&
+            api.checkTargetLanguages(account).includes(selectedTargetLanguage)
+          )
+        })
+      this.setState({ filteredAccounts: filteredAccountsBySourceAndTarget })
+    }
+    if (
+      selectedTargetLanguage == 'select' &&
+      this.state.selectedDomain !== 'select' &&
+      this.state.selectedSourceLanguage == 'select'
+    ) {
+      let filteredAccountsByDomains = accounts.filter(account => {
+        return api.displayDomains(account) == this.state.selectedDomain
+      })
+      this.setState({ filteredAccounts: filteredAccountsByDomains })
+    }
   }
 
   syncDatas = () => {
@@ -85,11 +390,11 @@ class MonthlyPlanning extends Component {
     })
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.syncDatas()
   }
 
-  componentDidUpdate(oldProps) {
+  componentDidUpdate (oldProps) {
     const newProps = this.props
 
     if (oldProps !== newProps) {
@@ -99,12 +404,16 @@ class MonthlyPlanning extends Component {
     console.log(this.state)
   }
 
-  render() {
+  render () {
     const roles = this.state.roles
     const accounts = this.state.accounts
     const domains = this.state.domains
     const languages = this.state.languages
     const selectedDomain = this.state.selectedDomain
+    const selectedSourceLanguage = this.state.selectedSourceLanguage
+    const selectedTargetLanguage = this.state.selectedTargetLanguage
+    const filteredAccounts = this.state.filteredAccounts
+
     console.log(this.state)
 
     return (
@@ -117,7 +426,7 @@ class MonthlyPlanning extends Component {
             ctTableResponsive
             content={
               <div>
-                <div className='container-week-view'>
+                <div className='container-month-view'>
                   <SelectTranslatorsMonthly
                     accounts={this.state.accounts}
                     filteredAccounts={this.state.filteredAccounts}
@@ -127,7 +436,7 @@ class MonthlyPlanning extends Component {
                   />
                   <MonthView passFilteredDomain={this.props.filteredDomain} />
                 </div>
-                <div className='container-week-view-bottom'>
+                <div className='container-month-view-bottom'>
                   <Filter
                     passSelectedTargetLanguage={this.updateTargetState}
                     passSelectedSourceLanguage={this.updateSourceState}

@@ -225,8 +225,25 @@ class Dashboard extends Component {
                     key={key}
                   />
                 )
-              }
-              else if (prop.path === '/weeklyplanning') {
+              } else if (prop.path === '/weeklyplanning') {
+                return (
+                  <Route
+                    exact
+                    path={prop.path}
+                    component={prop.component}
+                    key={key}
+                  />
+                )
+              } else if (prop.path === '/monthlyplanning') {
+                return (
+                  <Route
+                    exact
+                    path={prop.path}
+                    component={prop.component}
+                    key={key}
+                  />
+                )
+              } else if (prop.path === '/recurringtasks') {
                 return (
                   <Route
                     exact
@@ -236,7 +253,27 @@ class Dashboard extends Component {
                   />
                 )
               }
-              else if (prop.path === '/monthlyplanning') {
+              else if (prop.path === '/absences') {
+                return (
+                  <Route
+                    exact
+                    path={prop.path}
+                    component={prop.component}
+                    key={key}
+                  />
+                )
+              }
+              else if (prop.path === '/taskfinder') {
+                return (
+                  <Route
+                    exact
+                    path={prop.path}
+                    component={prop.component}
+                    key={key}
+                  />
+                )
+              }
+              else if (prop.path === '/workinghours') {
                 return (
                   <Route
                     exact
