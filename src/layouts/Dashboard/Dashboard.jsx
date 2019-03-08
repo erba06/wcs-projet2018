@@ -283,6 +283,16 @@ class Dashboard extends Component {
                   />
                 )
               }
+              else if (prop.path === '/addabsence') {
+                return (
+                  <Route
+                    exact
+                    path={prop.path}
+                    component={prop.component}
+                    key={key}
+                  />
+                )
+              }
               return null
             })}
             {translationRequestsRoutes.map((prop, key) => {
