@@ -33,7 +33,7 @@ class WeekView extends React.Component {
           </Panel.Heading>
           <Panel.Body className='weekview'>
             Select a day in a week :
-            <DatePickerComponent />
+         {/*}   <DatePickerComponent />*/}
           </Panel.Body>
         </Panel>
       </div>

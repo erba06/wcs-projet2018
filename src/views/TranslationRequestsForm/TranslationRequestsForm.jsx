@@ -54,7 +54,7 @@ class TranslationRequestsForm extends Component {
 
   updateDeadlineField (event) {
     const deadline = event.target.value
-    this.setState({ deadline })
+    this.setState({ deadline: this.props.selectedDate })
     console.log(deadline)
   }
 
