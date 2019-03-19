@@ -8,12 +8,69 @@ import DateRangePicker from 'react-bootstrap-daterangepicker'
 import 'bootstrap/dist/css/bootstrap.css'
 // you will also need the css that comes with bootstrap-daterangepicker
 import 'bootstrap-daterangepicker/daterangepicker.css'
+import moment from 'moment'
+import apiService from '../../api/apiService'
+import api from '../../api'
 
 class MyAvailability extends Component {
-  handleEvent (event, picker) {
-    console.log(picker.startDate)
+  constructor (props) {
+    super(props)
+
+    this.handleApply = this.handleApply.bind(this)
+
+    this.state = {
+      from: '',
+      to: '',
+      userAvailability: [],
+      unavailable: '',
+      startDate: moment().subtract(29, 'days'),
+      endDate: moment(),
+      ranges: {
+        Today: [moment(), moment()],
+        Yesterday: [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+        'This Month': [moment().startOf('month'), moment().endOf('month')],
+        'Last Month': [
+          moment()
+            .subtract(1, 'month')
+            .startOf('month'),
+          moment()
+            .subtract(1, 'month')
+            .endOf('month')
+        ]
+      }
+    }
+    console.log(this.state)
+  }
+
+  handleApply (event, picker) {
+    this.setState({
+      startDate: picker.startDate,
+      endDate: picker.endDate
+    })
+    api.addUserAvailability()
+  }
+
+  syncDatas = () => {
+    apiService.getApiEndpoint('GetUserAvailability').then(userAvailability => {
+      this.setState({ userAvailability: userAvailability.data })
+    })
+  }
+  componentDidMount () {
+    this.syncDatas()
   }
   render () {
+    let start = this.state.startDate.format('DD-MM-YYYY')
+    let end = this.state.endDate.format('DD-MM-YYYY')
+    let userAvailability = this.state.userAvailability
+    console.log(userAvailability)
+
+    let label = start + ' - ' + end
+    if (start === end) {
+      label = start
+    }
+
     return (
       <div className='content'>
         <Grid fluid>
@@ -32,14 +89,32 @@ class MyAvailability extends Component {
                       </p>
 
                       <DateRangePicker
-                        onEvent={this.handleEvent}
-                        startDate='1/1/2014'
-                        endDate='3/1/2014'
+                        startDate={this.state.startDate}
+                        endDate={this.state.endDate}
+                        onApply={this.handleApply}
                       >
-                        <Button bsStyle='info' fill>
-                          Select Dates
-                        </Button>
+                        <div className='input-group'>
+                          <input
+                            type='text'
+                            className='form-control'
+                            value={label}
+                          />
+                          <span className='input-group-btn'>
+                            <Button
+                              className='default date-range-toggle'
+                              bsStyle='info'
+                            >
+                              <i className='fa fa-calendar' /> Select Dates
+                            </Button>
+                          </span>
+                        </div>
                       </DateRangePicker>
+
+                      <h4>I am not available at the following dates:</h4>
+                      <div className='input-group'>
+                        From <span>{this.state.userAvailability.from}</span> to{' '}
+                        <span>{this.state.userAvailability.to}</span>
+                      </div>
                     </Jumbotron>
                   </form>
                 }

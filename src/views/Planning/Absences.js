@@ -54,7 +54,7 @@ class Absences extends Component {
 
   render () {
     return (
-      <div className='absences'>
+      <div className='content'>
         <Grid fluid>
           <Card
             title='Absences'
@@ -62,6 +62,39 @@ class Absences extends Component {
             ctTableFullWidth
             ctTableResponsive
             content={
+              <div className="global-container">
+                <ul className="breadcrumb">
+                  <li>
+                    <Link to="/weeklyplanning">
+                      <a href="WeeklyPlanningPage">Weekly Planning</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/monthlyplanning">
+                      <a href="MonthlyPlanningPage">Monthly Planning</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/recurringtasks">
+                      <a href="RecurringTasksPage">Recurring tasks</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/absences">
+                      <a href="Absence">Absences</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/taskfinder">
+                      <a href="TaskFinderPage">Task finder</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/workinghours">
+                      <a href="WorkingHours">Working hours</a>
+                    </Link>
+                  </li>
+                </ul>
               <div className='container-week-view-global'>
                 <div className='container-week-view-top'>
                   <SelectTranslators
@@ -90,6 +123,7 @@ class Absences extends Component {
                     </Link>
                   </div>
                 </div>
+              </div>
               </div>
             }
           />

@@ -64,6 +64,7 @@ input#password-id.form-control {
 .breadcrumb {
   float: left;
   margin-left: 15px;
+  width: 97.2%;
 }
 
 .buttonManagePages {
@@ -97,13 +98,14 @@ label {
   border: 1px transparent;
   padding: 10px;
   border-radius: 0.5rem;
-  margin-top: 10px;
   margin-left: 20px;
   margin-bottom: 10px;
 }
 .dragAndDrop .DropZone {
-  background-color: #9a9a9a;
-  height: 15%;
+  background-color: #e2dcdc;
+  margin-top: 5px;
+
+  height: 12%;
   width: 30%;
   padding: 1em;
 }
@@ -254,6 +256,7 @@ label {
 }
 .container-week-view-bottom {
   display: flex;
+  flex-direction: row;
   width: 60%;
 }
 .container-month-view-bottom {
@@ -266,7 +269,10 @@ label {
 .fc-event {
   margin: 4px;
 }
-
+.global-container-weekly {
+  display: flex;
+  flex-direction: column;
+}
 /* Monthly Planning */
 /* Month View */
 .month-view {
@@ -458,7 +464,7 @@ label {
   background-color: rgb(248, 248, 247);
   width: 100%;
 }
-.input-group {
+.datetimepicker .input-group {
   width: 30%;
   border: black;
 }
@@ -485,7 +491,6 @@ label {
 
 .fa-sun {
   margin-right: 1rem;
-  float: left;
 }
 .absence-list {
   background-color: rgb(248, 248, 247);
@@ -503,7 +508,7 @@ label {
 
 /* Add an absence */
 .absence-dates {
-  width: 40%;
+  width: 55%;
   display: flex;
   justify-content: space-between;
 }
@@ -535,12 +540,64 @@ select {
   width: 100%;
   font-size: 14px;
   line-height: 1.42857143;
-  
 }
 .who {
-display: block;
-width: 100%
+  display: block;
+  width: 100%;
 }
 .buttons {
   margin-top: 4px;
+}
+/* Recurring tasks*/
+.global-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.recurring-tasks {
+  background-color: rgb(248, 248, 247);
+  border-top-style: ridge;
+  margin-top: 20px;
+  font-size: normal;
+  font-weight: 100;
+  padding: 13px;
+  height: auto;
+  font-weight: bolder;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.recurring-task-title {
+  font-size: 21px;
+  padding: 4px;
+  background-color: rgb(248, 248, 247);
+  border-top-style: ridge;
+  height: 40px;
+}
+.recurring-task-dates {
+  width: 55%;
+  display: flex;
+  justify-content: space-between;
+}
+.container-recurring-task {
+  display: flex;
+  width: 72%;
+  margin-top: 3%;
+  width: 65%;
+  border-top-style: ridge;
+  display: flex;
+  flex-direction: column;
+}
+.recurring-task {
+  font-size: large;
+  font-weight: 100;
+  padding: 10px;
+  height: 50px;
+  background-color: rgb(248, 248, 247);
+}
+.fa-search {
+  margin-right: 1rem;
+}
+.fa-repeat {
+  margin-right: 1rem;
 }

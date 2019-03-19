@@ -18,11 +18,24 @@ moment.locale('en-gb')
 // const localizer = BigCalendar.momentLocalizer(moment)
 
 class WeekCalendar extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      translationRequests: props
+    }
+  }
   render () {
+    const translationRequests = this.props.translationRequests
+    console.log(translationRequests)
+    console.log(this.props)
+
     return (
       <div>
         <External />
-        <Calendar />
+        <Calendar
+          /* Pass translation request from week calendar to calendar */
+          translationRequests={translationRequests}
+        />
       </div>
     )
   }
@@ -32,7 +45,16 @@ class WeekCalendar extends React.Component {
  * A simple React component
  */
 class Calendar extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      translationRequests: props
+    }
+  }
   render () {
+    const translationRequests = this.props.translationRequests
+    console.log(translationRequests)
+    console.log(this.props)
     return <div id='calendar' />
   }
   componentDidMount () {
@@ -86,9 +108,15 @@ class Calendar extends React.Component {
           editable: true
         },
         {
+          title: 'TEESSST',
+          start: '2018-03-01',
+          end: this.props.translationRequests.deadline
+        },
+        {
           title: 'Long Event',
           start: '2018-03-07',
           end: '2018-03-10',
+          allDay: true,
           editable: true
         },
         {

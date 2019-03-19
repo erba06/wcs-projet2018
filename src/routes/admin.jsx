@@ -17,6 +17,7 @@ import Absences from '../views/Planning/Absences'
 import TaskFinder from '../views/Planning/TaskFinder'
 import WorkingHours from '../views/Planning/WorkingHours'
 import AddAbsence from '../views/Planning/AddAbsence'
+import AddRecurringTasks from '../views/Planning/AddRecurringTasks'
 
 const adminRoutes = [
   {
@@ -113,7 +114,12 @@ const adminRoutes = [
     path: "/addabsence",
     name: "Add an absence",
     component: AddAbsence,
+  },
+  {
+    path: "/recurringtask",
+    name: "Add a Recurring Task",
+    component: AddRecurringTasks,
   }
-]
+];
 
 export default adminRoutes

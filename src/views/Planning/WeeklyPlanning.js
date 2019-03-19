@@ -3,6 +3,7 @@ import { Grid } from 'react-bootstrap'
 import Card from 'components/Card/Card.jsx'
 import 'assets/css/admin.css'
 import SelectTranslators from 'components/Planning/SelectTranslators'
+import { Link } from 'react-router-dom'
 import WeekView from 'components/Planning/WeekView'
 import Filter from '../../components/Planning/Filter'
 import WeekCalendar from 'components/Planning/WeekCalendar'
@@ -21,7 +22,8 @@ class WeeklyPlanning extends Component {
       selectedTargetLanguage: 'select',
       selectedSourceLanguage: 'select',
       selectedDomain: 'select',
-      filteredAccounts: 'select'
+      filteredAccounts: 'select',
+      translationRequests: []
     }
     console.log(this.state)
   }
@@ -392,6 +394,14 @@ class WeeklyPlanning extends Component {
     apiService.getApiEndpoint('GetLanguages').then(languages => {
       this.setState({ languages: languages.data })
     })
+    apiService.getApiEndpoint('GetTranslationRequest', null, { id: 2 })
+    .then(translationRequests => {
+      this.setState({ translationRequests: translationRequests.data })
+      })
+    // apiService.getApiEndpoint('GetTranslationRequests')
+    //   .then(requests => {
+    //     this.setState({ requests: requests.data })
+    //   })
   }
   componentDidMount () {
     this.syncDatas()
@@ -406,44 +416,87 @@ class WeeklyPlanning extends Component {
     const selectedSourceLanguage = this.state.selectedSourceLanguage
     const selectedTargetLanguage = this.state.selectedTargetLanguage
     const filteredAccounts = this.state.filteredAccounts
+    const translationRequests = this.state.translationRequests
     console.log(this.state)
 
     return (
-      <div className='weekly-planning'>
+      <div className="weekly-planning">
         <Grid fluid>
           <Card
-            title='Weekly Planning'
-            category='Your internal translation requests marketplace'
+            title="Weekly Planning"
+            category="Your internal translation requests marketplace"
             ctTableFullWidth
             ctTableResponsive
             content={
-              <div className='container-week-view-global'>
-                <div className='container-week-view-top'>
-                  <SelectTranslators
-                    accounts={this.state.accounts}
-                    filteredAccounts={this.state.filteredAccounts}
-                    selectedTargetLanguage={this.state.selectedTargetLanguage}
-                    selectedSourceLanguage={this.state.selectedSourceLanguage}
-                    selectedDomain={this.state.selectedDomain}
-                  />
-                  <Filter
-                    passSelectedTargetLanguage={this.updateTargetState}
-                    passSelectedSourceLanguage={this.updateSourceState}
-                    passSelectedDomain={this.updateDomainState}
-                    domains={this.state.domains}
-                    languages={this.state.languages}
-                  />
-                  <WeekView passFilteredDomain={this.props.filteredDomain} />
-                </div>
-                <div className='container-week-view-bottom'>
-                  <WeekCalendar />
+              <div className='global-container-weekly'>
+                <ul className="breadcrumb">
+                  <li>
+                    <Link to="/weeklyplanning">
+                      <a href="WeeklyPlanningPage">Weekly Planning</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/monthlyplanning">
+                      <a href="MonthlyPlanningPage">Monthly Planning</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/recurringtasks">
+                      <a href="RecurringTasksPage">Recurring tasks</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/absences">
+                      <a href="Absence">Absences</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/taskfinder">
+                      <a href="TaskFinderPage">Task finder</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/workinghours">
+                      <a href="WorkingHours">Working hours</a>
+                    </Link>
+                  </li>
+                </ul>
+                <div className="container-week-view-global">
+                  <div className="container-week-view-top">
+                    <SelectTranslators
+                      accounts={this.state.accounts}
+                      filteredAccounts={this.state.filteredAccounts}
+                      selectedTargetLanguage={
+                        this.state.selectedTargetLanguage
+                      }
+                      selectedSourceLanguage={
+                        this.state.selectedSourceLanguage
+                      }
+                      selectedDomain={this.state.selectedDomain}
+                    />
+                    <Filter
+                      passSelectedTargetLanguage={this.updateTargetState}
+                      passSelectedSourceLanguage={this.updateSourceState}
+                      passSelectedDomain={this.updateDomainState}
+                      domains={this.state.domains}
+                      languages={this.state.languages}
+                    />
+                    <WeekView
+                      passFilteredDomain={this.props.filteredDomain}
+                    />
+                  </div>
+                  <div className="container-week-view-bottom">
+                    <WeekCalendar
+                    /* Pass translation request from week planning to week calendar */
+                    translationRequests={this.state.translationRequests} />
+                  </div>
                 </div>
               </div>
             }
           />
         </Grid>
       </div>
-    )
+    );
   }
 }
 

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Grid } from 'react-bootstrap'
 import Card from 'components/Card/Card.jsx'
+import { Link } from 'react-router-dom'
 import 'assets/css/admin.css'
 import SelectTranslatorsMonthly from 'components/Planning/SelectTranslatorsMonthly'
 import MonthView from 'components/Planning/MonthView'
@@ -425,7 +426,39 @@ class MonthlyPlanning extends Component {
             ctTableFullWidth
             ctTableResponsive
             content={
-              <div>
+              <div className='global-container-weekly'>
+                <ul className="breadcrumb">
+                  <li>
+                    <Link to="/weeklyplanning">
+                      <a href="WeeklyPlanningPage">Weekly Planning</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/monthlyplanning">
+                      <a href="MonthlyPlanningPage">Monthly Planning</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/recurringtasks">
+                      <a href="RecurringTasksPage">Recurring tasks</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/absences">
+                      <a href="Absence">Absences</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/taskfinder">
+                      <a href="TaskFinderPage">Task finder</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/workinghours">
+                      <a href="WorkingHours">Working hours</a>
+                    </Link>
+                  </li>
+                </ul>
                 <div className='container-month-view'>
                   <SelectTranslatorsMonthly
                     accounts={this.state.accounts}

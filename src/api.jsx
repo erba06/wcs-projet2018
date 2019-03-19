@@ -411,7 +411,7 @@ const deleteLanguage = prop => {
 
 /* MONTHLY & WEEKLY PLANNING */
 const displayDomains = (account, index) => {
- // console.log(account.domains.length)
+  // console.log(account.domains.length)
   if (account.domains.length === 0) {
     return null
   } else if (account.domains.length === 1) {
@@ -437,7 +437,6 @@ const displayLanguages = account => {
   }
 }
 const displayLanguagesInResultPanel = account => {
-  //console.log(account)
   if (account.sources.length === 0) return null
   else if (account.sources.length === 1 && account.targets.length === 1) {
     return (
@@ -476,6 +475,69 @@ const isTranslator = roles => roles.indexOf('Translator') > -1
 const displayTranslatorOnly = roles =>
   roles.filter(role => role.indexOf('Translator') > -1)
 
+/* TRANSLATION REQUESTS */
+const addTranslationRequest = translationRequest => {
+  apiService
+    .getApiEndpoint('PostTranslationRequests', {
+      jobType: translationRequest.requestType,
+      wordCount: translationRequest.wordcount,
+      wwc: translationRequest.WWC,
+      deadline: translationRequest.value,
+      comments: translationRequest.comments,
+      projectPath: translationRequest.pathName,
+      source: translationRequest.selectedSources,
+      targets: translationRequest.selectedTargets,
+      domain: translationRequest.selectedDomains,
+      orderNumber: translationRequest.orderNumber,
+      qualification: translationRequest.qualification,
+      clientName: translationRequest.clientName
+    })
+    .then(res => {
+      if (res.status === 200) {
+        Alert.success('The Translation request has been added')
+        setTimeout(() => {
+          window.location.href = '/editrole/#/translationrequests'
+        }, 500)
+      } else {
+        Alert.error('Error, try again')
+      }
+    })
+}
+const addUserAvailability = userAvailability => {
+  console.log(userAvailability)
+  apiService
+    .getApiEndpoint('PutUserAvailability', {
+      unavailable: true,
+      from: '2019-04-19T13:13:58.9555802Z',
+      to: '2019-04-19T13:13:58.9556574Z'
+    })
+    .then(res => {
+      if (res.status === 200 || 204) {
+        console.log('success')
+        Alert.success('The user availability has been added')
+        setTimeout(() => {
+          window.location.href = '/#/myavailability'
+        }, 500)
+      } else {
+        Alert.error('Error, try again')
+      }
+    })
+}
+const getUserAvailability = userAvailability => {
+  console.log(userAvailability)
+  apiService
+    .getApiEndpoint('GetUserAvailability')
+    .then(res => {
+      if (res.status === 200 || 204) {
+        console.log('success')
+        console.log(userAvailability.data.items)
+      } else {
+        Alert.error('Error, try again')
+      }
+    })
+}
+
+
 export default {
   logIn,
   logout,
@@ -506,5 +568,8 @@ export default {
   checkSourceLanguages,
   checkTargetLanguages,
   isTranslator,
-  displayTranslatorOnly
+  displayTranslatorOnly,
+  addTranslationRequest,
+  addUserAvailability,
+  getUserAvailability
 }

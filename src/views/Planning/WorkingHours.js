@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import { Grid } from 'react-bootstrap'
 import Card from 'components/Card/Card.jsx'
+import { Link } from 'react-router-dom'
 import 'assets/css/admin.css'
 import api from '../../api'
 import apiService from '../../api/apiService'
 import SelectTranslators from 'components/Planning/SelectTranslators'
 import Filter from '../../components/Planning/Filter'
 import DatePickerComponent from '../../components/DateTimePicker/DateTimePicker'
-import DateTimePicker from '../../components/DateTimePicker/DateTimePicker';
+import DateTimePicker from '../../components/DateTimePicker/DateTimePicker'
 
 class WorkingHours extends Component {
   constructor (props) {
@@ -407,7 +408,7 @@ class WorkingHours extends Component {
     console.log(this.state)
 
     return (
-      <div className='weekly-planning'>
+      <div className='content'>
         <Grid fluid>
           <Card
             title='Working hours'
@@ -415,35 +416,68 @@ class WorkingHours extends Component {
             ctTableFullWidth
             ctTableResponsive
             content={
-              <div className='container-week-view-global'>
-                <div className='container-week-view-top'>
-                  <SelectTranslators
-                    accounts={this.state.accounts}
-                    filteredAccounts={this.state.filteredAccounts}
-                    selectedTargetLanguage={this.state.selectedTargetLanguage}
-                    selectedSourceLanguage={this.state.selectedSourceLanguage}
-                    selectedDomain={this.state.selectedDomain}
-                  />
-                  <Filter
-                    passSelectedTargetLanguage={this.updateTargetState}
-                    passSelectedSourceLanguage={this.updateSourceState}
-                    passSelectedDomain={this.updateDomainState}
-                    domains={this.state.domains}
-                    languages={this.state.languages}
-                  />
-                </div>
-                <div className='container-working-hours'>
-                  <div className='working-hours'>
-                    <i class='fas fa-clock' />
-                    Manage working hours{' '}
+              <div className='global-container'>
+                <ul className='breadcrumb'>
+                  <li>
+                    <Link to='/weeklyplanning'>
+                      <a href='WeeklyPlanningPage'>Weekly Planning</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to='/monthlyplanning'>
+                      <a href='MonthlyPlanningPage'>Monthly Planning</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to='/recurringtasks'>
+                      <a href='RecurringTasksPage'>Recurring tasks</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to='/absences'>
+                      <a href='Absence'>Absences</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to='/taskfinder'>
+                      <a href='TaskFinderPage'>Task finder</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to='/workinghours'>
+                      <a href='WorkingHours'>Working hours</a>
+                    </Link>
+                  </li>
+                </ul>
+                <div className='container-week-view-global'>
+                  <div className='container-week-view-top'>
+                    <SelectTranslators
+                      accounts={this.state.accounts}
+                      filteredAccounts={this.state.filteredAccounts}
+                      selectedTargetLanguage={this.state.selectedTargetLanguage}
+                      selectedSourceLanguage={this.state.selectedSourceLanguage}
+                      selectedDomain={this.state.selectedDomain}
+                    />
+                    <Filter
+                      passSelectedTargetLanguage={this.updateTargetState}
+                      passSelectedSourceLanguage={this.updateSourceState}
+                      passSelectedDomain={this.updateDomainState}
+                      domains={this.state.domains}
+                      languages={this.state.languages}
+                    />
                   </div>
-                  <div className='container-select-month'>
-                  <div className='select-month'>Select a month: 
-                   </div>
-                   <div className='datetimepicker'>
+                  <div className='container-working-hours'>
+                    <div className='working-hours'>
+                      <i class='fas fa-clock' />
+                      Manage working hours{' '}
+                    </div>
+                    <div className='container-select-month'>
+                      <div className='select-month'>Select a month:</div>
+                      <div className='datetimepicker'>
                         <DateTimePicker />
-                            </div>
-                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             }

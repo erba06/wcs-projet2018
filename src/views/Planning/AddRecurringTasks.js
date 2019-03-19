@@ -18,14 +18,14 @@ import api from '../../api'
 import SelectButton from '../../components/Buttons/SelectButton'
 import DeselectButton from '../../components/Buttons/DeselectButton'
 
-class AddAbsence extends Component {
+class AddRecurringTasks extends Component {
   constructor (props) {
     super(props)
     this.state = {
       isSelected: false,
       forWhom: '',
       accounts: [],
-      selectedAbsence: '',
+      selectedTask: '',
       selectedforWhom: ''
     }
     console.log(this.props)
@@ -59,30 +59,25 @@ class AddAbsence extends Component {
     this.setState({ endDate: event.target.value })
     console.log(endDate)
   }
-  updateReasonField = event => {
-    const reason = event.target.reason
-    this.setState({ reason: event.target.value })
-    console.log(reason)
-  }
   updateForWhomField = event => {
     const forWhom = event.target.forWhom
     this.setState({ forWhom: event.target.value })
     console.log(this.state)
   }
 
-  updateAbsenceTypeField = event => {
-    const AbsenceType = event.target.AbsenceType
-    this.setState({ AbsenceType: event.target.value })
+  updateTaskTypeField = event => {
+    const TaskType = event.target.TaskType
+    this.setState({ TaskType: event.target.value })
     console.log(this.state)
   }
   handleSubmit = e => {
     e.preventDefault()
-    const absence = this.state.absence
+      const task = this.state.task
   }
 
   render () {
-    const absence = this.state.absence
-    console.log(absence)
+    const task = this.state.task
+    console.log(task)
     const accounts = this.state.accounts
     console.log(accounts)
     const startDate = this.state.startDate
@@ -104,17 +99,17 @@ class AddAbsence extends Component {
           <Row>
             <Col md={12}>
               <Card
-                title='Manage absences'
+                title='Recurring tasks'
                 content={
                   <Row>
                     <Col md={12}>
                       <form action='#' onSubmit={this.handleSubmit.bind(this)}>
-                        <div className='absence-date-title'>
+                        <div className='recurring-task-title'>
                           <i class='fas fa-plus-square' />
-                          <span>Add an absence</span>
+                          <span>Add a recurring task</span>
                         </div>
 
-                        <div className='absence-dates'>
+                        <div className='recurring-task-dates'>
                           <Col md={4}>
                             <ControlLabel>Start date</ControlLabel>
                             <FormControl
@@ -136,15 +131,6 @@ class AddAbsence extends Component {
                         </div>
 
                         {/* <Select options={['red', 'blue', 'green']} onChange={(values) => this.setValues(values)} /> */}
-                        <div className='absence-reason'>
-                          <Col md={10}>
-                            <ControlLabel>Reason</ControlLabel>
-                            <FormControl
-                              className='absence-reason'
-                              onChange={this.updateReasonField.bind(this)}
-                            />
-                          </Col>
-                        </div>
 
                         <div className='who'>
                           <Col md={10}>
@@ -184,23 +170,22 @@ class AddAbsence extends Component {
                           </Col>
                         </div>
 
-                        <div className='absence-type'>
+                        <div className='task-type'>
                           <Col md={10}>
-                            <ControlLabel>Type of absence</ControlLabel>
+                            <ControlLabel>Type of task</ControlLabel>
 
                             <select
-                              value={this.state.selectedAbsence}
-                              onChange={this.updateAbsenceTypeField.bind(this)}
+                              value={this.state.selectedTask}
+                              onChange={this.updateTaskTypeField.bind(this)}
                             >
                               {' '}
                               >
-                              <option value='standard-absence'>Standard</option>
-                              <option value='illness-absence'>Illness</option>
-                              <option selected value='university-absence'>
-                                University
+                              <option value='taks-translation'>
+                                Translation
                               </option>
-                              <option value='uncertain-availability-absence'>
-                                Uncertain availability
+                              <option value='task-reviw'>Review</option>
+                              <option selected value='taks-other'>
+                                Other
                               </option>
                             </select>
                           </Col>
@@ -210,7 +195,7 @@ class AddAbsence extends Component {
                           <Col md={12}>
                             <ButtonToolbar>
                               <Button
-                                // onClick={() => api.addAbsence(absence)}
+                                // onClick={() => api.addRecurringTask(recurringTask)}
                                 bsStyle='info'
                                 pullLeft
                                 fill
@@ -243,4 +228,5 @@ class AddAbsence extends Component {
   }
 }
 
-export default AddAbsence
+export default AddRecurringTasks
+

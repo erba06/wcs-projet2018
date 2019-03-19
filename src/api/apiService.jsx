@@ -138,7 +138,7 @@ const endpoints = {
     method: 'POST'
   },
   GetConstants: {
-    url: `${hostUrl}/TranslationRequests/constant`,
+    url: `${hostUrl}/TranslationRequests/constants`,
     method: 'GET'
   },
   GetUserAvailability: {

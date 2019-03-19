@@ -165,7 +165,7 @@ class AddUser extends Component {
       }
     }
     console.log('opts: ', opts)
-    this.setState({ selectedSources: opts })
+    this.setState({ selectedSources:opts })
   }
 
   updateTargetField (event) {

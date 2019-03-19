@@ -293,6 +293,26 @@ class Dashboard extends Component {
                   />
                 )
               }
+              else if (prop.path === '/recurringtask') {
+                return (
+                  <Route
+                    exact
+                    path={prop.path}
+                    component={prop.component}
+                    key={key}
+                  />
+                )
+              }
+              else if (prop.path === '/taskfinder') {
+                return (
+                  <Route
+                    exact
+                    path={prop.path}
+                    component={prop.component}
+                    key={key}
+                  />
+                )
+              }
               return null
             })}
             {translationRequestsRoutes.map((prop, key) => {
