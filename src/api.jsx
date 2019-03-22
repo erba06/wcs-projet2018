@@ -508,8 +508,8 @@ const addUserAvailability = userAvailability => {
   apiService
     .getApiEndpoint('PutUserAvailability', {
       unavailable: true,
-      from: '2019-04-19T13:13:58.9555802Z',
-      to: '2019-04-19T13:13:58.9556574Z'
+      from: userAvailability.startDate,
+      to: userAvailability.endDate
     })
     .then(res => {
       if (res.status === 200 || 204) {
@@ -525,18 +525,15 @@ const addUserAvailability = userAvailability => {
 }
 const getUserAvailability = userAvailability => {
   console.log(userAvailability)
-  apiService
-    .getApiEndpoint('GetUserAvailability')
-    .then(res => {
-      if (res.status === 200 || 204) {
-        console.log('success')
-        console.log(userAvailability.data.items)
-      } else {
-        Alert.error('Error, try again')
-      }
-    })
+  apiService.getApiEndpoint('GetUserAvailability').then(res => {
+    if (res.status === 200 || 204) {
+      console.log('success')
+      console.log(userAvailability.data.items)
+    } else {
+      Alert.error('Error, try again')
+    }
+  })
 }
-
 
 export default {
   logIn,

@@ -47,23 +47,33 @@ class WeekCalendar extends React.Component {
 class Calendar extends React.Component {
   constructor (props) {
     super(props)
-    this.state = {
-      translationRequests: props
-    }
-  }
-  render () {
-    const translationRequests = this.props.translationRequests
-    console.log(translationRequests)
-    console.log(this.props)
-    return <div id='calendar' />
+    this.updateEvents = this.updateEvents.bind(this)
   }
   componentDidMount () {
+    this.updateEvents(this.props.translationRequests)
+  }
+  componentDidUpdate () {
+    this.updateEvents(this.props.translationRequests)
+  }
+  updateEvents (eventsList) {
+    let array = []
+    array.push(eventsList)
+    console.log(array)
+
+    let event = array.map(event => ({
+      title: event.id,
+      start: event.requestDate,
+      end: event.deadline
+    }))
+    console.log(event)
+
+    $('#calendar').fullCalendar('destroy')
     $('#calendar').fullCalendar({
       dragOpacity: 0.4,
       header: {
         left: 'prev,next today',
         center: 'title',
-        //        right: 'month,agendaWeek,agendaDay',
+        right: 'month,agendaWeek,agendaDay',
         right: 'agendaWeek, agendaDay'
       },
       droppable: true,
@@ -81,116 +91,168 @@ class Calendar extends React.Component {
       maxTime: '19:00:00',
       height: 700,
       contentHeight: 500,
-
-      select: function (start, end) {
-        end = $.fullCalendar.moment(start)
-        end.add(1, 'hours')
-        $('#calendar').fullCalendar(
-          'renderEvent',
-          {
-            start: start,
-            end: end,
-            allDay: false,
-            editable: true
-          },
-          true // stick the event
-        )
-        $('#calendar').fullCalendar('unselect')
-      },
-      schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
-      events: [
-        {
-          title: 'All Day Event',
-          start: '2018-03-01',
-          allDay: true,
-          end: moment().add(1, 'hour'),
-          stick: true,
-          editable: true
-        },
-        {
-          title: 'TEESSST',
-          start: '2018-03-01',
-          end: this.props.translationRequests.deadline
-        },
-        {
-          title: 'Long Event',
-          start: '2018-03-07',
-          end: '2018-03-10',
-          allDay: true,
-          editable: true
-        },
-        {
-          id: 999,
-          title: 'Repeating Event',
-          start: '2018-03-09T16:00:00',
-          editable: true
-        },
-        {
-          id: 999,
-          title: 'Repeating Event',
-          start: '2018-03-16T16:00:00',
-          editable: true
-        },
-        {
-          title: 'Conference',
-          start: '2018-03-11',
-          end: '2018-03-13',
-          editable: true,
-          stick: true
-        },
-        {
-          title: 'Meeting',
-          start: '2018-03-12T10:30:00',
-          end: '2018-03-12T12:30:00',
-          editable: true
-        },
-        {
-          title: 'Lunch',
-          start: '2018-03-12T12:00:00'
-        },
-        {
-          title: 'Meeting',
-          start: '2018-03-12T14:30:00'
-        },
-        {
-          title: 'Happy Hour',
-          start: '2018-03-12T17:30:00'
-        },
-        {
-          title: 'Dinner',
-          start: '2018-03-12T20:00:00'
-        },
-        {
-          title: 'Birthday Party',
-          msg: 'I am OK',
-          start: '2018-03-14 14:00:00',
-          end: '2018-03-14 15:00:00',
-          editable: true,
-          allDay: false
-        },
-        {
-          title: 'Click for Google',
-          url: 'http://google.com/',
-          start: '2018-03-28'
-        }
-      ],
-      // this allows things to be dropped onto the calendar
-      drop: function (date, jsEvent, ui, resourceId) {
-        // is the "remove after drop" checkbox checked?
-        if ($('#drop-remove').is(':checked')) {
-          // if so, remove the element from the "Draggable Events" list
-          $(this).remove()
-        }
-      },
-      eventDrop: function (event, delta, revertFunc) {
-        alert(event.title + ' was dropped on ' + event.start.format())
-
-        if (!window.confirm('Are you sure about this change?')) {
-          revertFunc()
-        }
-      }
+      columnFormat: 'ddd',
+      events: event
     })
   }
+  render () {
+    return <div id='calendar' />
+  }
+  // constructor (props) {
+  //   super(props)
+  //   this.state = {
+  //     translationRequests: props
+  //   }
+  // }
+  // render () {
+  //   const translationRequests = this.props.translationRequests
+  //   console.log(translationRequests)
+  //   console.log(this.props)
+  //   console.log(moment(this.props.translationRequests.requestDate))
+  //   const start = moment(this.props.translationRequests.requestDate)
+
+  //   return <div id='calendar' />
+  // }
+  // componentDidMount () {
+  //   $('#calendar').fullCalendar({
+  //     events: this.props.translationRequests,
+  //     dragOpacity: 0.4,
+  //     header: {
+  //       left: 'prev,next today',
+  //       center: 'title',
+  //       //        right: 'month,agendaWeek,agendaDay',
+  //       right: 'agendaWeek, agendaDay'
+  //     },
+  //     droppable: true,
+  //     defaultView: 'agendaWeek',
+  //     businessHours: true,
+  //     weekends: false,
+  //     allDay: true,
+  //     defaultDate: '2018-03-12',
+  //     editable: true,
+  //     eventLimit: true,
+  //     selectable: true,
+  //     selectHelper: true,
+  //     resizable: true,
+  //     minTime: '09:00:00',
+  //     maxTime: '19:00:00',
+  //     height: 700,
+  //     contentHeight: 500,
+
+  //     select: function (start, end) {
+  //       end = $.fullCalendar.moment(start)
+  //       end.add(1, 'hours')
+  //       $('#calendar').fullCalendar(
+  //         'renderEvent',
+  //         {
+  //           start: start,
+  //           end: end,
+  //           allDay: false,
+  //           editable: true
+  //         },
+  //         true // stick the event
+  //       )
+  //       $('#calendar').fullCalendar('unselect')
+  //     },
+  //     schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+
+  //     events: [
+  //       {
+  //         title: 'All Day Event',
+  //         start: '2018-03-01',
+  //         allDay: true,
+  //         end: moment().add(1, 'hour'),
+  //         stick: true,
+  //         editable: true
+  //       },
+  //       {
+  //         title: 'TEESSST',
+  //         start: '2018-03-18',
+  //         allDay: true,
+  //         end: moment().add(1, 'hour'),
+  //         // end: this.props.translationRequests.deadline,
+  //         editable: true,
+  //         stick: true
+  //       },
+  //       {
+  //         title: 'Long Event',
+  //         start: '2018-03-07',
+  //         end: '2018-03-10',
+  //         allDay: true,
+  //         editable: true
+  //       },
+  //       {
+  //         id: 999,
+  //         title: 'Repeating Event',
+  //         start: '2018-03-09T16:00:00',
+  //         editable: true
+  //       },
+  //       {
+  //         id: 999,
+  //         title: 'Repeating Event',
+  //         start: '2018-03-16T16:00:00',
+  //         editable: true
+  //       },
+  //       {
+  //         title: 'Conference',
+  //         start: '2018-03-11',
+  //         end: '2018-03-13',
+  //         editable: true,
+  //         stick: true
+  //       },
+  //       {
+  //         title: 'Meeting',
+  //         start: '2018-03-12T10:30:00',
+  //         end: '2018-03-12T12:30:00',
+  //         editable: true
+  //       },
+  //       {
+  //         title: 'Lunch',
+  //         start: '2018-03-12T12:00:00'
+  //       },
+  //       {
+  //         title: 'Meeting',
+  //         start: '2018-03-12T14:30:00'
+  //       },
+  //       {
+  //         title: 'Happy Hour',
+  //         start: '2018-03-12T17:30:00'
+  //       },
+  //       {
+  //         title: 'Dinner',
+  //         start: '2018-03-12T20:00:00'
+  //       },
+  //       {
+  //         title: 'Birthday Party',
+  //         msg: 'I am OK',
+  //         start: '2018-03-14 14:00:00',
+  //         end: '2018-03-14 15:00:00',
+  //         editable: true,
+  //         allDay: false
+  //       },
+  //       {
+  //         title: 'Click for Google',
+  //         url: 'http://google.com/',
+  //         start: '2018-03-28'
+  //       }
+  //     ],
+  //     // this allows things to be dropped onto the calendar
+  //     drop: function (date, jsEvent, ui, resourceId) {
+  //       // is the "remove after drop" checkbox checked?
+  //       if ($('#drop-remove').is(':checked')) {
+  //         // if so, remove the element from the "Draggable Events" list
+  //         $(this).remove()
+  //       }
+  //     },
+  //     eventDrop: function (event, delta, revertFunc) {
+  //       alert(event.title + ' was dropped on ' + event.start.format())
+
+  //       if (!window.confirm('Are you sure about this change?')) {
+  //         revertFunc()
+  //       }
+  //     }
+  //   })
+  // }
 }
 
 class External extends React.Component {

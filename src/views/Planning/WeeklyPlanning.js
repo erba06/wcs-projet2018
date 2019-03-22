@@ -25,7 +25,6 @@ class WeeklyPlanning extends Component {
       filteredAccounts: 'select',
       translationRequests: []
     }
-    console.log(this.state)
   }
 
   updateTargetState = props => {
@@ -398,9 +397,10 @@ class WeeklyPlanning extends Component {
     .then(translationRequests => {
       this.setState({ translationRequests: translationRequests.data })
       })
-    // apiService.getApiEndpoint('GetTranslationRequests')
+ /* returns empty array ?*/
+      // apiService.getApiEndpoint('GetTranslationRequests')
     //   .then(requests => {
-    //     this.setState({ requests: requests.data })
+    //     this.setState({ translationRequest: requests.data })
     //   })
   }
   componentDidMount () {
@@ -408,6 +408,7 @@ class WeeklyPlanning extends Component {
   }
 
   render () {
+    const translationRequest = this.state.translationRequest
     const roles = this.state.roles
     const accounts = this.state.accounts
     const domains = this.state.domains

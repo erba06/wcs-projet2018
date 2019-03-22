@@ -45,11 +45,12 @@ class MyAvailability extends Component {
   }
 
   handleApply (event, picker) {
+    console.log(picker)
     this.setState({
       startDate: picker.startDate,
       endDate: picker.endDate
     })
-    api.addUserAvailability()
+    api.addUserAvailability(picker)
   }
 
   syncDatas = () => {
@@ -59,12 +60,15 @@ class MyAvailability extends Component {
   }
   componentDidMount () {
     this.syncDatas()
+    console.log(this.state)
   }
   render () {
     let start = this.state.startDate.format('DD-MM-YYYY')
     let end = this.state.endDate.format('DD-MM-YYYY')
     let userAvailability = this.state.userAvailability
-    console.log(userAvailability)
+    console.log(this.state)
+    let toDate = moment(this.state.userAvailability.to).format('DD-MM-YYYY')
+    let endDate = moment(this.state.userAvailability.endDate).format('DD-MM-YYYY')
 
     let label = start + ' - ' + end
     if (start === end) {
@@ -112,8 +116,8 @@ class MyAvailability extends Component {
 
                       <h4>I am not available at the following dates:</h4>
                       <div className='input-group'>
-                        From <span>{this.state.userAvailability.from}</span> to{' '}
-                        <span>{this.state.userAvailability.to}</span>
+                        From{' '}<span>{endDate} </span>{' '}
+                        to <span>{toDate}</span>
                       </div>
                     </Jumbotron>
                   </form>
