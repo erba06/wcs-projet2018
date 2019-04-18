@@ -1,17 +1,17 @@
-import { EDIT_LANGUAGE, ERROR_EDIT_LANGUAGE } from '../actions/index.js'
+import { ERROR_SELECT_TRANSLATION, SELECT_TRANSLATION } from '../actions/index.js'
 
-const LanguageReducer = (state = [], action) => {
+const SelectTranslationReducer = (state = [], action) => {
+
+
   switch (action.type) {
-    case 'EDIT_LANGUAGE':
-      console.log('EDIT_LANGUAGE reducer')
+    case SELECT_TRANSLATION:
+      console.log('SELECT_TRANSLATION reducer')
       console.log('action ', action)
-      action.payload = Date.now()
-      const newState = [...state, action.payload]
-      return newState
-    case ERROR_EDIT_LANGUAGE:
+      return { ...state, selectedTranslation: action.as }
+    case ERROR_SELECT_TRANSLATION:
       return action.errors
     default:
       return state
   }
 }
-export default LanguageReducer
+export default SelectTranslationReducer

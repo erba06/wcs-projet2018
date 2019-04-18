@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import createHashHistory from 'history/createBrowserHistory'
-import jwt from './jwt'
-import apiService from '../src/api/apiService'
+import React from 'react'
 import Alert from 'react-s-alert'
+import createHashHistory from 'history/createBrowserHistory'
+import apiService from '../src/api/apiService'
+import jwt from './jwt'
 
 const hostUrl = 'http://localhost:52996/'
 let now = new Date()
@@ -25,6 +25,13 @@ const onPageLoadChecks = () => {
   } else {
     return Promise.resolve(false)
   }
+}
+/* WHOAMI */
+
+const whoAmI = () => {
+  apiService.getApiEndpoint('GetWhoAmI').then(authInfo => {
+    console.log(authInfo.data.roles)
+  })
 }
 
 /* LOGIN */
@@ -155,7 +162,7 @@ const deleteUser = prop => {
     .getApiEndpoint('DeleteAccount', null, { id: prop.id })
     .then(res => console.log(res))
     .then(res => {
-      if (res.status === 200 || 204) {
+      if (res.status === 200 || res.status === 204) {
         Alert.success('The user has been deleted')
         setTimeout(() => {
           window.location.reload()
@@ -189,7 +196,8 @@ const getUser = id => {
       //   hashType: 'noslash' // Omit the leading slash
       // })
       // history.push(`/edituser/${res.data.id}`)
-      window.location.href = `/editrole/${res.data.id}#/edituser/${res.data.id}`
+      window.location.href = `/editrole/${res.data.id}#/edituser/${res.data
+        .id}`
     } else {
       console.log(res.status)
     }
@@ -217,7 +225,7 @@ const addDomain = domainName => {
 
 const deleteDomain = prop => {
   apiService.getApiEndpoint('DeleteDomain', null, { id: prop }).then(res => {
-    if (res.status === 200 || 204) {
+    if (res.status === 200 || res.status === 204) {
       Alert.success('The domain has been deleted')
       setTimeout(() => {
         window.location.reload()
@@ -232,7 +240,7 @@ const editDomain = prop => {
   apiService
     .getApiEndpoint('PutDomains', { name: prop.domains }, { id: prop.id })
     .then(res => {
-      if (res.status === 200 || 204) {
+      if (res.status === 200 || res.status === 204) {
         Alert.success('The domain has been edited')
         setTimeout(() => {
           window.location.href = '/editrole/2#/managedomains'
@@ -258,7 +266,7 @@ const getDomain = id => {
 /* MANAGE ROLES */
 const deleteRole = prop => {
   apiService.getApiEndpoint('DeleteRole', null, { id: prop }).then(res => {
-    if (res.status === 200 || 204) {
+    if (res.status === 200 || res.status === 204) {
       Alert.success(`The role has been deleted`)
       setTimeout(() => {
         window.location.reload()
@@ -309,7 +317,7 @@ const addRole = role => {
       description: role.description
     })
     .then(res => {
-      if (res.status === 200 || 204) {
+      if (res.status === 200 || res.status === 204) {
         console.log('succes')
         Alert.success('The role has been added')
         setTimeout(() => {
@@ -398,7 +406,7 @@ const deleteLanguage = prop => {
   apiService
     .getApiEndpoint('DeleteLanguage', null, { id: prop.id })
     .then(res => {
-      if (res.status === 200 || 204) {
+      if (res.status === 200 || res.status === 204) {
         Alert.success('The language has been deleted')
         setTimeout(() => {
           window.location.reload()
@@ -489,15 +497,15 @@ const addTranslationRequest = translationRequest => {
       targets: translationRequest.selectedTargets,
       domain: translationRequest.selectedDomains,
       orderNumber: translationRequest.orderNumber,
-      qualification: translationRequest.qualification,
+      qualification: translationRequest.qualifications,
       clientName: translationRequest.clientName
     })
     .then(res => {
       if (res.status === 200) {
         Alert.success('The Translation request has been added')
-        setTimeout(() => {
-          window.location.href = '/editrole/#/translationrequests'
-        }, 500)
+        // setTimeout(() => {
+        //   window.location.href = '/editrole/#/translationrequests'
+        //  }, 500)
       } else {
         Alert.error('Error, try again')
       }
@@ -512,7 +520,7 @@ const addUserAvailability = userAvailability => {
       to: userAvailability.endDate
     })
     .then(res => {
-      if (res.status === 200 || 204) {
+      if (res.status === 200 || res.status === 204) {
         console.log('success')
         Alert.success('The user availability has been added')
         setTimeout(() => {
@@ -534,8 +542,89 @@ const getUserAvailability = userAvailability => {
     }
   })
 }
+const cancelAssignment = assignmentId => {
+  console.log(assignmentId)
+  apiService
+    .getApiEndpoint('CancelAssignment', null, { id: assignmentId })
+    .then(res => {
+      if (res.status === 200 || res.status === 204) {
+        console.log('success')
+        console.log(res.data)
+        Alert.success(`The translation request has been cancelled`)
+        setTimeout(() => {
+          window.location.reload()
+        }, 500)
+      } else {
+        Alert.error('Error, try again')
+      }
+    })
+}
+const acceptAssignment = assignmentId => {
+  console.log(assignmentId)
+  apiService
+    .getApiEndpoint(
+      'AssignTranslationRequests',
+      {
+        message: 'An optional message to the requester',
+        reviewType: 'A recommended review type.'
+      },
+      { id: assignmentId }
+    )
+    .then(res => {
+      if (res.status === 200 || res.status === 204) {
+        console.log('success')
+        console.log(res.data)
+        Alert.success(`The translation request has been accepted`)
+        setTimeout(() => {
+          window.location.reload()
+        }, 500)
+      } else {
+        Alert.error('Error, try again')
+      }
+    })
+}
+const rejectTranslationRequest = prop => {
+  apiService
+    .getApiEndpoint('RejectTranslationRequests', null, { id: prop })
+    .then(res => {
+      if (res.status === 200 || res.status === 204) {
+        Alert.success(`The translation request has been deleted`)
+        setTimeout(() => {
+          window.location.reload()
+        }, 500)
+      } else {
+        Alert.error('Error, try again')
+      }
+    })
+}
+const renotifyTranslationRequest = id => {
+  apiService.getApiEndpoint('Renotify', null, { id: id }).then(res => {
+    if (res.status === 200 || res.status === 204) {
+      Alert.success(`The translation request has been renotified`)
+      // setTimeout(() => {
+      //   window.location.reload()
+      // }, 500)
+    } else {
+      Alert.error('Error, try again')
+    }
+  })
+}
+const deleteTranslationRequest = id => {
+  apiService.getApiEndpoint('DeleteTranslationRequest', null, { id: id }).then(res => {
+    if (res.status === 200 || res.status ===
+      204) {
+      Alert.success(`The translation request has been deleted`)
+      setTimeout(() => {
+        window.location.reload()
+      }, 500)
+    } else {
+      Alert.error('Error, try again')
+    }
+  })
+}
 
 export default {
+  whoAmI,
   logIn,
   logout,
   storeToken,
@@ -568,5 +657,10 @@ export default {
   displayTranslatorOnly,
   addTranslationRequest,
   addUserAvailability,
-  getUserAvailability
+  getUserAvailability,
+  cancelAssignment,
+  acceptAssignment,
+  rejectTranslationRequest,
+  renotifyTranslationRequest,
+  deleteTranslationRequest
 }

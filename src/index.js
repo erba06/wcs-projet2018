@@ -4,6 +4,8 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 
+import { persistor } from '../src/store'
+import { PersistGate } from 'redux-persist/integration/react'
 import { HashRouter, Route, Switch } from 'react-router-dom'
 import api from './api'
 import AuthForm from './views/Auth/AuthForm'
@@ -29,18 +31,21 @@ api.onPageLoadChecks().then(status => {
         store={createStoreWithMiddleware(
           reducers,
           window.__REDUX_DEVTOOLS_EXTENSION__ &&
-            window.__REDUX_DEVTOOLS_EXTENSION__()
-        )}
+          window.__REDUX_DEVTOOLS_EXTENSION__({
+            latency: 0
+          }))}
       >
-        <HashRouter>
-          <Switch>
-            {indexRoutes.map((prop, key) => {
-              return (
-                <Route to={prop.path} component={prop.component} key={key} />
-              )
-            })}
-          </Switch>
-        </HashRouter>
+        <PersistGate loading={null} persistor={persistor}>
+          <HashRouter>
+            <Switch>
+              {indexRoutes.map((prop, key) => {
+                return (
+                  <Route to={prop.path} component={prop.component} key={key} />
+                )
+              })}
+            </Switch>
+          </HashRouter>
+        </PersistGate>
       </Provider>,
       document.getElementById('root')
     )

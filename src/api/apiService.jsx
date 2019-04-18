@@ -109,6 +109,10 @@ const endpoints = {
     url: `${hostUrl}/TranslationRequests`,
     method: 'GET'
   },
+  AssignTranslationRequests: {
+    url: `${hostUrl}/TranslationRequests/{id}`,
+    method: 'PUT'
+  },
   PostTranslationRequests: {
     url: `${hostUrl}/TranslationRequests`,
     method: 'POST'
@@ -119,7 +123,7 @@ const endpoints = {
   },
   PutTranslationRequest: {
     url: `${hostUrl}/TranslationRequests/{id}`,
-    method: 'GET'
+    method: 'PUT'
   },
   DeleteTranslationRequest: {
     url: `${hostUrl}/TranslationRequests/{id}`,
@@ -133,7 +137,7 @@ const endpoints = {
     url: `${hostUrl}/TranslationRequests/{id}/reject`,
     method: 'PUT'
   },
-  PostRenotify: {
+  Renotify: {
     url: `${hostUrl}/TranslationRequests/{id}/renotify`,
     method: 'POST'
   },
@@ -196,9 +200,10 @@ const getApiEndpoint = (endPointName, body, params, query) => {
     .then(response => response.json())
     .catch(response => null)
 
-  return Promise.all([responsePromise, jsonPromise]).then(function (
-    [responseResult, jsonResult]
-  ) {
+  return Promise.all([responsePromise, jsonPromise]).then(function ([
+    responseResult,
+    jsonResult
+  ]) {
     let apiResult = {
       status: responseResult.status,
       data: jsonResult,

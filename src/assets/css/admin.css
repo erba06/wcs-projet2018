@@ -10,6 +10,107 @@
   margin-left: -8px;
 }
 
+/* Translation Request */
+.table-striped > tbody > tr {
+  height: 30px;
+}
+/* h4 .fa-user {
+  float: right;
+  margin-top: .1rem;
+  margin-right: 1rem;
+} */
+
+.container-details {
+  display: flex;
+  min-width: 568px;
+}
+
+.container-details.list-group {
+  min-width: 100%;
+}
+li.list-group-item {
+  font-family: inherit;
+  font-size: 14px;
+  color: #9a9a9a;
+}
+ul li span {
+  font-weight: bold;
+  margin: 5px;
+}
+
+.container-details ul.list-group{
+width:100%; 
+min-height: 144px;
+
+}
+.requestDetails.modal-body {
+  
+    background-image: linear-gradient(to left, rgba(18,108,238,0), rgba(18,108,238,1));
+ /* background-color:#126CEE; */
+}
+.loggedAs-info {
+  padding-right: 15px;
+}
+i span {
+  display: flex;
+  font-weight: 900;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
+.badge.badge-success {
+  display: inline-block;
+  min-width: 10px;
+  padding: 3px 7px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1;
+  color: #fff; /* Couleur de texte : Blanc */
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  background-color: green;
+}
+.badge.badge-warning {
+  display: inline-block;
+  min-width: 10px;
+  padding: 3px 7px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1;
+  color: #fff; /* Couleur de texte : Blanc */
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  background-color: orange;
+}
+.badge.badge-danger {
+  display: inline-block;
+  min-width: 10px;
+  padding: 3px 7px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1;
+  color: #fff; /* Couleur de texte : Blanc */
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  background-color: red;
+}
+
+.badge.badge-inverse {
+  display: inline-block;
+  min-width: 10px;
+  padding: 3px 7px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1;
+  color: #fff; /* Couleur de texte : Blanc */
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  background-color: black;
+}
+
 /*Admin */
 .btn-block {
   margin: 10px;
@@ -40,7 +141,7 @@ legend.scheduler-border {
 }
 /* Add user */
 .header h4 {
-  background-color: rgb(31, 66, 90);
+  background-color: #0a1c35;
   padding: 14px;
   border-radius: 5px;
 }
@@ -66,7 +167,11 @@ input#password-id.form-control {
   margin-left: 15px;
   width: 97.2%;
 }
-
+td li:before {
+content: '\1f4cb';
+margin-left: -20px;
+margin-right: 10px;
+}
 .buttonManagePages {
   margin-right: auto;
 }
@@ -77,6 +182,7 @@ button {
 label {
   margin-left: 5px;
 }
+
 
 /* Add  ...*/
 
@@ -179,8 +285,15 @@ label {
   width: 100%;
   border-color: none;
 }
-
-.fa-user {
+.row.text-center {
+  width: 90px;
+  float: right;
+  margin-top: -4.5px;
+}
+span.title.text-center {
+  font-size: 10px;
+}
+.list-translators .fa-user {
   float: left;
   margin-top: 1.3rem;
   margin-left: 0.4rem;

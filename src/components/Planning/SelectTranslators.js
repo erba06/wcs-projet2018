@@ -16,6 +16,17 @@ class SelectTranslators extends Component {
     }
     console.log(this.props)
   }
+
+  checkStatus (authInfo, translationRequests) {
+    console.log(authInfo + translationRequests)
+    console.log(authInfo.userId)
+    console.log(translationRequests.linguist.id)
+
+    if (authInfo.linguist.id == translationRequests.userId) {
+      return <span class='badge badge-success'>Accepted</span>
+    }
+  }
+
   componentDidUpdate (oldProps) {
     const newProps = this.props
 
@@ -41,7 +52,7 @@ class SelectTranslators extends Component {
     return (
       <div className='select-translators-week'>
         <Panel bsStyle='primary'>
-          <Panel.Heading id="mypanel">
+          <Panel.Heading id='mypanel'>
             <Panel.Title componentClass='h3'>
               <i className='pe-7s-note2' /> Translators
             </Panel.Title>
@@ -75,9 +86,8 @@ class SelectTranslators extends Component {
                 let domains = api.displayDomains(account)
                 let languages = api.displayLanguages(account)
                 let translators = api.displayTranslatorOnly(account.roles)
-                
+
                 if (isTranslators) {
-                  
                   return (
                     <ResultPanel
                       key={i}

@@ -241,7 +241,7 @@ class TranslationRequestsForm extends Component {
         <Grid fluid>
           <Row>
             <Col md={12}>
-              <h1>{JSON.stringify(this.state)}</h1>
+            {/*  <h1>{JSON.stringify(this.state)}</h1>*/}
 
               <Card
                 title='Add a request'

@@ -9,15 +9,15 @@ import apiService from '../../api/apiService'
 import api from '../../api'
 
 class ManageLanguages extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       languages: []
     }
-    // this.editLanguage = this.editLanguage.bind(this)
+    //this.editLanguage = this.editLanguage.bind(this)
   }
 
-  componentDidMount () {
+  componentDidMount() {
     apiService
       .getApiEndpoint('GetLanguages')
       .then(this.updateState)
@@ -27,15 +27,18 @@ class ManageLanguages extends Component {
 
   updateState = languages => {
     this.setState({ languages: languages.data })
+   // const action = { type: 'EDIT_LANGUAGE', value: this.state.languages }
+   // this.props.dispatch(action)
+    console.log(this.prop)
   }
 
-  // editLanguage() {
-  // const action = { type: 'EDIT_LANGUAGE', value: this.state.languages }
-  // this.props.dispatch(action)
-  // console.log(this.prop)
-  // }
+  editLanguage() {
+ //   const action = { type: 'EDIT_LANGUAGE', value: this.state.languages }
+   // this.props.dispatch(action)
+    console.log(this.prop)
+  }
 
-  render () {
+  render() {
     const languages = this.state.languages
     console.log(languages)
 
@@ -95,29 +98,29 @@ class ManageLanguages extends Component {
                                 {prop.isNeutral ? <ol>Yes</ol> : <ol>No</ol>}
                               </td>
                               <td>
-                             {/*}   <ButtonGroup className='buttonManagePages'> */}
-                                  <Link to='/editlanguage/:id'>
-                                    <Button
-                                      onClick={() => api.getLanguage(prop.id)}
-                                      bsSize='default'
-                                      bsStyle='primary'
-                                      fill
-                                    >
-                                      <i className='far fa-edit' /> Edit
-                                    </Button>
-                                  </Link>
+                                {/*}   <ButtonGroup className='buttonManagePages'> */}
+                                <Link to='/editlanguage/:id'>
                                   <Button
-                                    onClick={() => {
-                                      console.log(prop)
-                                      api.deleteLanguage(prop)
-                                    }}
+                                    onClick={() => this.updateState()}
                                     bsSize='default'
-                                    bsStyle='info'
+                                    bsStyle='primary'
                                     fill
                                   >
-                                    <i className='fas fa-trash-alt' /> Delete
+                                    <i className='far fa-edit' /> Edit
+                                    </Button>
+                                </Link>
+                                <Button
+                                  onClick={() => {
+                                    console.log(prop)
+                                    api.deleteLanguage(prop)
+                                  }}
+                                  bsSize='default'
+                                  bsStyle='info'
+                                  fill
+                                >
+                                  <i className='fas fa-trash-alt' /> Delete
                                   </Button>
-                               {/*} </ButtonGroup> */}
+                                {/*} </ButtonGroup> */}
                               </td>
                             </tr>
                           )
@@ -131,7 +134,7 @@ class ManageLanguages extends Component {
                 <Button bsStyle='info' pullleft='true' fill type='submit'>
                   Add language
                 </Button>
-                        <Alert stack={{ limit: 3 }} />
+                <Alert stack={{ limit: 3 }} />
               </Link>
             </Col>
           </Row>
@@ -140,8 +143,8 @@ class ManageLanguages extends Component {
     )
   }
 }
-{
-  /* const mapStateToProps = state => {
+
+const mapStateToProps = state => {
   return {
     state
     // languages: state.languages
@@ -149,6 +152,5 @@ class ManageLanguages extends Component {
 }
 
 export default connect(mapStateToProps)(ManageLanguages)
-*/
-}
-export default ManageLanguages
+
+//export default ManageLanguages
